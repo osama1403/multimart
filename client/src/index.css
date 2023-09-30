@@ -1,0 +1,87 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.scroller::-webkit-scrollbar {
+  /* display: none; */
+  height: 4px;
+  background-color: white;
+}
+.noscrollbar::-webkit-scrollbar {
+  display: none;
+ 
+}
+
+/* .scroller::-webkit-scrollbar-track{
+width: 4px;
+display: none;
+background-color: white;
+} */
+.scroller::-webkit-scrollbar-thumb {
+  background-color: rgb(212, 212, 216);
+  border-radius: 2px;
+}
+
+.active-side-link::before {
+  content: '';
+  position: absolute;
+  background-color: #ea3c12;
+  inset: 0px;
+  height: 100%;
+  width: 7px;
+  border-radius: 0px 12px 12px 0px;
+
+}
+
+.numberinput::-webkit-outer-spin-button,
+.numberinput::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+
+}
+
+.numberinput {
+  -moz-appearance: textfield;
+}
+
+
+.rotateY{
+  transform: rotateY(45deg);
+}
+.per {
+  perspective: 300px;
+}
+
+.trx1 {
+  transform: translateX(-20px) rotateY(45deg);
+  z-index: -1;
+}
+
+.trx2 {
+  transform: translateX(20px) rotateY(45deg);
+  z-index: 1;
+}
+
+@keyframes rotation {
+  0%{
+    transform: rotate(0deg);
+  }
+  100%{
+    transform: rotate(360deg);
+  }
+}
+.on{
+  animation: rotation 3s infinite linear ;
+}
+
+@keyframes shake {
+  0%{
+    transform: translateY(1px);
+  }
+  100%{
+    transform: translateY(0px);
+  }
+}
+.ontruck{
+  animation: shake 200ms infinite ;
+}
