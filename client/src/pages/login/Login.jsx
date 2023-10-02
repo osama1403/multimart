@@ -31,7 +31,7 @@ const Login = () => {
       const { token, role, userData } = response?.data
       setAuth({ accessToken: token, role, userData })
       navigate(from, { replace: true })
-      // console.log(response);
+      // console.log(userData);
     } catch (error) {
       if (error.response) {
         setAlert(error.response.data?.msg ? error.response.data?.msg : 'something went wrong')

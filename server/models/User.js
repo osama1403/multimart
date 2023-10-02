@@ -22,11 +22,11 @@ const userSchema = new Schema({
     type:String,
     default:''
   },
-  adress1:  {
+  address1:  {
     type:String,
     default:''
   },
-  adress2:  {
+  address2:  {
     type:String,
     default:''
   },

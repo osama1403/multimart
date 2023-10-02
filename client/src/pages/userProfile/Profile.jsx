@@ -13,9 +13,9 @@ const Profile = () => {
 
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')
-  const [email, setEmail] = useState('')
   const [phone, setPhone] = useState('')
-  const [adress, setAdress] = useState('')
+  const [address1, setAddress1] = useState('')
+  const [address2, setAddress2] = useState('')
   const [changed, setChanged] = useState(false)
   const [img, setImg] = useState(null)
   const { setAuth } = useAuth()
@@ -26,22 +26,22 @@ const Profile = () => {
     if (data) {
       setFirstName(data.firstName)
       setLastName(data.lastName)
-      setEmail(data.email)
       setPhone(data.phone)
-      setAdress(data.adress)
+      setAddress1(data.address1)
+      setAddress2(data.address2)
     }
   }, [data])
 
   useEffect(() => {
     if (data) {
-      if (data.firstName !== firstName || data.lastName !== lastName || data.email !== email || data.phone !== phone || data.adress !== adress) {
+      if (data.firstName !== firstName || data.lastName !== lastName  || data.phone !== phone || data.address1 !== address1 || data.address2 !== address2) {
         setChanged(true)
-        console.log('data.phone '+ data.adress);
+        console.log('data.phone ' + data.phone);
       } else {
         setChanged(false)
       }
     }
-  }, [firstName, lastName, phone, email, adress])
+  }, [firstName, lastName, phone, address1, address2])
 
   const handleSetImage = (e) => {
     if (e.target.files[0]) {
@@ -69,6 +69,29 @@ const Profile = () => {
     }
 
 
+  }
+
+  const handleUpdataInfo= async()=>{
+    const data = {
+      firstName,
+      lastName,
+      phone,
+      address1,
+      address2
+    }
+    try{
+      await privateAxios.post('/user/updateinfo',data)
+      const addresses = []
+          if (address1)
+            addresses.push(address1)
+          if (address2)
+            addresses.push(address2)
+
+      setAuth((p) => { return ({ ...p, userData: { ...p.userData, addresses } }) })
+    }catch(error){
+
+    }
+    
   }
 
   return (
@@ -162,20 +185,20 @@ const Profile = () => {
                       <input type="text" id="last name" className='outline-none border w-full rounded-lg bg-slate-100  p-2' value={lastName} onChange={(e) => { setLastName(e.target.value) }} />
                     </div>
                     <div className='grow min-w-[250px]'>
-                      <label htmlFor="email" className='block'> Email:</label>
-                      <input type="email" id="email" className='outline-none border w-full rounded-lg bg-slate-100 p-2' value={email} onChange={(e) => { setEmail(e.target.value) }} />
-                    </div>
-                    <div className='grow min-w-[250px]'>
                       <label htmlFor="phone number" className='block'> Phone number:</label>
-                      <input type="number" id="phone number" className='outline-none numberinput none border w-full rounded-lg bg-slate-100 p-2' value={phone} onChange={(e) => { setPhone(e.target.value) }} />
+                      <input type="text" id="phone number" className='outline-none numberinput none border w-full rounded-lg bg-slate-100 p-2' value={phone} onChange={(e) => { setPhone(e.target.value) }} />
                     </div>
                     <div className='w-full min-w-[250px]'>
-                      <label htmlFor="adress" className='block'>Adress:</label>
-                      <input type="text" id="adress" className='outline-none numberinput none border w-full rounded-lg bg-slate-100 p-2' value={adress} onChange={(e) => { setAdress(e.target.value) }} />
+                      <label htmlFor="adress" className='block'>Address1:</label>
+                      <input type="text" id="adress" className='outline-none numberinput none border w-full rounded-lg bg-slate-100 p-2' value={address1} onChange={(e) => { setAddress1(e.target.value) }} />
+                    </div>
+                    <div className='w-full min-w-[250px]'>
+                      <label htmlFor="adress" className='block'>Address2:</label>
+                      <input type="text" id="adress" className='outline-none numberinput none border w-full rounded-lg bg-slate-100 p-2' value={address2} onChange={(e) => { setAddress2(e.target.value) }} />
                     </div>
                   </div>
                   <div className='w-full max-w-3xl '>
-                    <button className={`mt-4 mx-auto block rounded-md px-4 py-1  border font-semibold border-primary text-primary ${changed ? '' : 'hidden'}`} disabled={!changed}>Update</button>
+                    <button className={`mt-4 mx-auto block rounded-md px-4 py-1  border font-semibold border-primary text-primary ${changed ? '' : 'hidden'}`} onClick={handleUpdataInfo}>Update</button>
                   </div>
 
 

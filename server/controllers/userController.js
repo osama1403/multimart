@@ -82,16 +82,14 @@ const getProfile = async (req, res) => {
 
 const updateInfo = async (req, res) => {
   try {
-    const token = req.headers["Authorization"].split(' ')
-    const decodedToken = jwt.decode(token, process.env.JWT_SECRET)
-    const { email } = decodedToken;
-    const { firstName, lastName, phone, adress1, adress2 } = req.data;
-    await User.updateOne({ email }, { firstName, lastName, phone, adress1, adress2 })
+    const email = getJwtEmail(req)
+    const { firstName, lastName, phone, address1, address2 } = req.body;
+    await User.updateOne({ email }, { firstName, lastName, phone, address1, address2 })
     res.json({ success: true, msg: "info updated successfully" })
   } catch (e) {
+    console.log(e);
     res.status(500).json({ success: false, msg: "server error" })
   }
-
 }
 
 

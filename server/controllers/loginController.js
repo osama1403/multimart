@@ -41,13 +41,20 @@ const handleLogin = async (req, res) => {
         const verified = await bcrypt.compare(password, user.password);
         if (verified) {
           const JWT = jwt.sign({ email: email, role: 'user' }, process.env.JWT_SECRET)
+          const addresses = []
+          if (user.address1)
+            addresses.push(user.address1)
+          if (user.address2)
+            addresses.push(user.address2)
+
           const userData = {
-            name: user.firstName +' '+ user.lastName,
+            name: user.firstName + ' ' + user.lastName,
             img: user.profilePicture,
             wishlist: user.wishlist,
-            cart: user.cart
+            cart: user.cart,
+            addresses: addresses
           }
-          res.status(200).json({ token: JWT, role: 'user',userData })
+          res.status(200).json({ token: JWT, role: 'user', userData })
           return
         }
       }

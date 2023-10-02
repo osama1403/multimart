@@ -54,7 +54,7 @@ const ProductPage = () => {
       setAlert('')
       setCartButtonLoading('true')
       const item = { id: data?._id, customizations }
-      const newCart = [...auth.cart]
+      const newCart = [...auth.userData.cart]
       //change the behaviour of the function to (add to cart ) or (remove from cart) according to state
       if (!inCart) {
         await privateAxios.post('/user/addtocart', { item })
@@ -63,13 +63,13 @@ const ProductPage = () => {
         await privateAxios.post('/user/removefromcart', { id: data._id })
         newCart.splice(newCart.findIndex((el) => el.id === data._id), 1)
       }
-      const authWithEditedCart = { ...auth, cart: newCart }
+      const authWithEditedCart = { ...auth, userData: { ...auth.userData, cart: newCart } }
       setAuth(authWithEditedCart)
 
     } catch (error) {
       if (error.response) {
         setAlert(error.response.data?.msg ? error.response.data?.msg : 'something went wrong')
-      } else if (error.request && error.message!=='canceled' ) {
+      } else if (error.request && error.message !== 'canceled') {
         setAlert('no server response')
       }
     }
@@ -92,14 +92,14 @@ const ProductPage = () => {
         await privateAxios.post('/user/removefromwishlist', { id: data?._id })
         newWishlist.splice(newWishlist.indexOf(data?._id), 1)
       }
-      const authWithEditedWishlist = { ...auth, wishlist: newWishlist }
+      const authWithEditedWishlist = { ...auth, userData: { ...auth.userData, wishlist: newWishlist } }
       setAuth(authWithEditedWishlist)
       console.log(authWithEditedWishlist)
 
-    } catch (error) { 
+    } catch (error) {
       if (error.response) {
         setAlert(error.response.data?.msg ? error.response.data?.msg : 'something went wrong')
-      } else if (error.request && error.message!=='canceled' ) {
+      } else if (error.request && error.message !== 'canceled') {
         setAlert('no server response')
       }
     }
