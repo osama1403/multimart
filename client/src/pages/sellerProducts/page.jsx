@@ -3,31 +3,12 @@ import { Link } from 'react-router-dom'
 import { FaPlus } from 'react-icons/fa';
 import { useEffect, useState } from 'react';
 import usePrivateAxios from '../../hooks/usePrivateAxios';
+import useGetAxios from '../../hooks/useGetAxios';
 
 const SellerProducts = () => {
-  const [data, setData] = useState(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState('')
   const privateaxios = usePrivateAxios()
-
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true)
-      try {
-        const response = await privateaxios.get('/seller/products')
-        setData(response.data)
-        // console.log((data));
-      } catch (error) {
-        if (error.response) {
-          setError(error.response.data?.msg ? error.response.data?.msg : 'something went wrong')
-        } else if (error.request) {
-          setError('no server response')
-        }
-      }
-      setLoading(false)
-    }
-    fetchData()
-  }, [privateaxios])
+  const { data, loading, error } = useGetAxios('/seller/products', privateaxios, [])
+  
 
   return (
     <>

@@ -2,7 +2,6 @@ const User = require('../models/User');
 const Cart = require('../models/Cart')
 const getJwtEmail = require('../utils/getJwtEmail')
 
-
 const getCart = async (req, res) => {
   const email = getJwtEmail(req)
   try {
@@ -62,6 +61,7 @@ const removeFromCart = async (req, res) => {
   try {
     const isRemoved = await User.updateOne({ email }, { $pull: { cart: { id: id } } })
     if (isRemoved) {
+      console.log(isRemoved);
       res.json({ success: 'true', msg: 'product removed from cart successfully' })
       return
     }

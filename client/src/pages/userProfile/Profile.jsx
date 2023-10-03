@@ -21,7 +21,7 @@ const Profile = () => {
   const { setAuth } = useAuth()
   const serverUrl = process.env.REACT_APP_URL
   const privateAxios = usePrivateAxios()
-  const [data, loading, error] = useGetAxios('/user/profile', privateAxios, [])
+  const {data, loading, error} = useGetAxios('/user/profile', privateAxios, [])
   useEffect(() => {
     if (data) {
       setFirstName(data.firstName)

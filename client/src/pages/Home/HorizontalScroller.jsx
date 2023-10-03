@@ -32,7 +32,7 @@ const HorizontalScroller = ({ category }) => {
   //   })
   // }, [axios])
 
-  const [data,loading,msg] = useGetAxios(`/products?categories[]=${category}&limit=8`,axios,[])
+  const {data,loading,msg} = useGetAxios(`/products?categories[]=${category}&limit=8`,axios,[])
 
   return (
     <>

@@ -42,7 +42,7 @@ const Products = () => {
     return qs
   }, [filter])
 
-  const [data, loading, error] = useGetAxios('/products' + queryString, axios, [])
+  const {data, loading, error} = useGetAxios('/products' + queryString, axios, [])
 
   return (
     <>

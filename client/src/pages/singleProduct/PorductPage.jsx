@@ -21,7 +21,7 @@ const ProductPage = () => {
 
   const [img, setImg] = useState(0);
   const [alert, setAlert] = useState('')
-  const [data, loading, error] = useGetAxios(`/products/${id}`, axios, [])
+  const { data, loading, error } = useGetAxios(`/products/${id}`, axios, [])
   const [customizations, setCustomizations] = useState({})
   const [cartButtonLoading, setCartButtonLoading] = useState(false)
   const [wishlistButtonLoading, setWishlistButtonLoading] = useState(false)

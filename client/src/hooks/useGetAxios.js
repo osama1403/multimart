@@ -19,7 +19,7 @@ const useGetAxios = (url, axiosInstance, dep) => {
         console.log('useaxios error');
         if (error.response) {
           setError(error.response.data?.msg ? error.response.data?.msg : 'something went wrong')
-        } else if (error.request && error.message!=='canceled') {
+        } else if (error.request && error.message !== 'canceled') {
           console.log(error);
           setError('no server response')
         }
@@ -34,7 +34,7 @@ const useGetAxios = (url, axiosInstance, dep) => {
     }
   }, [...dep, axiosInstance, url])
 
-  return ([data, loading, error]);
+  return ({data, loading, error, setData});
 }
 
 export default useGetAxios;

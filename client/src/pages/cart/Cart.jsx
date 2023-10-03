@@ -1,56 +1,44 @@
-import shirt1 from '../../assets/shirt1.jpg'
 import useGetAxios from '../../hooks/useGetAxios';
 import usePrivateAxios from '../../hooks/usePrivateAxios';
 import LoadingThreeDots from '../../components/LoadingThreeDots';
-import prodPlaceholder from '../../assets/images/prodPlaceholder.jpg'
 import { AiOutlineCloseCircle } from 'react-icons/ai';
 import { useEffect, useState } from 'react';
+import CartItem from './CartItem';
 import useAuth from '../../hooks/useAuth';
-const serverUrl = process.env.REACT_APP_URL
 
 const Cart = () => {
   const privateAxios = usePrivateAxios()
-  const [cartInfo, setCartInfo] = useState({})
-  const [data, loading, error] = useGetAxios('/user/cart', privateAxios, [])
+  const { data, loading, error, setData } = useGetAxios('/user/cart', privateAxios, [])
   const { auth, setAuth } = useAuth()
-  const [syncedCart, setSyncedCart] = useState(false)
-  const [adress, setAdress] = useState('')
-
+  const [cartInfo, setCartInfo] = useState({})
+  const [address, setAddress] = useState('')
   const [checkout, setCheckout] = useState(false)
-
+  const [checkoutAlert, setCheckoutAlert] = useState('')
 
   useEffect(() => {
     if (data) {
       console.log('set auth');
-      setAuth({ ...auth, userData: { ...auth.userData, cart: data.cart } })
-      setSyncedCart(true)
+      setAuth((p) => { return ({ ...p, userData: { ...p.userData, cart: data.cart } }) })
     }
-  }, [data])
+  }, [data, setAuth])
 
   useEffect(() => {
-    // avoid extra rerender
-    if (data && !syncedCart) {
-      return
-    }
-    //
     if (data?.products?.length >= 0) {
       const taxRate = 8
-      const subtotal = data.products.reduce((p, el) => { return (auth.userData.cart.some((e) => e.id === el._id) ? p + el.price : p) }, 0)
+      const subtotal = data.products.reduce((p, el) => p + el.price, 0)
       console.log("subtotal : " + subtotal);
       const tax = subtotal * taxRate / 100
       const estShCost = 60
       const cartdata = {
-        elements: `# ${auth.userData.cart.length}`,
-        subtotal: `$ ${subtotal}`,
+        elements: `# ${data.cart.length}`,
+        subtotal: `$ ${subtotal.toFixed(2)}`,
         estShCost: `$ ${estShCost.toFixed(2)}`,
         taxRate: taxRate,
         tax: `$ ${tax}`,
         total: (subtotal + tax + estShCost).toFixed(2)
-
       }
       console.log(subtotal + ' tax : ' + tax + ' estsh: ' + estShCost + ' tot: ' + subtotal + tax + estShCost);
       setCartInfo(cartdata)
-
     } else {
       const cartdata = {
         elements: `# -`,
@@ -63,7 +51,7 @@ const Cart = () => {
       setCartInfo(cartdata)
     }
 
-  }, [data, auth, syncedCart])
+  }, [data])
 
   useEffect(() => {
     if (checkout) {
@@ -72,6 +60,20 @@ const Cart = () => {
       document.body.style.overflow = 'auto';
     }
   }, [checkout])
+
+  const handleSubmit = async () => {
+    if (!address) {
+      setCheckoutAlert('please provide shipping address')
+      return
+    }
+    setCheckoutAlert('')
+    try {
+      await privateAxios.post('/user/placeorder', { cart: data.cart })
+    } catch (err) {
+
+    }
+
+  }
 
 
   return (
@@ -88,37 +90,10 @@ const Cart = () => {
               <>
                 <h1 className="text-2xl p-3 rounded-xl bg-zinc-100 "> your cart:</h1>
                 {
-                  data.products.map((el) => {
+                  data.products.map((el, idx) => {
                     const cus = data.cart.find(e => e.id === el._id).customizations
                     return (
-                      <div className="w-full border p-4 my-4 hyphens-auto">
-                        <h2 className="text-lg font-semibold md:hidden"> {el.name}</h2>
-                        <div className="flex  flex-row flex-wrap sm:flex-nowrap gap-3 items-stretch my-3">
-                          <img src={el.images[0] ? serverUrl + '/' + el.images[0] : prodPlaceholder} alt="" className='border self-center aspect-square w-32 md:w-36' />
-                          <div className='grow flex gap-3 justify-between items-center'>
-                            <div className='min-w-[135px]  md:min-w-[256px] w-min grow '>
-                              <h2 className='w-full mb-2 text-lg font-semibold break-words hidden  md:block'> {el.name}</h2>
-                              <div className=''>
-                                {
-                                  el.customizations?.map((el, idx) => {
-                                    return (
-                                      <p key={idx}><span className='font-semibold'>{`${el.name}: `}</span>{cus[el.name]}</p>
-                                    )
-                                  })
-                                }
-
-                              </div>
-                            </div>
-                            <p className='self-start text-primary'>{`$${el.price}`}</p>
-
-                          </div>
-                        </div>
-                        <div className=' w-fit mx-auto'>
-                          <button className='w-32 bg-zinc-200 hover:bg-slate-300 p-1 rounded-md  m-1'>Remove</button>
-                          <button className='w-32 bg-zinc-200 hover:bg-slate-300 p-1 rounded-md  m-1'>Edit</button>
-                        </div>
-
-                      </div>
+                      <CartItem el={el} customizations={cus} setData={setData} key={idx} />
                     )
                   })
                 }
@@ -169,17 +144,17 @@ const Cart = () => {
 
 
       {
-        (data && auth.userData.cart.length !== 0) &&
+        (data && data.cart.length !== 0) &&
 
-        <div className={`fixed  py-10 px-4 inset-0 w-full ${checkout ? 'flex' : 'hidden'} items-center justify-center backdrop-blur z-30`}>
-          <div className='w-full p-3 rounded-xl relative max-w-xl bg-white border border-primary   '>
-            <button className='absolute -top-3 -right-3 rounded-full text-3xl text-primary bg-slate-200' onClick={() => { setCheckout(false) }}><AiOutlineCloseCircle /></button>
+        <div className={`fixed  py-10 px-4 inset-0 w-full ${checkout ? 'flex' : 'hidden'}  items-center justify-center backdrop-blur z-30`}>
+          <div className='w-full p-3 rounded-xl relative max-w-xl bg-white border border-primary '>
+            <button className='absolute -top-3 -right-3 rounded-full text-3xl text-primary bg-zinc-200' onClick={() => { setCheckout(false) }}><AiOutlineCloseCircle /></button>
             <p className='text-zinc-500 text-lg'>items:</p>
             <ol className='list-decimal list-inside '>
               {
-                data.products.filter((el) => auth.userData.cart.some((e) => e.id === el._id)).map((el, idx) => {
+                data.products.map((el, idx) => {
                   return (
-                    <li className='flex justify-between items-center px-3 even:bg-slate-200 my-1' key={idx}>
+                    <li className='flex justify-between items-center px-3 even:bg-zinc-100 my-1' key={idx}>
                       <p className='text-zinc-700 font-medium '>{el.name}</p>
                       <p>{el.price}</p>
 
@@ -190,22 +165,25 @@ const Cart = () => {
               }
             </ol>
             <p className='text-zinc-500 text-lg mt-4'>total: {cartInfo.total}$</p>
-            <div className='flex items-center flex-wrap space-x-3 mt-4'>
+            <div className='flex items-center flex-wrap gap-2 mt-4'>
               <p className='text-zinc-500 text-lg'>ship to:</p>
-              {auth.userData.addresses.map((el, idx) => {
-                return (
-                  <button className={`border px-2 rounded-full ${adress === auth.userData.addresses[idx] ? 'border-primary text-primary' : 'border-zinc-400'} `}
-                    onClick={() => { setAdress(el) }}>
-                    address #{idx}
-                  </button>
-                )
-              })}
+              <div className='space-x-2'>
+                {auth.userData.addresses.map((el, idx) => {
+                  return (
+                    <button className={`border px-2 rounded-full ${address === auth.userData.addresses[idx] ? 'border-primary text-primary' : 'border-zinc-400'} `}
+                      onClick={() => { setAddress(el) }} key={idx}>
+                      address #{idx + 1}
+                    </button>
+                  )
+                })}
+              </div>
 
             </div>
-            <input type="text" name="adress" id="adress" value={adress}
-              className='w-full outline-none text-zinc-600 px-3 py-1 mt-2 border border-zinc-400 rounded-md'
-              onChange={(e) => { setAdress(e.target.value) }} />
-            <button className='py-1 px-3 my-4 mx-auto block text-primary border border-primary rounded-full text-lg font-semibold'>Buy Now</button>
+            <input type="text" name="address" id="address" value={address}
+              className='w-full outline-none text-zinc-600 px-3 py-1 my-2 border border-zinc-400 rounded-md'
+              onChange={(e) => { setAddress(e.target.value) }} />
+            <p className='text-sm text-red-600'>{checkoutAlert}</p>
+            <button className='py-1 px-3 my-4 mx-auto block text-primary border border-primary rounded-full text-lg font-semibold' onClick={handleSubmit}>Buy Now</button>
           </div>
         </div>
       }

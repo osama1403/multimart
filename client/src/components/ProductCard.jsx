@@ -1,6 +1,5 @@
-import img from '../assets/prod.jpeg'
-import { AiOutlineShoppingCart, AiOutlineHeart, AiFillHeart, AiOutlineStar } from 'react-icons/ai'
-import { useState, useMemo } from 'react';
+import { AiOutlineHeart, AiFillHeart, AiOutlineStar } from 'react-icons/ai'
+import { useMemo } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import prodPlaceholder from '../assets/images/prodPlaceholder.jpg'
 import usePrivateAxios from '../hooks/usePrivateAxios';
@@ -37,7 +36,7 @@ const ProductCard = ({ data }) => {
     } catch (error) {
       console.error(error);
     }
-
+    
   }
 
 

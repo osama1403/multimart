@@ -2,33 +2,13 @@ import { AiOutlineStar } from 'react-icons/ai'
 import usePrivateAxios from '../../hooks/usePrivateAxios';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import useGetAxios from '../../hooks/useGetAxios';
 
 const SellerSingleProduct = () => {
   const privateaxios = usePrivateAxios()
   const { id } = useParams()
+  const { data, loading, error } = useGetAxios(`/seller/products/${id}`, privateaxios, [id])
 
-  const [data, setData] = useState(null)
-  const [error, setError] = useState('')
-
-  useEffect(() => {
-    const abort = new AbortController()
-    const fetchData = async () => {
-      try {
-        const response = await privateaxios.get(`/seller/products/${id}`, { signal: abort.signal })
-        setData(response.data)
-      } catch (error) {
-        if (error.response) {
-          setError(error.response.data?.msg ? error.response.data?.msg : 'something went wrong')
-        } else if (error.request) {
-          setError('no server response')
-        }
-      }
-    }
-    fetchData()
-    return (() => {
-      abort.abort()
-    })
-  }, [privateaxios, id])
 
   return (
     <div className="grow min-h-screen px-2 sm:px-6 py-8 max-w-6xl mx-auto">
@@ -107,13 +87,13 @@ const SellerSingleProduct = () => {
 
           <h2 className='mt-5 mb-2'>images:</h2>
           {
-              <div className='flex flex-wrap space-x-3'>
-                {
-                  data.images.map((el,idx)=>{
-                    return <img src={`http://127.0.0.1:5000/${el}`} alt="prod image" key={idx} className='w-24 h-24 rounded object-cover border'/>
-                  })
-                }
-              </div>
+            <div className='flex flex-wrap space-x-3'>
+              {
+                data.images.map((el, idx) => {
+                  return <img src={`http://127.0.0.1:5000/${el}`} alt="prod image" key={idx} className='w-24 h-24 rounded object-cover border' />
+                })
+              }
+            </div>
           }
 
 

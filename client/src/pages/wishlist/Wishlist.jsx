@@ -5,7 +5,7 @@ import useGetAxios from "../../hooks/useGetAxios";
 import usePrivateAxios from "../../hooks/usePrivateAxios";
 const Wishlist = () => {
   const privateAxios = usePrivateAxios()
-  const [data, loading, error] = useGetAxios('/user/wishlist', privateAxios, [])
+  const { data, loading, error } = useGetAxios('/user/wishlist', privateAxios, [])
 
   return (
     <>

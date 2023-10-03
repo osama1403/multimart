@@ -2,6 +2,7 @@ const express = require('express');
 const { addToWishlist, removeFromWishlist, getWishlist } = require('../controllers/wishlistController');
 const { addToCart, removeFromCart,getCart } = require('../controllers/cartController')
 const { getProfile, updateProfilePic, updateInfo } = require('../controllers/userController');
+const { placeOrder } = require('../controllers/ordersController');
 const isUser = require('../middlewares/isUser');
 const userRouter = express.Router();
 
@@ -17,6 +18,7 @@ userRouter.post('/addtocart', addToCart)
 userRouter.post('/removefromcart', removeFromCart)
 userRouter.post('/updatepfp', updateProfilePic)
 userRouter.post('/updateinfo', updateInfo)
+userRouter.post('/placeorder', placeOrder)
 userRouter.get('/wishlist', getWishlist)
 userRouter.get('/cart', getCart)
 userRouter.get('/profile', getProfile)
