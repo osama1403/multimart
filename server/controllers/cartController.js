@@ -29,7 +29,7 @@ const getCart = async (req, res) => {
         }
       }
     ])
-    
+
     matched = matched[0]
     res.json(matched)
   } catch (e) {
@@ -57,14 +57,15 @@ const addToCart = async (req, res) => {
 
 const removeFromCart = async (req, res) => {
   const email = getJwtEmail(req)
-  const { id } = req.body
+  const { id, refresh } = req.body
   try {
-    const isRemoved = await User.updateOne({ email }, { $pull: { cart: { id: id } } })
-    if (isRemoved) {
-      console.log(isRemoved);
-      res.json({ success: 'true', msg: 'product removed from cart successfully' })
-      return
+    await User.updateOne({ email }, { $pull: { cart: { id: id } } })
+    if (refresh) {
+
+      return getCart(req, res)
     }
+    res.json({ success: 'true', msg: 'product removed from cart successfully' })
+
   } catch (error) {
     console.log(error);
     res.status(500).json({ success: false, msg: 'server error' })

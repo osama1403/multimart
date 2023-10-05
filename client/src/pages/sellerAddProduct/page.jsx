@@ -28,10 +28,10 @@ const AddProduct = () => {
   const privateaxios = usePrivateAxios()
 
   const addSpecification = (e) => {
-    setSpecifications((p) => {
-      let ps = [...p]
-      ps.push('')
-      return ps
+    setSpecifications(p => {
+      let sp = [...p]
+      sp.push('')
+      return sp
     })
   }
 
@@ -85,30 +85,31 @@ const AddProduct = () => {
   const handleSubmit = async (e) => {
     e.preventDefault()
     try {
-      if (!name || price + priceCents === 0 || categories.length === 0) {
+      const prodPrice = price * 100 + priceCents
+      if (!name || prodPrice === 0 || categories.length === 0) {
         setAlert("please provide all necessarry data")
         return
       }
       const stockCount = alwAvail ? -1 : stock
       setLoading(true)
-      const productData= JSON.stringify( {
+      const productData = JSON.stringify({
         name,
-        price,
+        price: prodPrice,
         stock: stockCount,
         description,
         specifications,
         categories,
         customizations
       })
-      
-      const f = new FormData()
-      images.forEach((el)=>{
-        f.append('images',el)
-      })
-      f.append('productData',productData)
 
-      const response = await privateaxios.post('/seller/addproduct',f,{
-        headers:{
+      const f = new FormData()
+      images.forEach((el) => {
+        f.append('images', el)
+      })
+      f.append('productData', productData)
+
+      const response = await privateaxios.post('/seller/addproduct', f, {
+        headers: {
           'Content-Type': 'multipart/form-data'
         }
       })
@@ -132,12 +133,12 @@ const AddProduct = () => {
         <div className="py-2 px-4 border rounded-lg shadow-md">
 
           <h1 className="text-2xl text-primary">Add new product :</h1>
-          <form className="mt-6" onSubmit={handleSubmit}>
+          <form className="mt-6" onSubmit={handleSubmit} autoComplete="off">
             <div className="mt-4">
               <label htmlFor="name" className="block">Product Name:</label>
-              <input type="text" autoComplete="none" id="name" value={name} onChange={(e) => { setName(e.target.value) }}
+              <input type="text" autoComplete="off" id="name" value={name} onChange={(e) => { setName(e.target.value) }}
                 className="outline-none bg-zinc-50 border px-2 py-1 text-lg rounded-lg w-full max-w-lg"
-              />
+               />
             </div>
 
             <div className="mt-4">
@@ -321,7 +322,7 @@ const AddProduct = () => {
                 {(custoptions.length > 0) &&
                   custoptions.map((el, idx) => {
                     return (
-                      <div className="flex items-center">
+                      <div className="flex items-center" key={idx}>
 
                         <input type="text" value={el} className="px-2 py-1 mt-2 w-full max-w-[150px] border border-zinc-400 rounded-lg outline-none mb-3"
                           onChange={(e) => {

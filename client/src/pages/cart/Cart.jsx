@@ -16,6 +16,7 @@ const Cart = () => {
   const [checkoutAlert, setCheckoutAlert] = useState('')
 
   useEffect(() => {
+    // console.log("data: " +data);
     if (data) {
       console.log('set auth');
       setAuth((p) => { return ({ ...p, userData: { ...p.userData, cart: data.cart } }) })
@@ -27,15 +28,15 @@ const Cart = () => {
       const taxRate = 8
       const subtotal = data.products.reduce((p, el) => p + el.price, 0)
       console.log("subtotal : " + subtotal);
-      const tax = subtotal * taxRate / 100
-      const estShCost = 60
+      const tax = (subtotal * taxRate / 100)
+      const estShCost = 6000
       const cartdata = {
         elements: `# ${data.cart.length}`,
-        subtotal: `$ ${subtotal.toFixed(2)}`,
-        estShCost: `$ ${estShCost.toFixed(2)}`,
+        subtotal: `$ ${(subtotal / 100).toFixed(2)}`,
+        estShCost: `$ ${(estShCost / 100).toFixed(2)}`,
         taxRate: taxRate,
-        tax: `$ ${tax}`,
-        total: (subtotal + tax + estShCost).toFixed(2)
+        tax: `$ ${(tax / 100).toFixed(2)}`,
+        total: `$ ${((subtotal + tax + estShCost) / 100).toFixed(2)}`
       }
       console.log(subtotal + ' tax : ' + tax + ' estsh: ' + estShCost + ' tot: ' + subtotal + tax + estShCost);
       setCartInfo(cartdata)
@@ -93,7 +94,9 @@ const Cart = () => {
                   data.products.map((el, idx) => {
                     const cus = data.cart.find(e => e.id === el._id).customizations
                     return (
-                      <CartItem el={el} customizations={cus} setData={setData} key={idx} />
+                      <div key={el._id}>
+                        <CartItem el={el} customizations={cus} setData={setData} />
+                      </div>
                     )
                   })
                 }
@@ -111,43 +114,39 @@ const Cart = () => {
       <div className=' max-w-sm min-w-fit w-full lg:w-auto  lg:grow relative mx-auto '>
         <div className=' sticky top-20 w-full  bg-zinc-800 rounded-lg py-6 px-3  text-white font-light flex flex-col space-y-5'>
           <h1 className='text-xl font-medium '>SUMMARY:</h1>
-          {
 
-            <>
-              <div className='flex justify-between pb-1 border-b border-zinc-400 '>
-                <p >elements :</p>
-                <p>{cartInfo.elements}</p>
-              </div>
-              <div className='flex md justify-between pb-1 border-b border-zinc-400 '>
-                <p >subtotal :</p>
-                <p> {cartInfo.subtotal}</p>
-              </div>
-              <div className='flex justify-between items-center pb-1 gap-3 border-b border-zinc-400 '>
-                <p >estimated shipping cost :</p>
-                <p className='whitespace-nowrap'>{cartInfo.estShCost}</p>
-              </div>
-              <div className='flex justify-between pb-1 border-b border-zinc-400 '>
-                <p>Tax : {cartInfo.taxRate}%</p>
-                <p>{cartInfo.tax}</p>
-              </div>
-              <div className='flex justify-between pb-1 border-b border-zinc-400 text-lg font-normal '>
-                <p >TOTAL :</p>
-                <p>{cartInfo.total}</p>
-              </div>
-              <button className='w-full max-w-[240px] mx-auto py-1 rounded-md hover: bg-primary text-lg text-white font-normal font-nunito ' onClick={() => { setCheckout(true) }}> Checkout</button>
-            </>
-
-          }
+          <div className='flex justify-between pb-1 border-b border-zinc-400 '>
+            <p >elements :</p>
+            <p>{cartInfo.elements}</p>
+          </div>
+          <div className='flex md justify-between pb-1 border-b border-zinc-400 '>
+            <p >subtotal :</p>
+            <p> {cartInfo.subtotal}</p>
+          </div>
+          <div className='flex justify-between items-center pb-1 gap-3 border-b border-zinc-400 '>
+            <p >estimated shipping cost :</p>
+            <p className='whitespace-nowrap'>{cartInfo.estShCost}</p>
+          </div>
+          <div className='flex justify-between pb-1 border-b border-zinc-400 '>
+            <p>Tax : {cartInfo.taxRate}%</p>
+            <p>{cartInfo.tax}</p>
+          </div>
+          <div className='flex justify-between pb-1 border-b border-zinc-400 text-lg font-normal '>
+            <p >TOTAL :</p>
+            <p>{cartInfo.total}</p>
+          </div>
+          <button className='w-full max-w-[240px] mx-auto py-1 rounded-md hover: bg-primary text-lg text-white font-normal font-nunito ' onClick={() => { setCheckout(true) }}> Checkout</button>
 
         </div>
       </div>
 
 
       {
-        (data && data.cart.length !== 0) &&
 
-        <div className={`fixed  py-10 px-4 inset-0 w-full ${checkout ? 'flex' : 'hidden'}  items-center justify-center backdrop-blur z-30`}>
-          <div className='w-full p-3 rounded-xl relative max-w-xl bg-white border border-primary '>
+        (data && (() => { console.log(" data : " + data); return true }) && data.cart.length !== 0) &&
+
+        <div className={`fixed py-10 px-4 top-0 left-0 overflow-y-auto h-screen w-full ${checkout ? 'grid' : 'hidden'}  grid-cols-1 backdrop-blur z-30`}>
+          <div className='w-full m-auto p-3 rounded-xl relative max-w-xl bg-white border border-primary '>
             <button className='absolute -top-3 -right-3 rounded-full text-3xl text-primary bg-zinc-200' onClick={() => { setCheckout(false) }}><AiOutlineCloseCircle /></button>
             <p className='text-zinc-500 text-lg'>items:</p>
             <ol className='list-decimal list-inside '>
@@ -156,7 +155,7 @@ const Cart = () => {
                   return (
                     <li className='flex justify-between items-center px-3 even:bg-zinc-100 my-1' key={idx}>
                       <p className='text-zinc-700 font-medium '>{el.name}</p>
-                      <p>{el.price}</p>
+                      <p>{(el.price / 100).toFixed(2)}</p>
 
                     </li>
                   )

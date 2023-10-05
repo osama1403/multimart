@@ -36,7 +36,7 @@ const ProductCard = ({ data }) => {
     } catch (error) {
       console.error(error);
     }
-    
+
   }
 
 
@@ -54,8 +54,8 @@ const ProductCard = ({ data }) => {
           <div className='h-14 flex items-center space-x-2  justify-between '>
             <h3 className=' md:text-xl grow text-ellipsis line-clamp-2'>{data.name} </h3>
             <div className='text-primary'>
-              <p className='text-sm md:text-base font-bold line-through'>{data.price}$</p>
-              <p className='text-xs md:text-sm font-bold'> {data.price}$</p>
+              <p className='text-sm md:text-base font-bold line-through'>{(data.price / 100).toFixed(2)}$</p>
+              <p className='text-xs md:text-sm font-bold'> {(data.price / 100).toFixed(2)}$</p>
             </div>
 
           </div>
