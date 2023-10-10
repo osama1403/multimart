@@ -10,7 +10,7 @@ const Home = () => {
     <HorizontalScroller category={'Automotive'}/>
     <CategoriesSection />
     <HorizontalScroller category={'Others'}/>
-    <HorizontalScroller />
+    <HorizontalScroller category = {'Apparel and Fashion'}/>
     
     {/* <SearchBar /> */}
     </>

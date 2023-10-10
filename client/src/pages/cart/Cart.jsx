@@ -14,6 +14,7 @@ const Cart = () => {
   const [address, setAddress] = useState('')
   const [checkout, setCheckout] = useState(false)
   const [checkoutAlert, setCheckoutAlert] = useState('')
+  const [cartAlert, setCartAlert] = useState('')
 
   useEffect(() => {
     // console.log("data: " +data);
@@ -62,6 +63,16 @@ const Cart = () => {
     }
   }, [checkout])
 
+  const handleCheckout = () => {
+    setCartAlert('')
+    if (data.products.some(el => el.stock === 0)) {
+      setCartAlert('one of the products is not available')
+    } else {
+      setCheckout(true)
+    }
+  }
+
+
   const handleSubmit = async () => {
     if (!address) {
       setCheckoutAlert('please provide shipping address')
@@ -69,7 +80,7 @@ const Cart = () => {
     }
     setCheckoutAlert('')
     try {
-      await privateAxios.post('/user/placeorder', { cart: data.cart })
+      await privateAxios.post('/user/placeorder', { address })
     } catch (err) {
 
     }
@@ -135,15 +146,16 @@ const Cart = () => {
             <p >TOTAL :</p>
             <p>{cartInfo.total}</p>
           </div>
-          <button className='w-full max-w-[240px] mx-auto py-1 rounded-md hover: bg-primary text-lg text-white font-normal font-nunito ' onClick={() => { setCheckout(true) }}> Checkout</button>
-
+          <button className='w-full max-w-[240px] mx-auto py-1 rounded-md hover: bg-primary text-lg text-white font-normal font-nunito ' onClick={handleCheckout}> Checkout</button>
+          <p className='text-red-500'>{cartAlert}</p>
         </div>
       </div>
 
 
+      {/* checkout modal */}
       {
 
-        (data && (() => { console.log(" data : " + data); return true }) && data.cart.length !== 0) &&
+        (data && data.cart.length !== 0) &&
 
         <div className={`fixed py-10 px-4 top-0 left-0 overflow-y-auto h-screen w-full ${checkout ? 'grid' : 'hidden'}  grid-cols-1 backdrop-blur z-30`}>
           <div className='w-full m-auto p-3 rounded-xl relative max-w-xl bg-white border border-primary '>
@@ -155,7 +167,7 @@ const Cart = () => {
                   return (
                     <li className='flex justify-between items-center px-3 even:bg-zinc-100 my-1' key={idx}>
                       <p className='text-zinc-700 font-medium '>{el.name}</p>
-                      <p>{(el.price / 100).toFixed(2)}</p>
+                      <p>${(el.price / 100).toFixed(2)}</p>
 
                     </li>
                   )
@@ -163,7 +175,7 @@ const Cart = () => {
                 })
               }
             </ol>
-            <p className='text-zinc-500 text-lg mt-4'>total: {cartInfo.total}$</p>
+            <p className='text-zinc-500 text-lg mt-4'>total: {cartInfo.total}</p>
             <div className='flex items-center flex-wrap gap-2 mt-4'>
               <p className='text-zinc-500 text-lg'>ship to:</p>
               <div className='space-x-2'>

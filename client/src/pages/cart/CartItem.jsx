@@ -21,19 +21,19 @@ const CartItem = ({ el, customizations, setData }) => {
   }
 
   return (
-    <div className="w-full border px-2 md:px-4 py-4 my-4 hyphens-auto" >
+    <div className="w-full border p-3 my-4 hyphens-auto" >
       {/* <h2 className="text-lg font-semibold md:hidden"> {el.name}</h2> */}
-      <div className="flex  flex-row flex-wrap  gap-3 items-stretch my-3">
-        <img src={el.images[0] ? serverUrl + '/' + el.images[0] : prodPlaceholder} alt="" className='border self-center aspect-square w-32 md:w-36 mx-auto' />
-        <div className='grow flex gap-3 justify-between items-center min-w-[275px]'>
+      <div className="flex  flex-row flex-wrap  gap-3 items-stretch mb-3">
+        <img src={el.images[0] ? serverUrl + '/' + el.images[0] : prodPlaceholder} alt="" className='border self-center aspect-square w-36 mx-auto' />
+        <div className='grow flex gap-3 justify-between items-center min-w-[250px]'>
           <div className='min-w-[135px] h-full md:min-w-[256px] w-min grow '>
             <div className=' mb-2 '>
               <h2 className='w-full text-lg font-semibold break-words block'> {el.name}</h2>
               <div className='text-center w-fit '>
                 {
                   el.stock !== 0 ?
-                    <p className='bg-green-400 text-white text-sm inline-block px-1 rounded'>Available</p>
-                    : <p className='bg-red-400 text-white text-sm px-1 rounded'>Not Available</p>
+                    <p className='bg-green-500 text-white text-sm inline-block px-1 rounded'>Available</p>
+                    : <p className='bg-red-500 text-white text-sm inline-block px-1 rounded'>Not Available</p>
                 }
                 <p className=' ml-2 text-sm inline-block'>{el.stock >= 0 ? el.stock + ' left' : 'always'}</p>
               </div>

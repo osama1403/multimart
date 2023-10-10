@@ -2,46 +2,49 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
 const orderSchema = new Schema({
-  owner:{
-    type:String,
-    required:true
+  owner: {
+    type: String,
+    required: true
   },
-  date:{
-    type:Date,
-    required:true
+  seller: {
+    type: String,
+    required: true
   },
-  orderNum:{
-    type:Number,
-    required:true
+  date: {
+    type: Date,
+    required: true
   },
-  status:{
-    type:String,
-    default:'Pending'
+  status: {
+    type: String,
+    default: 'Pending'
   },
-  shippingAdress:{
-    type:String,
-    required:true
+  shippingAdress: {
+    type: String,
+    required: true
   },
-  estimatedDelivery:{
-    type:String,
-    required:true
+  estimatedDelivery: {
+    type: String
   },
-  totalCost:{
-    type:Number,
-    required:true
+  products: {
+    type:[Schema.Types.Mixed],
+    required: true
   },
-  subtotal:{
-    type:Number,
-    required:true
+  totalCost: {
+    type: Number,
+    required: true
   },
-  shippingCost:{
-    type:Number,
-    required:true
+  subtotal: {
+    type: Number,
+    required: true
   },
-  tax:{
-    type:Number,
-    required:true
+  shippingCost: {
+    type: Number,
+    required: true
+  },
+  tax: {
+    type: Number,
+    required: true
   }
 
 })
-module.exports = mongoose.model('order',orderSchema);
+module.exports = mongoose.model('order', orderSchema);

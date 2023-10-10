@@ -52,7 +52,7 @@ const ProductPage = () => {
 
     try {
       setAlert('')
-      setCartButtonLoading('true')
+      setCartButtonLoading(true)
       const item = { id: data?._id, customizations }
       const newCart = [...auth.userData.cart]
       //change the behaviour of the function to (add to cart ) or (remove from cart) according to state
@@ -81,10 +81,12 @@ const ProductPage = () => {
       Navigate('/login', { state: { from: Location } })
       return
     }
+
     try {
       setAlert('')
       setWishlistButtonLoading(true)
-      const newWishlist = [...auth.wishlist]
+      const newWishlist = [...auth.userData.wishlist]
+      console.log('sssssssssssssssss');
       if (!inWishlist) {
         await privateAxios.post('/user/addtowishlist', { id: data?._id })
         newWishlist.push(data?._id)
@@ -176,10 +178,10 @@ const ProductPage = () => {
 
                   <div className='mt-2 flex items-center space-x-3'>
                     <p className='line-through '>
-                      {data.price/100}$
+                      {data.price / 100}$
                     </p>
                     <p className='text-xl  '>
-                      {data.price/100}$
+                      {data.price / 100}$
                     </p>
                   </div>
                   {/* description */}
@@ -220,8 +222,8 @@ const ProductPage = () => {
                   {alert && <p className='text-red-500 mb-2'>{alert}</p>}
                   {/* Buttons */}
                   <div className='min-w-min flex flex-wrap justify-start gap-2'>
-                    <button className='outline-none w-52 py-1 px-1 flex items-center justify-center gap-2 rounded-md hover:opacity-90 text-white  bg-primary' onClick={handleAddToCart}><AiOutlineShoppingCart className='w-fit' />{cartButtonLoading ? <BsThreeDots /> : inCart ? <span>Remove from cart</span> : <span>Add to cart</span>} </button>
-                    <button className='outline-none w-52 py-1 px-1 flex items-center justify-center gap-2 rounded-md hover:opacity-80 text-primary border border-primary' onClick={handleAddToWishlist}><AiOutlineHeart className='w-fit' /> {wishlistButtonLoading ? <BsThreeDots /> : inWishlist ? <span>Remove from wishlist</span> : <span>Add to wishlist</span>} </button>
+                    <button className='outline-none w-52 h-8 py-1 px-1 flex items-center justify-center gap-2 rounded-md hover:opacity-90 text-white  bg-primary' onClick={handleAddToCart}><AiOutlineShoppingCart className='w-fit' />{cartButtonLoading ? <BsThreeDots /> : inCart ? <span>Remove from cart</span> : <span>Add to cart</span>} </button>
+                    <button className='outline-none w-52 h-8 py-1 px-1 flex items-center justify-center gap-2 rounded-md hover:opacity-80 text-primary border border-primary box-border' onClick={handleAddToWishlist}><AiOutlineHeart className='w-fit' /> {wishlistButtonLoading ? <BsThreeDots /> : inWishlist ? <span>Remove from wishlist</span> : <span>Add to wishlist</span>} </button>
                   </div>
 
 

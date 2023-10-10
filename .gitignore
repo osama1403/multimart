@@ -3,3 +3,4 @@
 /client/.env.development.local
 /server/node_modules
 /server/.env
+/server/images

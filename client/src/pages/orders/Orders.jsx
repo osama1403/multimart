@@ -1,101 +1,66 @@
-
 import { Link } from 'react-router-dom'
+import useGetAxios from '../../hooks/useGetAxios'
+import usePrivateAxios from '../../hooks/usePrivateAxios'
+import LoadingThreeDots from '../../components/LoadingThreeDots'
 
 const Orders = () => {
+  const privateAxios = usePrivateAxios()
+  const { data, loading, error } = useGetAxios('/user/orders', privateAxios, [])
+
   return (
     <>
-      <div className="grow max-w-6xl mx-auto flex flex-col gap-4 px-1 sm:px-4 py-4 mb-4 font-nunito">
+      <div className="grow max-w-6xl self-stretch mx-auto flex flex-col gap-4 px-1 sm:px-4 py-4 mb-4 font-nunito">
+        {
+          error ? <p className="text-lg text-red-500 " > {error}</p>
+            :
+            loading ?
+              <LoadingThreeDots />
+              : data?.length > 0 ?
+                <>
+                  {
+                    data.map((el, idx) => {
 
-        <div className="flex max-w-3xl border rounded-lg p-4 shadow-md">
-          <div className='grow '>
-            <div className='w-full flex justify-between items-start'>
-              <h1 className='text-lg font-bold text-primary'>#726</h1>
-              <p className='text-primary'>$637.99</p>
-            </div>
-            <p className='mt-1 text-zinc-500'>March 23/2023</p>
-            <p className='inline-block px-2 mt-2 bg-zinc-200 rounded-md'>shipping</p>
-            
-            <div className='flex flex-col sm:flex-row gap-6'>
-              <div className='border-t mt-2 grow min-w-[240px]'>
-                <div className='py-1 border-b'><span>1</span> <p className='ml-2 inline-block'> T-shirt </p></div>
-                <div className='py-1 border-b'><span>2</span> <p className='ml-2 inline-block'> jordan shoes </p></div>
-                <div className='py-1 border-b '><span>3</span> <p className='ml-2 inline-block'> hat </p></div>
-                <div className='py-1 border-b '><span> 2 </span><p className='ml-2 inline-block'> more .. </p></div>
-              </div>
-              
-              <div className='flex sm:flex-col justify-end gap-3'>
-                <Link to={'#'} className='w-20 px-4 box-content py-1 border font-medium hover:text-primary border-primary rounded text-center' > Details</Link>
-                <Link to={'#'} className='w-20 px-4 box-content py-1 border font-medium hover:text-primary border-primary rounded text-center' > Details</Link>
-                {/* <img src={shirt1} alt="" /> */}
-              </div>
-            
-            </div>
-          </div>
+                      return (
+                        <div className=" max-w-3xl border rounded-lg p-4 shadow-md">
+                          <div className='w-full flex justify-between items-start'>
+                            <p className='mt-1 text-zinc-500'>{new Date(el.date).toLocaleString()}</p>
+                            <p className='text-primary'>{el.totalCost / 100}$</p>
+                          </div>
+                          <p className={`inline-block px-2 mt-2  rounded-md
+                          ${el.status==='Pending'?'bg-zinc-300':el.status==='Processing'?'bg-yellow-300':el.status==='Shipping'?'bg-blue-300':'bg-green-400'} `}>
+                            {el.status}
+                          </p>
 
-        </div>
+                          <div className='flex flex-col sm:flex-row gap-6'>
+                            <div className='border-t mt-2 grow min-w-[240px]'>
+                              {
+                                el.productsElements.map((el, idx) => {
+                                  return (
+                                    <div className='py-1 border-b' key={idx}><span>{idx + 1}</span> <p className='ml-2 inline-block'> {el.name} </p></div>
+                                  )
+                                })
+                              }
 
+                            </div>
 
-        <div className="flex max-w-3xl border rounded-lg p-4 shadow-md">
-          <div className='grow '>
-            <div className='w-full flex justify-between items-start'>
-              <h1 className='text-lg font-bold text-primary'>#726</h1>
-              <p className='text-primary'>$637.99</p>
-            </div>
-            <p className='mt-1 text-zinc-500'>March 23/2023</p>
-            <p className='inline-block px-2 mt-2 bg-zinc-200 rounded-md'>shipping</p>
-            
-            <div className='flex flex-col sm:flex-row gap-6'>
-              <div className='border-t mt-2 grow min-w-[240px]'>
-                <div className='py-1 border-b'><span>1</span> <p className='ml-2 inline-block'> T-shirt </p></div>
-                <div className='py-1 border-b'><span>2</span> <p className='ml-2 inline-block'> jordan shoes </p></div>
-                <div className='py-1 border-b '><span>3</span> <p className='ml-2 inline-block'> hat </p></div>
-                <div className='py-1 border-b '><span> 2 </span><p className='ml-2 inline-block'> more .. </p></div>
-              </div>
-              
-              <div className='flex sm:flex-col justify-end gap-3'>
-                <Link to={'#'} className='w-20 px-4 box-content py-1 border font-medium hover:text-primary border-primary rounded text-center' > Details</Link>
-                <Link to={'#'} className='w-20 px-4 box-content py-1 border font-medium hover:text-primary border-primary rounded text-center' > Details</Link>
-                {/* <img src={shirt1} alt="" /> */}
-              </div>
-            
-            </div>
-          </div>
+                            <div className='flex sm:flex-col justify-end gap-3'>
+                              <Link to={`/orders/${el._id}`} className='w-20 px-4 box-content py-1 border font-medium hover:text-primary border-primary rounded text-center' > Details</Link>
+                            </div>
 
-        </div>
+                          </div>
+                        </div>
+                      )
+                    })
+                  }
+                </>
 
+                :
+                <div className='h-full flex items-center'>
+                  <p className='text-lg text-red-500 text-center '>you have no orders</p>
+                </div>
 
-        <div className="flex max-w-3xl border rounded-lg p-4 shadow-md">
-          <div className='grow '>
-            <div className='w-full flex justify-between items-start'>
-              <h1 className='text-lg font-bold text-primary'>#726</h1>
-              <p className='text-primary'>$637.99</p>
-            </div>
-            <p className='mt-1 text-zinc-500'>March 23/2023</p>
-            <p className='inline-block px-2 mt-2 bg-zinc-200 rounded-md'>shipping</p>
-            
-            <div className='flex flex-col sm:flex-row gap-6'>
-              <div className='border-t mt-2 grow min-w-[240px]'>
-                <div className='py-1 border-b'><span>1</span> <p className='ml-2 inline-block'> T-shirt </p></div>
-                <div className='py-1 border-b'><span>2</span> <p className='ml-2 inline-block'> jordan shoes </p></div>
-                <div className='py-1 border-b '><span>3</span> <p className='ml-2 inline-block'> hat </p></div>
-                <div className='py-1 border-b '><span> 2 </span><p className='ml-2 inline-block'> more .. </p></div>
-              </div>
-              
-              <div className='flex sm:flex-col justify-end gap-3'>
-                <Link to={'#'} className='w-20 px-4 box-content py-1 border font-medium hover:text-primary border-primary rounded text-center' > Details</Link>
-                <Link to={'#'} className='w-20 px-4 box-content py-1 border font-medium hover:text-primary border-primary rounded text-center' > Details</Link>
-                {/* <img src={shirt1} alt="" /> */}
-              </div>
-            
-            </div>
-          </div>
-
-        </div>
-
-
-
-
-      </div>
+        }
+      </div >
     </>
   );
 }
