@@ -2,7 +2,7 @@ const User = require('../models/User');
 const Cart = require('../models/Cart')
 const getJwtEmail = require('../utils/getJwtEmail');
 const Order = require('../models/Order');
-const { Mongoose, default: mongoose } = require('mongoose');
+const mongoose = require('mongoose');
 
 const placeOrder = async (req, res) => {
   const email = getJwtEmail(req)
@@ -114,7 +114,22 @@ const getOrders = async (req, res) => {
         }
       },
       {
+        $lookup: {
+          from: 'sellers',
+          localField: 'seller',
+          foreignField: 'email',
+          as: 'seller'
+        }
+      },
+
+      {
+        $set: {
+          seller: { $arrayElemAt: ['$seller', 0] },
+        }
+      },
+      {
         $project: {
+          'seller.password': 0,
           productsIds: 0,
         }
       }
@@ -123,6 +138,7 @@ const getOrders = async (req, res) => {
 
   } catch (error) {
     res.status(500).json({ msg: 'server error' })
+    console.log(error);
   }
 
 }
@@ -150,7 +166,22 @@ const getSingleOrder = async (req, res) => {
         }
       },
       {
+        $lookup: {
+          from: 'sellers',
+          localField: 'seller',
+          foreignField: 'email',
+          as: 'seller'
+        }
+      },
+
+      {
+        $set: {
+          seller: { $arrayElemAt: ['$seller', 0] },
+        }
+      },
+      {
         $project: {
+          'seller.password': 0,
           productsIds: 0,
         }
       }
