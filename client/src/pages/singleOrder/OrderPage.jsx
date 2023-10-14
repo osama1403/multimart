@@ -36,23 +36,20 @@ const OrderPage = () => {
 
               <div className='w-full px-4 py-1 border rounded-lg bg-white shadow-md mt-1'>
                 {/* <h1 className='text-2xl font-bold mr-8'>order #<span>726</span></h1> */}
-                <div className='flex items-center justify-between flex-wrap'>
+                <div className='flex items-center justify-between w-full max-w-2xl flex-wrap'>
                   <p className='text-zinc-700'><AiOutlineCalendar className='inline' />{new Date(data.date).toLocaleString()}</p>
                   <p className='text-xl font-bold text-zinc-600'>${data.totalCost / 100}</p>
                 </div>
-                <span>seller:</span><Link className='text-blue-400 ml-2 hover:text-blue-600'>seller name</Link>
+                <span>seller:</span><Link className='text-blue-400 ml-2 hover:text-blue-600'>{data.seller.shopName}</Link>
               </div>
-
-
-
 
               {/* status */}
               <div className='mt-2 w-full p-4 border rounded-lg bg-white shadow-md'>
                 <p className='text-zinc-500 font-medium mb-3'>
-                  <FaCircle className={` inline mb-1 mr-2 text-blue-500 ${data.status === 'Pending' ? 'text-zinc-300'
-                    : data.status === 'Processing' ? 'text-yellow-300'
-                      : data.status === 'Shipping' ? 'text-blue-300'
-                        : 'text-green-400'}`} />
+                  <FaCircle className={` inline mb-1 mr-2 ${data.status === 'Pending' ? 'text-zinc-300'
+                    : data.status === 'Processing' ? 'text-yellow-500'
+                      : data.status === 'Shipping' ? 'text-blue-500'
+                        : 'text-green-500'}`} />
                   {data.status}</p>
 
                 {/* status diagram */}

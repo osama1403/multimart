@@ -27,7 +27,7 @@ const Orders = () => {
                             <p className='text-primary'>{el.totalCost / 100}$</p>
                           </div>
                           <p className={`inline-block px-2 mt-2  rounded-md
-                          ${el.status==='Pending'?'bg-zinc-300':el.status==='Processing'?'bg-yellow-300':el.status==='Shipping'?'bg-blue-300':'bg-green-400'} `}>
+                          ${el.status==='Pending'?'bg-zinc-300':el.status==='Processing'?'bg-yellow-400':el.status==='Shipping'?'bg-blue-400 ':'bg-green-400'} `}>
                             {el.status}
                           </p>
 

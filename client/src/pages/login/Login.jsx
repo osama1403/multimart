@@ -14,6 +14,7 @@ const Login = () => {
   const { setAuth } = useAuth()
   const navigate = useNavigate()
   const location = useLocation()
+  console.log(location);
   const from = location.state?.from?.pathname || '/'
 
   const handlesubmit = async (e) => {

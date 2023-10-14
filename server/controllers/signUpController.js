@@ -40,8 +40,8 @@ const handleSignUp = async (req, res) => {
 }
 
 const handleSellerSignUp = async (req, res) => {
-  const { email, password, firstName, lastName } = req.body;
-  if (email && password && firstName && lastName) {
+  const { email, password, shopName } = req.body;
+  if (email && password && shopName) {
     // validate input 
     const emailTest = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const validEmail = emailTest.test(email)
@@ -56,7 +56,7 @@ const handleSellerSignUp = async (req, res) => {
 
       if (!founduser) {
         const hashedpw = await bcrypt.hash(password, 4)
-        const created = await Seller.create({ firstName, lastName, email, password: hashedpw });
+        const created = await Seller.create({ shopName, email, password: hashedpw });
         if (created) {
           res.json({ success: true, msg: 'sign up succeded' })
           return

@@ -101,6 +101,9 @@ const getOrders = async (req, res) => {
         $match: { owner: email }
       },
       {
+        $sort:{date:-1}
+      },
+      {
         $addFields: {
           productsIds: { $map: { input: "$products", in: { $toObjectId: "$$this.id" } } }
         }
@@ -130,6 +133,7 @@ const getOrders = async (req, res) => {
       {
         $project: {
           'seller.password': 0,
+          'seller.email': 0,
           productsIds: 0,
         }
       }

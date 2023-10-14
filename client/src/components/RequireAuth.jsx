@@ -8,7 +8,7 @@ const RequireAuth = ({ allowedRoles }) => {
     allowedRoles.includes(auth.role) ?
       <Outlet />
       : auth.accessToken ?
-        'unauthorized'
+        <Navigate to={`/unauthorized`} replace />
         : <Navigate to={`${allowedRoles.includes('seller') ? '/seller/login' : '/login'}`} state={{ from: location }} replace />
 
     // allowedRoles.includes

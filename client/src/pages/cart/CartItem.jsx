@@ -53,9 +53,10 @@ const CartItem = ({ el, customizations, setData }) => {
 
         </div>
       </div>
-      <div className=' w-fit mx-auto flex flex-wrap items-center'>
-        <button className='w-32 h-8 inline-flex items-center justify-center bg-zinc-200 hover:bg-slate-300 p-1 rounded-md  m-1' onClick={handleRemove}>{loadingRemove ? <BsThreeDots className='text-2xl' /> : 'Remove'}</button>
-        <button className='w-32 h-8 inline-flex items-center justify-center bg-zinc-200 hover:bg-slate-300 p-1 rounded-md  m-1'>Edit</button>
+      {/* <div className=' w-full mx-auto flex flex-wrap justify-center items-center gap-2'> */}
+      <div className=' w-full '>
+        <button className='w-32 h-8 ml-auto flex items-center justify-center bg-zinc-200 hover:bg-slate-300 p-1 rounded-md ' onClick={handleRemove}>{loadingRemove ? <BsThreeDots className='text-2xl' /> : 'Remove'}</button>
+        {/* <button className='w-32 h-8 inline-flex items-center justify-center bg-zinc-200 hover:bg-slate-300 p-1 rounded-md '>Edit</button> */}
       </div>
 
     </div>

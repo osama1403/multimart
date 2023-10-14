@@ -21,19 +21,19 @@ import SellerOrders from "./pages/sellerOrders/page";
 import SellerLogin from './pages/sellerLogin/page'
 import SellerSignUp from './pages/sellerSignUp/page'
 import RequireAuth from "./components/RequireAuth";
+import Unauthorized from "./pages/unauthorized/Unauthorized";
 function App() {
   return (
     <>
       <Routes>
 
-        <Route path="/" element={<Layout />}>
+        <Route element={<Layout />}>
 
           <Route element={<RequireAuth allowedRoles={['visitor']} />}>
             <Route path="login" element={<Login />} />
             <Route path="signup" element={<SignUp />} />
             <Route path="seller/login" element={<SellerLogin />} />
             <Route path="seller/signup" element={<SellerSignUp />} />
-
           </Route>
 
           <Route element={<RequireAuth allowedRoles={['visitor', 'user']} />}>
@@ -43,7 +43,7 @@ function App() {
           </Route>
 
           {/* protect for normal users only */}
-          <Route element={<RequireAuth allowedRoles={['visitor', 'user']} />}>
+          <Route element={<RequireAuth allowedRoles={['user']} />}>
             <Route element={<UserLayout />}>
               <Route path="profile" element={<Profile />} />
               <Route path="cart" element={<Cart />} />
@@ -55,19 +55,17 @@ function App() {
 
         </Route>
         {/* protect for sellers only */}
-        <Route element={<RequireAuth allowedRoles={['visitor', 'seller']} />}>
-
+        <Route element={<RequireAuth allowedRoles={['seller']} />}>
           <Route path="/seller" element={<SellerLayout />}>
             <Route path="dashboard" element={<Dashboard />} />
             <Route path="products" element={<SellerProducts />} />
             <Route path="addproduct" element={<SellerAddProduct />} />
             <Route path="orders" element={<SellerOrders />} />
             <Route path="products/:id" element={<SellerSingleProduct />} />
-
           </Route>
-
         </Route>
 
+        <Route path="/unauthorized" element={<Unauthorized/>} />
         <Route path="*" element={<></>} />
       </Routes>
     </>

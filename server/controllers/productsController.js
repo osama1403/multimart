@@ -1,4 +1,4 @@
-const { isObjectIdOrHexString } = require('mongoose');
+const { isObjectIdOrHexString, default: mongoose } = require('mongoose');
 const Product = require('../models/Product')
 const getJwtEmail = require('../utils/getJwtEmail')
 const multerInstance = require('../multerInstance');
@@ -136,7 +136,7 @@ const addProduct = (req, res) => {
 
 }
 
-const getSellerProduct = async (req, res) => {
+const getSellerProducts = async (req, res) => {
   const email = getJwtEmail(req)
   try {
     const products = await Product.find({ owner: email })
@@ -159,7 +159,37 @@ const getSellerSingleProduct = async (req, res) => {
 
   const email = getJwtEmail(req)
   try {
-    const product = await Product.findById(id);
+    let product = await Product.aggregate([
+      {
+        $match: { _id: new mongoose.Types.ObjectId(id) }
+      },
+      {
+        $addFields: { strid: { $toString: '$_id' } }
+      },
+      {
+        $lookup: {
+          from: 'orders',
+          let: { prodid: '$strid' },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $in: ['$$prodid', '$products.id']
+                }
+                // products: {
+                //   $elemMatch: {
+                //     id: '$$prodid'
+                //   }
+                // }
+              }
+            }
+          ],
+          as: 'allorders'
+        }
+      }
+
+    ]);
+    product = product[0]
     if (product.owner !== email) {
       return res.status(400).json({ success: false, msg: 'not the owner' })
     } else {
@@ -172,6 +202,43 @@ const getSellerSingleProduct = async (req, res) => {
   }
 }
 
+const editStock = async (req, res) => {
+  const email = getJwtEmail(req)
+  try {
+    const { id, mode, value } = req.body
+    const prod = await Product.findById(id)
+    if(prod.owner !== email){
+      res.status(403).send('unauthorized')
+    }
+
+    if (value < 0 || mode === 'REMOVE' && value > prod.stock) {
+      return res.status(400).json({ msg: 'value error' })
+    }
+    let query = {}
+    switch (mode) {
+      case 'ADD':
+        query = { $inc: { stock: value } }
+        break;
+      case 'REMOVE':
+        query = { $inc: { stock: -value } }
+        break;
+      case 'SET':
+        query = { $set: { stock: value } }
+        break;
+      case 'ALWAYS AVAILABLE':
+        query = { $set: { stock: -1 } }
+        break;
+    }
+    await Product.updateOne({ _id: new mongoose.Types.ObjectId(id) }, query)
+    res.json({ msg: 'Updated successfully' })
+    console.log(prod);
+
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ msg: 'server error' })
+  }
+
+}
 
 
 
@@ -180,6 +247,7 @@ module.exports = {
   getSingleProduct,
   getHomePageData,
   addProduct,
-  getSellerProduct,
+  editStock,
+  getSellerProducts,
   getSellerSingleProduct
 }
