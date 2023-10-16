@@ -1,5 +1,5 @@
 import prodPlaceholder from '../../assets/images/prodPlaceholder.jpg'
-const OrderProductItem = ({ product, customizations }) => {
+const OrderProductItem = ({ product, details }) => {
   const serverUrl = process.env.REACT_APP_URL
   console.log(product);
   return (
@@ -13,7 +13,7 @@ const OrderProductItem = ({ product, customizations }) => {
           <div className='my-auto grow flex flex-col justify-center'>
             {
               product.customizations.map((el, idx) => {
-                return <p className=''><span className='text-zinc-600'>{el.name}:</span> {customizations[el.name]}</p>
+                return <p className='' key={idx}><span className='text-zinc-600'>{el.name}:</span> {details.customizations[el.name]}</p>
               })
             }
           </div>
@@ -22,8 +22,8 @@ const OrderProductItem = ({ product, customizations }) => {
 
       <div className='grow w-fit sm:w-auto flex justify-between gap-4'>
         <p className=''>${(product.price / 100).toFixed(2)}</p>
-        <p className=''>#2</p>
-        <p>$-</p>
+        <p className=''>x{details.count}</p>
+        <p>${((product.price * details.count) / 100).toFixed(2)}</p>
       </div>
 
     </div>

@@ -1,7 +1,6 @@
 import prodPlaceholder from '../../assets/images/prodPlaceholder.jpg'
 import { Link } from 'react-router-dom'
 import { FaPlus } from 'react-icons/fa';
-import { useEffect, useState } from 'react';
 import usePrivateAxios from '../../hooks/usePrivateAxios';
 import useGetAxios from '../../hooks/useGetAxios';
 import LoadingThreeDots from '../../components/LoadingThreeDots';

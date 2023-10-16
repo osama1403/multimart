@@ -24,10 +24,10 @@ const Orders = () => {
                         <div className=" max-w-3xl border rounded-lg p-4 shadow-md">
                           <div className='w-full flex justify-between items-start'>
                             <p className='mt-1 text-zinc-500'>{new Date(el.date).toLocaleString()}</p>
-                            <p className='text-primary'>{el.totalCost / 100}$</p>
+                            <p className='text-primary'>{(el.totalCost / 100).toFixed(2)}$</p>
                           </div>
                           <p className={`inline-block px-2 mt-2  rounded-md
-                          ${el.status==='Pending'?'bg-zinc-300':el.status==='Processing'?'bg-yellow-400':el.status==='Shipping'?'bg-blue-400 ':'bg-green-400'} `}>
+                          ${el.status === 'Pending' ? 'bg-zinc-300' : el.status === 'Processing' ? 'bg-yellow-400' : el.status === 'Shipping' ? 'bg-blue-400 ' : 'bg-green-400'} `}>
                             {el.status}
                           </p>
 
@@ -55,7 +55,7 @@ const Orders = () => {
                 </>
 
                 :
-                <div className='h-full flex items-center'>
+                <div className='h-full flex items-center justify-center'>
                   <p className='text-lg text-red-500 text-center '>you have no orders</p>
                 </div>
 

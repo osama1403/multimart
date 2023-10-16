@@ -1,8 +1,9 @@
 import useGetAxios from '../../hooks/useGetAxios';
 import usePrivateAxios from '../../hooks/usePrivateAxios';
 import LoadingThreeDots from '../../components/LoadingThreeDots';
-import { AiOutlineCloseCircle } from 'react-icons/ai';
-import { useEffect, useState } from 'react';
+import { BsThreeDots } from 'react-icons/bs'
+import { AiOutlineCloseCircle, AiOutlineCheck } from 'react-icons/ai';
+import { useEffect, useMemo, useState } from 'react';
 import CartItem from './CartItem';
 import useAuth from '../../hooks/useAuth';
 
@@ -15,6 +16,11 @@ const Cart = () => {
   const [checkout, setCheckout] = useState(false)
   const [checkoutAlert, setCheckoutAlert] = useState('')
   const [cartAlert, setCartAlert] = useState('')
+  const [elCount, setElCount] = useState({})
+  const [submitLoading, setSubmitLoading] = useState(false)
+  const [submitSuccess, setSubmitSuccess] = useState(false)
+  const countData = useMemo(() => { return data?.cart?.length > 0 ? data.cart.reduce((p, c) => { return { ...p, [c.id]: (elCount[c.id] ? elCount[c.id] : 1) } }, {}) : {} }, [data, elCount])
+
 
   useEffect(() => {
     // console.log("data: " +data);
@@ -27,7 +33,7 @@ const Cart = () => {
   useEffect(() => {
     if (data?.products?.length >= 0) {
       const taxRate = 8
-      const subtotal = data.products.reduce((p, el) => p + el.price, 0)
+      const subtotal = data.products.reduce((p, el) => p + (el.price * countData[el._id]), 0)
       console.log("subtotal : " + subtotal);
       const tax = (subtotal * taxRate / 100)
       const estShCost = 6000
@@ -53,7 +59,7 @@ const Cart = () => {
       setCartInfo(cartdata)
     }
 
-  }, [data])
+  }, [data, countData])
 
   useEffect(() => {
     if (checkout) {
@@ -65,26 +71,36 @@ const Cart = () => {
 
   const handleCheckout = () => {
     setCartAlert('')
-    if (data.products.some(el => el.stock === 0)) {
+    if (data.products.some(el => el.stock === 0 || (el.stock > 0 && (countData[el._id] ? countData[el._id] : 1) > el.stock))) {
       setCartAlert('one of the products is not available')
     } else {
-      setCheckout(true)
+      if (data?.cart?.length > 0)
+        setCheckout(true)
     }
   }
 
 
   const handleSubmit = async () => {
+    if (submitSuccess) {
+      return
+    }
     if (!address) {
       setCheckoutAlert('please provide shipping address')
       return
     }
     setCheckoutAlert('')
+    setSubmitLoading(true)
     try {
-      await privateAxios.post('/user/placeorder', { address })
-    } catch (err) {
-
+      await privateAxios.post('/user/placeorder', { address, count: countData })
+      setSubmitSuccess(true)
+    } catch (error) {
+      if (error.response) {
+        setCheckoutAlert(error.response.data?.msg ? error.response.data?.msg : 'something went wrong')
+      } else if (error.request) {
+        setCheckoutAlert('no server response')
+      }
     }
-
+    setSubmitLoading(false)
   }
 
 
@@ -106,12 +122,13 @@ const Cart = () => {
                     const cus = data.cart.find(e => e.id === el._id).customizations
                     return (
                       <div key={el._id}>
-                        <CartItem el={el} customizations={cus} setData={setData} />
+                        <CartItem el={el} customizations={cus} setData={setData} elcount={elCount[el._id]} setelcount={setElCount} />
                       </div>
                     )
                   })
                 }
               </>
+
               :
               <div className="flex  h-[calc(100vh-64px)] justify-center items-center ">
                 <p className="text-xl font font-semibold text-red-500"> Your cart is empty </p>
@@ -165,11 +182,11 @@ const Cart = () => {
               {
                 data.products.map((el, idx) => {
                   return (
-                    <li className='flex justify-between items-center px-3 even:bg-zinc-100 my-1' key={idx}>
-                      <p className='text-zinc-700 font-medium '>{el.name}</p>
-                      <p>${(el.price / 100).toFixed(2)}</p>
+                    <p className='text-zinc-700 font-medium break-words even:bg-zinc-100 my-1 px-3'>{el.name}  x{countData[el._id]}</p>
+                    // <li className='flex justify-between items-center px-3 even:bg-zinc-100 my-1' key={idx}>
+                    /* <p>${((el.price * countData[el._id]) / 100).toFixed(2)}</p> */
 
-                    </li>
+                    // </li>
                   )
 
                 })
@@ -194,7 +211,7 @@ const Cart = () => {
               className='w-full outline-none text-zinc-600 px-3 py-1 my-2 border border-zinc-400 rounded-md'
               onChange={(e) => { setAddress(e.target.value) }} />
             <p className='text-sm text-red-600'>{checkoutAlert}</p>
-            <button className='py-1 px-3 my-4 mx-auto block text-primary border border-primary rounded-full text-lg font-semibold' onClick={handleSubmit}>Buy Now</button>
+            <button className={`py-1 px-3 w-28 my-4 mx-auto block ${submitSuccess ? 'text-green-500' : 'text-primary'} border ${submitSuccess ? 'border-green-500' : 'border-primary'} rounded-full text-lg font-semibold`} onClick={handleSubmit}>{submitLoading ? <BsThreeDots className='text-3xl mx-auto' /> : submitSuccess ? <AiOutlineCheck className='text-3xl mx-auto' /> : 'Buy Now'}</button>
           </div>
         </div>
       }

@@ -106,9 +106,9 @@ const OrderPage = () => {
                 {/* items */}
                 {
                   data.productsElements.map((el, idx) => {
-                    const cus = data.products.find(c => c.id === el._id).customizations
+                    const details = data.products.find(c => c.id === el._id)
                     return (
-                      <OrderProductItem product={el} customizations={cus}/>
+                      <OrderProductItem product={el} details={details}/>
                     )
                   })
                 }
