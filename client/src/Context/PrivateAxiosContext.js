@@ -1,17 +1,21 @@
 import useRefreshToken from "../hooks/useRefreshToken";
 import useAuth from "../hooks/useAuth";
 import { privateAxios } from "../api/axios";
-import { useEffect, createContext } from "react";
+import { useLayoutEffect,useEffect, createContext, useCallback } from "react";
 
 const PrivateAxiosContext = createContext({})
 
 const PrivateAxiosProvider = ({ children }) => {
   const refresh = useRefreshToken();
   const { auth } = useAuth();
+  // const au = useCallback(()=>auth,[])
+  // useEffect(()=>{
+  //   console.log(auth);
+  // },[])
 
-  useEffect(() => {
+  useLayoutEffect(() => {
+    console.log('private axios interceptor ... ' + auth?.accessToken);
     const requestInterceptor = privateAxios.interceptors.request.use(config => {
-      console.log('private axios interceptor');
       if (!config.headers["Authorization"]) {
         config.headers["Authorization"] = `${auth?.accessToken}`
       }
@@ -36,7 +40,7 @@ const PrivateAxiosProvider = ({ children }) => {
       privateAxios.interceptors.request.eject(requestInterceptor)
       privateAxios.interceptors.response.eject(responstInterceptors)
     }
-  }, [auth?.accessToken, refresh])
+  }, [auth?.accessToken,refresh])
 
   return (
     <PrivateAxiosContext.Provider value={privateAxios}>

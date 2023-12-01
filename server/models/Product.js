@@ -15,15 +15,23 @@ const productSchema = new Schema({
     type: Number,
     required: true
   },
-  stock:{
+  shippingCostPerUnit: {
     type: Number,
     required: true
   },
-  sold:{
-    type:Number,
-    default:0
+  stock: {
+    type: Number,
+    required: true
   },
-  rating: {
+  sold: {
+    type: Number,
+    default: 0
+  },
+  totalRatingCount: {
+    type: Number,
+    default: 0
+  },
+  totalRating: {
     type: Number,
     default: 0
   },

@@ -8,6 +8,7 @@ import CartItem from './CartItem';
 import useAuth from '../../hooks/useAuth';
 
 const Cart = () => {
+  console.log('cart here' );
   const privateAxios = usePrivateAxios()
   const { data, loading, error, setData } = useGetAxios('/user/cart', privateAxios, [])
   const { auth, setAuth } = useAuth()

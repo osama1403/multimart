@@ -14,8 +14,12 @@ const sellerSchema = new Schema({
     type: String,
     required:true
   },
+  balance:{
+    type:Number,
+    default:0
+  },
   phone: Number,
-  adress: String,
+  address: String,
   profilePicture : String
 })
 module.exports = mongoose.model('seller', sellerSchema)

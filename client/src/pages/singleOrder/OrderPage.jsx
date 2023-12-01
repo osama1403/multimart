@@ -3,9 +3,6 @@ import { HiOutlineArrowSmLeft } from 'react-icons/hi'
 import { AiOutlineCalendar } from 'react-icons/ai'
 import { FaTruck, FaCheckCircle, FaCircle, FaClock } from 'react-icons/fa'
 import { FaGear } from 'react-icons/fa6'
-
-
-import img from '../../assets/prod.jpeg'
 import useGetAxios from '../../hooks/useGetAxios'
 import usePrivateAxios from '../../hooks/usePrivateAxios'
 import LoadingThreeDots from '../../components/LoadingThreeDots'
@@ -50,7 +47,8 @@ const OrderPage = () => {
                     : data.status === 'Processing' ? 'text-yellow-500'
                       : data.status === 'Shipping' ? 'text-blue-500'
                         : 'text-green-500'}`} />
-                  {data.status}</p>
+                  {data.status}
+                </p>
 
                 {/* status diagram */}
                 <div className='w-full flex items-center text-2xl text-zinc-400 gap-2 max-w-2xl'>
@@ -70,7 +68,7 @@ const OrderPage = () => {
                 <p className='text-lg font-semibold text-zinc-500 '>info:</p>
 
                 <p className='mt-2'>Shipping to:</p>
-                <p className='text-zinc-600'>{data.shippingAdress}</p>
+                <p className='text-zinc-600'>{data.shippingAddress}</p>
 
                 <p className='mt-2'>Estimated delivery:</p>
                 <p className='text-zinc-600'>-</p>
@@ -107,8 +105,9 @@ const OrderPage = () => {
                 {
                   data.productsElements.map((el, idx) => {
                     const details = data.products.find(c => c.id === el._id)
+                    const rating = data.ratings.find(r => r.productId === el._id)
                     return (
-                      <OrderProductItem product={el} details={details}/>
+                      <OrderProductItem product={el} details={details} rating={rating} delivered={data.status==='Delivered'} key={idx} />
                     )
                   })
                 }

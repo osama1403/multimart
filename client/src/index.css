@@ -73,6 +73,9 @@ background-color: white;
 .on{
   animation: rotation 3s infinite linear ;
 }
+.onfast{
+  animation: rotation 1s infinite linear ;
+}
 
 @keyframes shake {
   0%{

@@ -1,19 +1,26 @@
 const express = require('express');
 const isSeller = require('../middlewares/isSeller');
-const { addProduct,editStock, getSellerProducts,getSellerSingleProduct } = require('../controllers/productsController');
+const { addProduct, editStock, getSellerProducts, getSellerSingleProduct } = require('../controllers/productsController');
+const { sellerGetOrders , sellerGetSingleOrder,sellerUpgradeStatus} = require('../controllers/ordersController')
+const{sellerGetDashboard} = require('../controllers/sellerController')
 const sellerRouter = express.Router();
 
 sellerRouter.use(isSeller)
 
-sellerRouter.use((req,res,next)=>{
+sellerRouter.use((req, res, next) => {
   console.log('seller router hit ')
   next()
 })
 
-sellerRouter.post('/addproduct', addProduct)
-sellerRouter.post('/editstock', editStock)
 
 sellerRouter.get('/products', getSellerProducts)
-sellerRouter.get('/products/:id',getSellerSingleProduct )
+sellerRouter.get('/products/:id', getSellerSingleProduct)
+sellerRouter.get('/orders', sellerGetOrders)
+sellerRouter.get('/orders/:id', sellerGetSingleOrder)
+sellerRouter.get('/dashboard', sellerGetDashboard)
+
+sellerRouter.post('/addproduct', addProduct)
+sellerRouter.post('/editstock', editStock)
+sellerRouter.post('/orders/upgradestatus', sellerUpgradeStatus)
 
 module.exports = sellerRouter;

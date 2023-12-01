@@ -172,8 +172,8 @@ const ProductPage = () => {
                   </div>
 
                   <div className='mt-2 flex items-center text-xl font font-nunito text-primary'>
-                    <AiOutlineStar className='inline-block mr-2' />
-                    <p className='inline-block'>{data.rating}</p>
+                    <AiOutlineStar className='inline-block mr-1' />
+                    <p className='inline-block'>{data.totalRatingCount === 0 ? 0 : (data.totalRating / data.totalRatingCount).toFixed(1)} <span className='text-sm ml-1'>( {data.totalRatingCount} )</span></p>
                   </div>
 
                   <div className='mt-2 flex items-center space-x-3'>

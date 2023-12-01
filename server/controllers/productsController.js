@@ -1,18 +1,24 @@
 const { isObjectIdOrHexString, default: mongoose } = require('mongoose');
 const Product = require('../models/Product')
+const Rating = require('../models/Rating')
 const getJwtEmail = require('../utils/getJwtEmail')
 const multerInstance = require('../multerInstance');
 
-const fs = require('fs')
+const fs = require('fs');
+const Order = require('../models/Order');
 
 
 const getProducts = async (req, res) => {
   const pageCount = 200;
   let { page, categories, limit } = req.query
+  let search = req.query.search || ''
   console.log(categories);
+  console.log(search);
+
   page = !isNaN(page) ? page * 1 : 0;
   console.log(Array.isArray(categories));
   const queryFilter = categories && Array.isArray(categories) ? { categories: { $in: categories } } : {}
+  queryFilter.name = { $regex: search, $options: 'i' }
   try {
     const products = await Product.find(queryFilter).skip(page * pageCount).limit(limit ? limit : pageCount);
     res.json(products);
@@ -161,7 +167,7 @@ const getSellerSingleProduct = async (req, res) => {
   try {
     let product = await Product.aggregate([
       {
-        $match: { _id: new mongoose.Types.ObjectId(id) }
+        $match: { owner: email, _id: new mongoose.Types.ObjectId(id) }
       },
       {
         $addFields: { strid: { $toString: '$_id' } }
@@ -176,25 +182,46 @@ const getSellerSingleProduct = async (req, res) => {
                 $expr: {
                   $in: ['$$prodid', '$products.id']
                 }
-                // products: {
-                //   $elemMatch: {
-                //     id: '$$prodid'
-                //   }
-                // }
+              }
+            },
+            {
+              $project: {
+                status: 1,
+                products: 1
               }
             }
           ],
           as: 'allorders'
         }
+      },
+      {
+        $project: {
+          strid: 0
+        }
       }
 
     ]);
     product = product[0]
-    if (product.owner !== email) {
-      return res.status(400).json({ success: false, msg: 'not the owner' })
-    } else {
-      return res.json(product)
+    const ordersCount = {
+      total: 0,
+      pending: 0,
+      processing: 0,
+      shipping: 0,
+      delivered: 0
     }
+    // ordersCount.total = product.allorders.length
+    product.allorders.forEach(el => {
+      const { count } = el.products.find(el => el.id === id)
+      ordersCount[el.status.toLowerCase()] += count
+      ordersCount.total += count
+
+    })
+    product.ordersCount = ordersCount
+
+    delete product.allorders
+
+    return res.json(product)
+
 
   } catch (error) {
     console.log(error);
@@ -207,7 +234,7 @@ const editStock = async (req, res) => {
   try {
     const { id, mode, value } = req.body
     const prod = await Product.findById(id)
-    if(prod.owner !== email){
+    if (prod.owner !== email) {
       res.status(403).send('unauthorized')
     }
 
@@ -239,6 +266,31 @@ const editStock = async (req, res) => {
   }
 
 }
+const rateProduct = async (req, res) => {
+  const { id, rate } = req.body
+  const email = getJwtEmail(req)
+  try {
+    const deliveredOrder = await Order.findOne({ owner: email, "products.id": id, status: "Delivered" })
+    console.log(deliveredOrder);
+    if (!deliveredOrder) {
+      // user hasn't bought the product or the product is not delivered yet
+      res.status(400).json({ success: 'false', msg: 'cannot rate product' })
+      return
+    }
+    const isRated = await Rating.findOne({ user: email, productId: id })
+    const now = new Date()
+    if (isRated) {
+      await Rating.updateOne({ user: email, productId: id }, { rating: rate, date: now })
+    } else {
+      await Product.updateOne({ _id: id }, { $inc: { totalRatingCount: 1, totalRating: rate } })
+      await Rating.create({ user: email, productId: id, rating: rate, date: now })
+    }
+    res.json({ success: true, msg: 'rated successfully' })
+  } catch (err) {
+    res.status(500).json({ success: false, msg: 'server error' })
+  }
+
+}
 
 
 
@@ -249,5 +301,6 @@ module.exports = {
   addProduct,
   editStock,
   getSellerProducts,
-  getSellerSingleProduct
+  getSellerSingleProduct,
+  rateProduct
 }

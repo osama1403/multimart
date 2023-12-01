@@ -18,6 +18,7 @@ import SellerAddProduct from './pages/sellerAddProduct/page'
 import SellerSingleProduct from "./pages/sellerSingleProduct/Page";
 import SellerLayout from "./Layouts/SellerLayout";
 import SellerOrders from "./pages/sellerOrders/page";
+import SellerSingleOrder from "./pages/sellerSingleOrder/page";
 import SellerLogin from './pages/sellerLogin/page'
 import SellerSignUp from './pages/sellerSignUp/page'
 import RequireAuth from "./components/RequireAuth";
@@ -59,13 +60,14 @@ function App() {
           <Route path="/seller" element={<SellerLayout />}>
             <Route path="dashboard" element={<Dashboard />} />
             <Route path="products" element={<SellerProducts />} />
+            <Route path="products/:id" element={<SellerSingleProduct />} />
             <Route path="addproduct" element={<SellerAddProduct />} />
             <Route path="orders" element={<SellerOrders />} />
-            <Route path="products/:id" element={<SellerSingleProduct />} />
+            <Route path="orders/:id" element={<SellerSingleOrder />} />
           </Route>
         </Route>
 
-        <Route path="/unauthorized" element={<Unauthorized/>} />
+        <Route path="/unauthorized" element={<Unauthorized />} />
         <Route path="*" element={<></>} />
       </Routes>
     </>

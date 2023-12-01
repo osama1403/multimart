@@ -18,7 +18,7 @@ const orderSchema = new Schema({
     type: String,
     default: 'Pending'
   },
-  shippingAdress: {
+  shippingAddress: {
     type: String,
     required: true
   },

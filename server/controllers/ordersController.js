@@ -4,6 +4,7 @@ const getJwtEmail = require('../utils/getJwtEmail');
 const Order = require('../models/Order');
 const Product = require('../models/Product')
 const mongoose = require('mongoose');
+const Seller = require('../models/Seller');
 
 const placeOrder = async (req, res) => {
   const email = getJwtEmail(req)
@@ -65,44 +66,61 @@ const placeOrder = async (req, res) => {
     const orders = new Map()
     matched.products.forEach(el => {
       if (!orders.has(el.owner)) {
-        orders.set(el.owner, [{ ...matched.cart.find(e => el._id.equals(e.id)), count: count[el._id] ? count[el._id] : 1 }])
+        orders.set(el.owner, [{ ...matched.cart.find(e => el._id.equals(e.id)), count: count[el._id] ? count[el._id] : 1, reducestock: el.stock < 0 ? false : true }])
       } else {
-        orders.get(el.owner).push({ ...matched.cart.find(e => el._id.equals(e.id)), count: count[el._id] ? count[el._id] : 1 })
+        orders.get(el.owner).push({ ...matched.cart.find(e => el._id.equals(e.id)), count: count[el._id] ? count[el._id] : 1, reducestock: el.stock < 0 ? false : true })
       }
     });
     console.log(orders);
     const finalOrders = []
     const currentDate = new Date()
     // console.log(currentDate);
-    const bulk = []
+    const productsBulk = []
+    const sellersBulk = []
 
     for (const [seller, items] of orders) {
       const subtotal = items.reduce((p, el) => {
         return (p + ((matched.products.find(e => e._id.equals(el.id)).price) * el.count))
       }, 0)
-      console.log(subtotal);
+      console.log(seller);
       const tax = Math.round(0.08 * subtotal)
       const shippingCost = 6000
+
+      // const shippingCosts = items.reduce((p, el) => {
+      //   return (p + ((matched.products.find(e => e._id.equals(el.id)).shippingCostPerUnit) * el.count))
+      // }, 0)
+
       const totalCost = subtotal + tax + shippingCost
-      const o = new Order({ owner: email, seller, date: currentDate, shippingAdress: address, products: items, totalCost, subtotal, shippingCost, tax })
+      const o = new Order({ owner: email, seller, date: currentDate, shippingAddress: address, products: items, totalCost, subtotal, shippingCost, tax })
       finalOrders.push(o)
+      const b = (subtotal + shippingCost)
+      console.log(b);
+      sellersBulk.push({
+        updateOne: {
+          filter: { email: seller },
+          update: {
+            $inc: { balance: b },
+          }
+        }
+      })
+
       items.forEach(el => {
-        bulk.push({
+        productsBulk.push({
           updateOne: {
             filter: { _id: el.id },
             update: {
-              $inc: { sold: el.count, stock: -el.count },
-
+              $inc: { sold: el.count, stock: el.reducestock ? -el.count : 0 },
             }
           }
         })
       })
     }
 
-
     await Order.insertMany(finalOrders)
-    await Product.bulkWrite(bulk)
-    res.json({ msg: 'order added successfully' })
+    await Product.bulkWrite(productsBulk)
+    await Seller.bulkWrite(sellersBulk)
+    await
+      res.json({ msg: 'order added successfully' })
     // await 
 
   } catch (error) {
@@ -199,6 +217,76 @@ const getSingleOrder = async (req, res) => {
       },
       {
         $lookup: {
+          from: 'ratings',
+          let: { prodids: '$productsIds' },
+          pipeline:[
+            {
+              $match:{
+                user:email,
+                $expr:{
+                  $in:['$productId','$$prodids']
+                }
+              }
+            }
+
+          ],
+          as:'ratings'
+        }
+      },
+      {
+        $lookup: {
+          from: 'sellers',
+          localField: 'seller',
+          foreignField: 'email',
+          as: 'seller'
+        }
+      },
+
+      {
+        $set: {
+          seller: { $arrayElemAt: ['$seller', 0] },
+        }
+      },
+      {
+        $project: {
+          'seller.password': 0,
+          productsIds: 0,
+        }
+      }
+    ])
+    console.log(matched);
+    res.json(matched[0])
+
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ msg: 'server error' })
+  }
+
+}
+const sellerGetSingleOrder = async (req, res) => {
+  const email = getJwtEmail(req)
+  const { id } = req.params
+  console.log(id + email);
+  try {
+    const matched = await Order.aggregate([
+      {
+        $match: { seller: email, _id: new mongoose.Types.ObjectId(id) }
+      },
+      {
+        $addFields: {
+          productsIds: { $map: { input: "$products", in: { $toObjectId: "$$this.id" } } }
+        }
+      },
+      {
+        $lookup: {
+          from: 'products',
+          localField: 'productsIds',
+          foreignField: '_id',
+          as: 'productsElements'
+        }
+      },
+      {
+        $lookup: {
           from: 'sellers',
           localField: 'seller',
           foreignField: 'email',
@@ -228,5 +316,37 @@ const getSingleOrder = async (req, res) => {
 
 }
 
+const sellerGetOrders = async (req, res) => {
+  const email = getJwtEmail(req)
+  try {
+    const orders = await Order.find({ seller: email }).sort({ date: -1 })
+    res.json(orders)
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ msg: 'server error' })
+  }
 
-module.exports = { placeOrder, getOrders, getSingleOrder }
+}
+const sellerUpgradeStatus = async (req, res) => {
+  const { id } = req.body
+  const email = getJwtEmail(req)
+  if (!mongoose.isObjectIdOrHexString(id)) {
+    return res.status(400).send('not valid id')
+  }
+  try {
+    const order = await Order.findOne({ _id: id, seller: email })
+    if (order) {
+      const status = order.status === 'Pending' ? 'Processing' : order.status === 'Processing' ? 'Shipping' : 'Delivered'
+      await Order.updateOne({ _id: id }, { status: status })
+      res.json({ success: true, msg: 'order updated successfully', status })
+    }
+    else {
+      res.status(400).json({ msg: 'invalid' })
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ msg: 'server error' })
+  }
+
+}
+module.exports = { placeOrder, getOrders, getSingleOrder, sellerGetOrders, sellerGetSingleOrder, sellerUpgradeStatus }

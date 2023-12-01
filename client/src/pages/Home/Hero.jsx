@@ -1,6 +1,11 @@
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import SearchBar from '../../components/SearchBar';
+
 const Hero = () => {
+  const navigate = useNavigate()
+  const handleSearch = (x) => {
+    navigate('/products', { state: { searchString: x } })
+  }
   return (
     <>
       {/* <section class="bg-gray-900 text-white">
@@ -24,12 +29,12 @@ const Hero = () => {
             </div>
 
             <Link to={'/seller/login'} className=' py-3 px-4 bg-gray-200 hover:bg-orange-300 rounded-xl ' >
-             I'm a seller
+              I'm a seller
             </Link>
           </div>
 
           <div className='flex justify-center items-center mt-10'>
-            <SearchBar />
+            <SearchBar handleSearch={handleSearch} searchValue={''}/>
           </div>
 
         </div>

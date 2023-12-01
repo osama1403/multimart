@@ -62,11 +62,11 @@ const SellerSingleProduct = () => {
 
               <div className='w-full mb-4 px-2 py-3 border rounded-xl shadow-md '>
                 <p>Added in: 22/11/2021</p>
-                <p className='text-lg font-medium'>units sold: 12</p>
-                <p className=''>pending units: 2</p>
-                <p className=''>processing units: 3</p>
-                <p className=''>shipping units: 2</p>
-                <p className=''>delivered: 12</p>
+                <p className='text-lg font-medium'>units sold: {data.ordersCount.total}</p>
+                <p className=''>pending units: {data.ordersCount.pending}</p>
+                <p className=''>processing units: {data.ordersCount.processing}</p>
+                <p className=''>shipping units: {data.ordersCount.shipping}</p>
+                <p className=''>delivered: {data.ordersCount.delivered}</p>
 
               </div>
 

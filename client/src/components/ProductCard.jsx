@@ -60,9 +60,9 @@ const ProductCard = ({ data }) => {
 
           </div>
           <div className='flex items-center text-xl md:text-2xl justify-between z-10'>
-            <div className='text-lg  md:text-xl flex items-center'>
-              <AiOutlineStar className='mr-2' />
-              <p className='text-base'>{data.rating}</p>
+            <div className='text-lg text-primary md:text-xl flex items-center'>
+              <AiOutlineStar className='mr-1 ' />
+              <p className='text-base inline-block'>{data.totalRatingCount === 0 ? 0 : (data.totalRating / data.totalRatingCount).toFixed(1)} </p>
             </div>
             {/* <button className='outline-none  hover:text-primary'><AiOutlineShoppingCart /></button> */}
             <button className={`outline-none hover:text-primary ${inWishlist ? 'text-primary' : ''}`} onClick={handleAddToWishlist} >{inWishlist ? <AiFillHeart /> : <AiOutlineHeart />}</button>

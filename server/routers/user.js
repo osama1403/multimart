@@ -4,6 +4,7 @@ const { addToCart, removeFromCart, getCart } = require('../controllers/cartContr
 const { getProfile, updateProfilePic, updateInfo } = require('../controllers/userController');
 const { placeOrder, getOrders ,getSingleOrder} = require('../controllers/ordersController');
 const isUser = require('../middlewares/isUser');
+const { rateProduct } = require('../controllers/productsController');
 const userRouter = express.Router();
 
 userRouter.use((req, res, next) => {
@@ -19,6 +20,7 @@ userRouter.post('/removefromcart', removeFromCart)
 userRouter.post('/updatepfp', updateProfilePic)
 userRouter.post('/updateinfo', updateInfo)
 userRouter.post('/placeorder', placeOrder)
+userRouter.post('/rateproduct', rateProduct)
 userRouter.get('/wishlist', getWishlist)
 userRouter.get('/cart', getCart)
 userRouter.get('/profile', getProfile)

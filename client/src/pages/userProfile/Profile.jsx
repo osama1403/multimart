@@ -16,12 +16,13 @@ const Profile = () => {
   const [phone, setPhone] = useState('')
   const [address1, setAddress1] = useState('')
   const [address2, setAddress2] = useState('')
+  const [dataAlert, setDataAlert] = useState('')
   const [changed, setChanged] = useState(false)
   const [img, setImg] = useState(null)
   const { setAuth } = useAuth()
   const serverUrl = process.env.REACT_APP_URL
   const privateAxios = usePrivateAxios()
-  const {data, loading, error} = useGetAxios('/user/profile', privateAxios, [])
+  const { data, loading, error } = useGetAxios('/user/profile', privateAxios, [])
   useEffect(() => {
     if (data) {
       setFirstName(data.firstName)
@@ -34,7 +35,7 @@ const Profile = () => {
 
   useEffect(() => {
     if (data) {
-      if (data.firstName !== firstName || data.lastName !== lastName  || data.phone !== phone || data.address1 !== address1 || data.address2 !== address2) {
+      if (data.firstName !== firstName || data.lastName !== lastName || data.phone !== phone || data.address1 !== address1 || data.address2 !== address2) {
         setChanged(true)
         console.log('data.phone ' + data.phone);
       } else {
@@ -71,7 +72,7 @@ const Profile = () => {
 
   }
 
-  const handleUpdataInfo= async()=>{
+  const handleUpdataInfo = async () => {
     const data = {
       firstName,
       lastName,
@@ -79,19 +80,28 @@ const Profile = () => {
       address1,
       address2
     }
-    try{
-      await privateAxios.post('/user/updateinfo',data)
+    try {
+      setDataAlert('')
+
+      await privateAxios.post('/user/updateinfo', data)
+      setChanged(false)
       const addresses = []
-          if (address1)
-            addresses.push(address1)
-          if (address2)
-            addresses.push(address2)
+      if (address1)
+        addresses.push(address1)
+      if (address2)
+        addresses.push(address2)
 
       setAuth((p) => { return ({ ...p, userData: { ...p.userData, addresses } }) })
-    }catch(error){
+    } catch (error) {
+      if (error.response) {
+        setDataAlert(error.response.data?.msg ? error.response.data?.msg : 'something went wrong')
+      }
+      if (error.request) {
+        setDataAlert('no server response')
+      }
 
     }
-    
+
   }
 
   return (
@@ -197,6 +207,7 @@ const Profile = () => {
                       <input type="text" id="adress" className='outline-none numberinput none border w-full rounded-lg bg-slate-100 p-2' value={address2} onChange={(e) => { setAddress2(e.target.value) }} />
                     </div>
                   </div>
+                  {dataAlert && <p>{dataAlert}</p>}
                   <div className='w-full max-w-3xl '>
                     <button className={`mt-4 mx-auto block rounded-md px-4 py-1  border font-semibold border-primary text-primary ${changed ? '' : 'hidden'}`} onClick={handleUpdataInfo}>Update</button>
                   </div>

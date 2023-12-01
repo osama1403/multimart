@@ -23,7 +23,7 @@ ChartJS.register( // register these elements and start working with them
 );
 
 
-const chart = () => {
+const chart = ({chartData}) => {
   
   const options = {
     maintainAspectRatio:false,
@@ -67,14 +67,14 @@ const chart = () => {
     }
   };
 
-  const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
+  const labels = chartData.months;
 
   const data = {
     labels,
     datasets: [
       {
         label: 'ORDERS',
-        data: [47, 24, 35, 40, 50, 30, 60],
+        data: chartData.units,
         borderColor: 'rgb(255, 99, 132)',
         backgroundColor: 'rgba(255, 99, 132, 0.2)',
         yAxisID: 'y',
@@ -83,7 +83,7 @@ const chart = () => {
         },
       {
         label: 'REVENU',
-        data: [1804, 600, 1000, 1200, 2000, 1500, 1700],
+        data: chartData.revenu,
         borderColor: 'rgb(53, 162, 235)',
         backgroundColor: 'rgba(53, 162, 235, 0.2)',
         yAxisID: 'y1',
