@@ -2,7 +2,7 @@ const express = require('express');
 const isSeller = require('../middlewares/isSeller');
 const { addProduct, editStock, getSellerProducts, getSellerSingleProduct } = require('../controllers/productsController');
 const { sellerGetOrders , sellerGetSingleOrder,sellerUpgradeStatus} = require('../controllers/ordersController')
-const{sellerGetDashboard} = require('../controllers/sellerController')
+const{sellerGetDashboard, sellerUpdateProfile} = require('../controllers/sellerController')
 const sellerRouter = express.Router();
 
 sellerRouter.use(isSeller)
@@ -21,6 +21,7 @@ sellerRouter.get('/dashboard', sellerGetDashboard)
 
 sellerRouter.post('/addproduct', addProduct)
 sellerRouter.post('/editstock', editStock)
+sellerRouter.post('/updateprofile', sellerUpdateProfile)
 sellerRouter.post('/orders/upgradestatus', sellerUpgradeStatus)
 
 module.exports = sellerRouter;

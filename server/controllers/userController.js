@@ -29,9 +29,9 @@ const updateProfilePic = async (req, res) => {
   const upload = multerInstance.single('img')
   upload(req, res, async (err) => {
     if (err?.message === 'not supported format') {
-      res.status(400).json({ success: false, msg: 'not supported format' })
+      return res.status(400).json({ success: false, msg: 'not supported format' })
     } else if (err) {
-      res.status(500).json({ success: false, msg: "server error" })
+      return res.status(500).json({ success: false, msg: "server error" })
     }
     try {
       // const filename = res.req.file.filename;

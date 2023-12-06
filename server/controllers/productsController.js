@@ -36,7 +36,26 @@ const getSingleProduct = async (req, res) => {
       res.status(400).json({ success: false, msg: "invalid product id" })
       return;
     }
-    const product = await Product.findById(id)
+    let product = await Product.aggregate([
+      {
+        $match: { _id: new mongoose.Types.ObjectId(id) }
+      },
+      {
+        $lookup: {
+          from: 'sellers',
+          localField: 'owner',
+          foreignField: 'email',
+          as: 'owner'
+        }
+      },
+      {
+        $set: {
+          owner: { $arrayElemAt: ['$owner', 0] },
+        }
+      }
+    ])
+    product = product[0]
+    product.owner = { id: product.owner._id, shopName: product.owner.shopName }
     res.json(product)
   } catch (err) {
     console.log(err);
@@ -94,12 +113,10 @@ const addProduct = (req, res) => {
     const upload = multerInstance.array('images', 4)
     upload(req, res, async (err) => {
       if (err?.message === 'not supported format') {
-        res.status(400).json({ success: false, msg: 'not supported format' })
-        return
+        return res.status(400).json({ success: false, msg: 'not supported format' })
       } else if (err) {
         console.log(err);
-        res.status(500).json({ success: false, msg: "serverrrrrr error" })
-        return
+        return res.status(500).json({ success: false, msg: "server error" })        
       }
 
       const { name, price, stock, categories, specifications, customizations } = JSON.parse(req.body?.productData)

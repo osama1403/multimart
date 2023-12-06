@@ -23,6 +23,7 @@ import SellerLogin from './pages/sellerLogin/page'
 import SellerSignUp from './pages/sellerSignUp/page'
 import RequireAuth from "./components/RequireAuth";
 import Unauthorized from "./pages/unauthorized/Unauthorized";
+import SellerPage from "./pages/sellerPage/SellerPage";
 function App() {
   return (
     <>
@@ -41,6 +42,8 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="products" element={<Products />} />
             <Route path="products/:id" element={<ProductPage />} />
+            <Route path="seller/:id" element={<SellerPage />} />
+
           </Route>
 
           {/* protect for normal users only */}

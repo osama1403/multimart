@@ -1,6 +1,7 @@
+const { default: mongoose } = require('mongoose');
 const Seller = require('../models/Seller')
 const getJwtEmail = require("../utils/getJwtEmail")
-
+const multerInstance = require('../multerInstance')
 const getMonthName = (date) => {
   return date.toLocaleString('en-US', {
     month: 'long',
@@ -98,11 +99,11 @@ const sellerGetDashboard = async (req, res) => {
       delete (seller.orders)
       seller.totalSales = totalsales
       seller.lastSevenDays = last7days
-      
-      seller.chartData={
+
+      seller.chartData = {
         months: Object.keys(months).reverse(),
-        units:Array.from(Object.keys(months),el=>months[el].units).reverse(),
-        revenu:Array.from(Object.keys(months),el=>months[el].revenu/100).reverse()
+        units: Array.from(Object.keys(months), el => months[el].units).reverse(),
+        revenu: Array.from(Object.keys(months), el => months[el].revenu / 100).reverse()
       }
     }
     res.json(seller)
@@ -112,4 +113,81 @@ const sellerGetDashboard = async (req, res) => {
     res.status(500).json({ msg: 'server error' })
   }
 }
-module.exports = { sellerGetDashboard }
+const getSellerProfile = async (req, res) => {
+  const { id } = req.params
+  console.log(id);
+  try {
+    let seller = await Seller.aggregate([
+      {
+        $match: {
+          _id: new mongoose.Types.ObjectId(id)
+        }
+      },
+      {
+        $lookup: {
+          from: 'products',
+          localField: 'email',
+          foreignField: 'owner',
+          as: 'products'
+        }
+      },
+      {
+        $project: {
+          password: 0,
+          balance: 0
+        }
+      }
+    ])
+    seller = seller[0]
+    res.json(seller)
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ success: false, msg: 'server error' })
+  }
+
+}
+const sellerUpdateProfile = async (req, res) => {
+  const upload = multerInstance.array('images', 2)
+  try {
+    upload(req, res, async (err) => {
+      if (err?.message === 'not supported format') {
+        return res.status(400).json({ success: false, msg: 'not supported format' })
+      } else if (err) {
+        console.log(err);
+        return res.status(500).json({ success: false, msg: "server error" })
+      }
+
+      const updateData = JSON.parse(req.body?.data)
+      const updateobj = {}
+      if (updateData?.bio) {
+        updateobj.bio = updateData.bio.trim().substring(0, 200)
+      }
+      if (updateData.shopName) {
+        updateobj.shopName = updateData.shopName
+      }
+      if (updateData.profileImage) {
+        const img = req.files?.find(el => el.originalname === updateData.profileImage).filename;
+        updateobj.profilePicture = img
+      }
+      if (updateData.coverImage) {
+        const img = req.files?.find(el => el.originalname === updateData.coverImage).filename;
+        updateobj.coverPicture = img
+      }
+
+      try {
+        const email = getJwtEmail(req);
+        await Seller.updateOne({ email: email }, updateobj)
+        res.json({ success: true, msg: 'profile updated successfully' })
+      } catch (err) {
+        console.log(err);
+        res.status(500).json({ success: false, msg: 'server error' })
+
+      }
+
+    })
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ success: false, msg: 'server error' })
+  }
+}
+module.exports = { sellerGetDashboard, getSellerProfile, sellerUpdateProfile }

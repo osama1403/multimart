@@ -3,7 +3,7 @@ import LoadingThreeDots from '../../components/LoadingThreeDots';
 import { FiEdit } from 'react-icons/fi'
 import useGetAxios from '../../hooks/useGetAxios';
 import usePrivateAxios from '../../hooks/usePrivateAxios';
-import prodPlaceholder from '../../assets/images/profilePlaceholder.png'
+import profilePlaceholder from '../../assets/images/profilePlaceholder.png'
 import useAuth from '../../hooks/useAuth';
 const Profile = () => {
 
@@ -123,7 +123,7 @@ const Profile = () => {
                   <div className='relative flex flex-col items-center'>
                     <label htmlFor='img' className='text-primary hover:text-blue-400  absolute top-2 right-2 cursor-pointer outline-none'><FiEdit /></label>
                     <input type="file" name="img" id="img" className='hidden' accept='image/*' onChange={handleSetImage} />
-                    <img src={img ? URL.createObjectURL(img) : data.profilePicture ? serverUrl + '/' + data.profilePicture : prodPlaceholder} alt="" className='aspect-square w-40 h-40 rounded-full object-cover' />
+                    <img src={img ? URL.createObjectURL(img) : data.profilePicture ? serverUrl + '/' + data.profilePicture : profilePlaceholder} alt="" className='aspect-square w-40 h-40 rounded-full object-cover' />
 
                   </div>
                   <div>

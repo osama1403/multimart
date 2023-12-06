@@ -4,7 +4,7 @@ import { BsThreeDots } from 'react-icons/bs';
 import prodPlaceholder from '../../assets/images/prodPlaceholder.jpg'
 import axios from '../../api/axios';
 import useGetAxios from '../../hooks/useGetAxios';
-import { useLocation, useParams } from 'react-router-dom';
+import { useLocation, useParams, Link } from 'react-router-dom';
 import LoadingThreeDots from '../../components/LoadingThreeDots';
 import useAuth from '../../hooks/useAuth';
 import { useNavigate } from "react-router-dom";
@@ -155,6 +155,10 @@ const ProductPage = () => {
                   <h1 className='text-2xl  font-semibold '>
                     {data.name}
                   </h1>
+                  <div className='text-lg'>
+                    <span>shop: </span>
+                    <Link to={`/seller/${data.owner.id}`} className='text-blue-700 hover:underline'>{data.owner.shopName}</Link>
+                  </div>
 
                   {/* <p className='mt-2 text-green-400 text-lg'>in stock</p> */}
                   <div>

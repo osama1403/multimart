@@ -18,8 +18,13 @@ const sellerSchema = new Schema({
     type:Number,
     default:0
   },
+  bio:{
+    type:String,
+    default:''
+  },
+  profilePicture:String,
+  coverPicture:String,
   phone: Number,
   address: String,
-  profilePicture : String
 })
 module.exports = mongoose.model('seller', sellerSchema)

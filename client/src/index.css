@@ -7,9 +7,10 @@
   height: 4px;
   background-color: white;
 }
+
 .noscrollbar::-webkit-scrollbar {
   display: none;
- 
+
 }
 
 /* .scroller::-webkit-scrollbar-track{
@@ -45,9 +46,10 @@ background-color: white;
 }
 
 
-.rotateY{
+.rotateY {
   transform: rotateY(45deg);
 }
+
 .per {
   perspective: 300px;
 }
@@ -63,28 +65,60 @@ background-color: white;
 }
 
 @keyframes rotation {
-  0%{
+  0% {
     transform: rotate(0deg);
   }
-  100%{
+
+  100% {
     transform: rotate(360deg);
   }
 }
-.on{
-  animation: rotation 3s infinite linear ;
+
+.on {
+  animation: rotation 3s infinite linear;
 }
-.onfast{
-  animation: rotation 1s infinite linear ;
+
+.onfast {
+  animation: rotation 1s infinite linear;
 }
 
 @keyframes shake {
-  0%{
+  0% {
     transform: translateY(1px);
   }
-  100%{
+
+  100% {
     transform: translateY(0px);
   }
 }
-.ontruck{
-  animation: shake 200ms infinite ;
+
+.ontruck {
+  animation: shake 200ms infinite;
+}
+
+.pfp::before {
+  content: '';
+  position: absolute;
+  top: 80px;
+  left: -32px;
+  width: 40px;
+  height: 24px;
+  box-sizing: border-box;
+  border-right: 8px solid white;
+  border-bottom: 8px solid white;
+  border-radius: 99px 0px;
+  z-index: -1;
+}
+.pfp::after {
+  content: '';
+  position: absolute;
+  top: 80px;
+  left: 152px;
+  width: 40px;
+  height: 24px;
+  box-sizing: border-box;
+  border-left: 8px solid white;
+  border-bottom: 8px solid white;
+  border-radius: 0px 99px;
+  z-index: -1;
 }
