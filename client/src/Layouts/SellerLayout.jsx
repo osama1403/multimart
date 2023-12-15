@@ -2,7 +2,8 @@ import { Outlet, NavLink, useLocation } from "react-router-dom";
 import { FaStore, FaThLarge, FaPlus, FaListUl } from 'react-icons/fa'
 import { AiFillDashboard, AiOutlineClose, AiOutlineMenu } from 'react-icons/ai'
 import { BsFillChatFill } from 'react-icons/bs'
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
+import { socketIoContext } from "../Context/SocketIoContext";
 
 const links = [
   { name: "Store", link: '/seller/store', icon: <FaStore /> },
@@ -16,8 +17,8 @@ const links = [
 const SellerLayout = () => {
   const [open, setOpen] = useState(false)
   const { pathname } = useLocation();
-
-
+  const { notification } = useContext(socketIoContext)
+  console.log(notification);
   useEffect(() => {
     setOpen(false);
   }, [pathname])
@@ -50,7 +51,7 @@ const SellerLayout = () => {
               <div className="flex flex-col w-full text-xl p-6 [&>*:not(:last-child)]:border-b ">
                 {links.map((el, idx) =>
                   <NavLink to={el.link} key={idx} className={({ isActive }) => { return `relative w-full py-5 flex items-center justify-center  gap-4 ${isActive ? 'text-primary' : ''}` }}>
-                    {el.icon} <span className="inline">{el.name}</span>
+                    {el.name === 'Chat' ? <i className={`relative chaticon ${notification ? '':'before:hidden'}`}>{el.icon}</i> : el.icon} <span className="inline">{el.name}</span>
                   </NavLink>
                 )}
               </div>
@@ -62,7 +63,7 @@ const SellerLayout = () => {
           <div className="flex flex-col sticky top-0 gap-3 py-10 min-w-max text-2xl lg:text-lg text-zinc-600  font-nunito">
             {links.map((el, idx) =>
               <NavLink to={el.link} key={idx} className={({ isActive }) => { return `relative w-full  px-5 py-2 flex items-center justify-center sm:justify-start gap-4 ${isActive ? 'text-primary' : ''}` }}>
-                {el.icon} <span className={` hidden lg:inline`}>{el.name}</span>
+                {el.name === 'Chat' ? <i className={`relative chaticon ${notification ? '':'before:hidden'}`}>{el.icon}</i> : el.icon} <span className={` hidden lg:inline`}>{el.name}</span>
               </NavLink>
             )}
           </div>

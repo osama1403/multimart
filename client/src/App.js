@@ -24,6 +24,8 @@ import SellerSignUp from './pages/sellerSignUp/page'
 import RequireAuth from "./components/RequireAuth";
 import Unauthorized from "./pages/unauthorized/Unauthorized";
 import SellerPage from "./pages/sellerPage/SellerPage";
+import Chat from "./pages/chat/Chat";
+import SingleChat from "./pages/singleChat/SingleChat";
 function App() {
   return (
     <>
@@ -54,6 +56,8 @@ function App() {
               <Route path="orders" element={<Orders />} />
               <Route path="orders/:id" element={<OrderPage />} />
               <Route path="wishlist" element={<Wishlist />} />
+              <Route path="chat" element={<Chat />} />
+              <Route path="chat/:id" element={<SingleChat />} />
             </Route>
           </Route>
 
@@ -67,6 +71,8 @@ function App() {
             <Route path="addproduct" element={<SellerAddProduct />} />
             <Route path="orders" element={<SellerOrders />} />
             <Route path="orders/:id" element={<SellerSingleOrder />} />
+            <Route path="chat" element={<Chat />} />
+            <Route path="chat/:id" element={<SingleChat />} />
           </Route>
         </Route>
 

@@ -122,3 +122,26 @@ background-color: white;
   border-radius: 0px 99px;
   z-index: -1;
 }
+
+.chaticon::before{
+  content: '';
+  position: absolute;
+  top:-2px;
+  left: -5px;
+  width: 8px;
+  height: 8px;
+  border-radius: 4px;
+  background-color: #ea3c12;
+}
+
+.navimg::before{
+  content: '';
+  position: absolute;
+  bottom:0px;
+  left: -4px;
+  width: 8px;
+  height: 8px;
+  border-radius: 4px;
+  background-color: #ea3c12;
+  
+}

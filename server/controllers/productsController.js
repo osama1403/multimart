@@ -2,7 +2,7 @@ const { isObjectIdOrHexString, default: mongoose } = require('mongoose');
 const Product = require('../models/Product')
 const Rating = require('../models/Rating')
 const getJwtEmail = require('../utils/getJwtEmail')
-const multerInstance = require('../multerInstance');
+const multerInstance = require('../Configuration/multerInstance');
 
 const fs = require('fs');
 const Order = require('../models/Order');
@@ -12,8 +12,8 @@ const getProducts = async (req, res) => {
   const pageCount = 200;
   let { page, categories, limit } = req.query
   let search = req.query.search || ''
-  console.log(categories);
-  console.log(search);
+  // console.log(categories);
+  // console.log(search);
 
   page = !isNaN(page) ? page * 1 : 0;
   console.log(Array.isArray(categories));

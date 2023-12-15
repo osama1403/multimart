@@ -1,7 +1,7 @@
 const { default: mongoose } = require('mongoose');
 const Seller = require('../models/Seller')
 const getJwtEmail = require("../utils/getJwtEmail")
-const multerInstance = require('../multerInstance')
+const multerInstance = require('../Configuration/multerInstance')
 const getMonthName = (date) => {
   return date.toLocaleString('en-US', {
     month: 'long',

@@ -1,7 +1,12 @@
 import { Outlet, NavLink } from "react-router-dom";
 import { FaUser, FaShoppingCart, FaListAlt, FaHeart } from 'react-icons/fa'
+import { BsChatFill } from "react-icons/bs";
+import { useContext } from "react";
+import { socketIoContext } from "../Context/SocketIoContext";
 
 const UserLayout = () => {
+  const { notification } = useContext(socketIoContext)
+
   return (
     <>
       <div className="md:flex flex-row min-h-[calc(100vh-64px)]">
@@ -22,6 +27,10 @@ const UserLayout = () => {
             <NavLink to='/wishlist' className={({ isActive }) => { return `relative w-full py-2 px-6 flex items-center justify-center md:justify-start gap-4 ${isActive ? 'text-primary' : ''}` }}>
               <FaHeart /> 
               <p className="hidden md:block">wishlist</p>
+            </NavLink>
+            <NavLink to='/chat' className={({ isActive }) => { return `relative w-full py-2 px-6 flex items-center justify-center md:justify-start gap-4 ${isActive ? 'text-primary' : ''}` }}>
+            <i className={`relative chaticon ${notification ? '':'before:hidden'}`}><BsChatFill /></i> 
+              <p className="hidden md:block">chat</p>
             </NavLink>
 
           </div>

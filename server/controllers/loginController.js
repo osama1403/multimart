@@ -40,7 +40,7 @@ const handleLogin = async (req, res) => {
       if (user) {
         const verified = await bcrypt.compare(password, user.password);
         if (verified) {
-          const JWT = jwt.sign({ email: email, role: 'user' }, process.env.JWT_SECRET)
+          const JWT = jwt.sign({ email: email, id: user._id, role: 'user' }, process.env.JWT_SECRET)
           const addresses = []
           if (user.address1)
             addresses.push(user.address1)
@@ -54,7 +54,7 @@ const handleLogin = async (req, res) => {
             cart: user.cart,
             addresses: addresses
           }
-          res.status(200).json({ token: JWT, role: 'user', userData })
+          res.status(200).json({ token: JWT, role: 'user', id: user._id, userData })
           return
         }
       }
@@ -88,8 +88,8 @@ const handleSellerLogin = async (req, res) => {
       if (seller) {
         const verified = await bcrypt.compare(password, seller.password);
         if (verified) {
-          const JWT = jwt.sign({ email: email, role: 'seller' }, process.env.JWT_SECRET)
-          res.status(200).json({ token: JWT, role: 'seller' })
+          const JWT = jwt.sign({ email: email, id: seller._id, role: 'seller' }, process.env.JWT_SECRET)
+          res.status(200).json({ token: JWT, role: 'seller', id: seller._id })
           return
         }
       }

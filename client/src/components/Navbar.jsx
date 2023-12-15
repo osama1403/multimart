@@ -1,9 +1,10 @@
 import { Link, NavLink, useLocation } from "react-router-dom";
 import { ReactComponent as Logo } from '../assets/logo.svg'
 import { AiOutlineClose, AiOutlineMenu } from 'react-icons/ai'
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import useAuth from '../hooks/useAuth';
 import profilePlaceholder from '../assets/images/profilePlaceholder.png'
+import { socketIoContext } from "../Context/SocketIoContext";
 
 const Navbar = () => {
   const serverUrl = process.env.REACT_APP_URL
@@ -11,6 +12,8 @@ const Navbar = () => {
   const { pathname } = useLocation();
   const { auth } = useAuth();
   const { accessToken } = auth
+  const { notification } = useContext(socketIoContext)
+
   console.log(accessToken);
 
   useEffect(() => {
@@ -71,8 +74,10 @@ const Navbar = () => {
             {
               accessToken ?
                 <NavLink to={'/profile'} className={` -order-1 md:order-1 flex flex-col md:flex-row items-center md:pl-6 gap-2 box-border md:h-full text-base `}>
-                  <img src={auth.userData?.img ? serverUrl + '/' + auth.userData.img  : profilePlaceholder} alt="" className="  inline rounded-full w-20 h-20 md:w-10 md:h-10 object-cover" />
-                  <p className="mt-1 text-center md:max-w-[130px] md:line-clamp-2">{auth?.userData?.name}</p>
+                  <div className={`inline navimg relative ${notification ? '':'before:hidden'}`}>
+                    <img src={auth.userData?.img ? serverUrl + '/' + auth.userData.img : profilePlaceholder} alt="" className=" inline rounded-full w-20 h-20 md:w-10 md:h-10 object-cover" />
+                  </div>
+                  <p className="mt-1 text-center md:max-w-[130px] md:line-clamp-2 ">{auth?.userData?.name}</p>
                 </NavLink> :
                 <>
                   <NavLink to={'/login'} className={({ isActive }) => { return ` py-1 rounded-md font-light ${isActive ? 'text-primary' : 'text-black'}` }}>

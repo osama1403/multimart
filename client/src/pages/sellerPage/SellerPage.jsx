@@ -2,11 +2,11 @@ import img from '../../assets/prod.jpeg'
 import ProductCard from '../../components/ProductCard'
 import useGetAxios from '../../hooks/useGetAxios';
 import axios from '../../api/axios'
-import { useParams } from 'react-router-dom'
+import { useParams,Link } from 'react-router-dom'
 import LoadingThreeDots from '../../components/LoadingThreeDots';
 import profilePlaceholder from '../../assets/images/profilePlaceholder.png';
 import coverPlaceholder from '../../assets/images/coverPlaceholder.png';
-import { BsChatFill } from 'react-icons/bs';
+import { BsChatDots } from 'react-icons/bs';
 
 const SellerPage = () => {
   const serverUrl = process.env.REACT_APP_URL
@@ -33,7 +33,7 @@ const SellerPage = () => {
                   </div>
                   <div className='flex flex-col sm:flex-row gap-2 items-center sm:pb-8 sm:pl-1'>
                     <h1 className='text-xl font-semibold '>{data?.shopName}</h1>
-                    <button className='outline-none text-primary text-xl '><BsChatFill /></button>
+                    <Link to={`/chat/${id}`} className='outline-none text-zinc-600 hover:text-primary text-xl '><BsChatDots /></Link>
                   </div>
                 </div>
               </div>

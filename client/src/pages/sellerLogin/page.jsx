@@ -28,8 +28,8 @@ const Login = () => {
     try {
       setLoading(true)
       const response = await axios.post('/login/seller', { email, password })
-      const { token, role } = response?.data
-      setAuth({ accessToken: token, role })
+      const { token, role, id } = response?.data
+      setAuth({ accessToken: token, role, id })
       navigate(from, { replace: true })
       // console.log(response);
     } catch (error) {
