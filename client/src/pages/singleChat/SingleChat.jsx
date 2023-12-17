@@ -9,10 +9,12 @@ import { socketIoContext } from "../../Context/SocketIoContext";
 import usePrivateAxios from "../../hooks/usePrivateAxios";
 import useGetAxios from "../../hooks/useGetAxios";
 import LoadingThreeDots from "../../components/LoadingThreeDots";
+import profilePlaceholder from '../../assets/images/profilePlaceholder.png';
 import useAuth from "../../hooks/useAuth";
 
 const SingleChat = () => {
   const privateAxios = usePrivateAxios()
+  const serverUrl = process.env.REACT_APP_URL
   const { id } = useParams()
   console.log(id);
   const { auth } = useAuth()
@@ -75,8 +77,8 @@ const SingleChat = () => {
                 <div className="rounded-2xl bg-slate-200 h-full border shadow-md flex flex-col w-full ">
                   {/* header */}
                   <div className="flex items-center px-2 py-1 rounded-2xl gap-3 bg-white">
-                    <img src={img} alt="" className="rounded-full w-12 h-12 border " />
-                    <h1 className="font-semibold text-xl ">john doe</h1>
+                    <img src={data?.peer?.profilePicture ? serverUrl + '/' + data.peer.profilePicture : profilePlaceholder} alt="" className="rounded-full w-12 h-12 border " />
+                    <h1 className="font-semibold text-xl ">{auth.role === 'user' ? data?.peer?.shopName : data?.peer?.firstname + ' ' + data?.peer?.lastName}</h1>
                   </div>
 
                   <div className="grow flex flex-col-reverse px-2 overflow-y-auto  noscrollbar">

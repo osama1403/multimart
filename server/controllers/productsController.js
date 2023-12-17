@@ -9,19 +9,52 @@ const Order = require('../models/Order');
 
 
 const getProducts = async (req, res) => {
-  const pageCount = 200;
-  let { page, categories, limit } = req.query
+  const pageCount = 40;
+  let { page, categories } = req.query
   let search = req.query.search || ''
+  page = !isNaN(page) ? page * 1 : 0;
   // console.log(categories);
   // console.log(search);
+  // console.log(Array.isArray(categories));
+  // console.log('page: ' + page);
 
-  page = !isNaN(page) ? page * 1 : 0;
-  console.log(Array.isArray(categories));
   const queryFilter = categories && Array.isArray(categories) ? { categories: { $in: categories } } : {}
   queryFilter.name = { $regex: search, $options: 'i' }
   try {
-    const products = await Product.find(queryFilter).skip(page * pageCount).limit(limit ? limit : pageCount);
-    res.json(products);
+    // const products = await Product.find(queryFilter).skip(page * pageCount).limit(pageCount);
+    let data = await Product.aggregate([
+      {
+        $facet: {
+          'info': [
+            {
+              $match: queryFilter
+            },
+            {
+              $count: 'count'
+            }
+          ],
+          'products': [
+            {
+              $match: queryFilter
+            },
+            {
+              $skip: page * pageCount
+            },
+            {
+              $limit: pageCount
+            }
+          ]
+        }
+      }
+    ])
+
+    data = data[0]
+    //if aggregation couldnt find any document it will stop the pipeline and we wont get the count result
+    data.info.length > 0 ? data.info = data.info[0] : data.info = { 'count': 0 }
+    data.info.page = page
+    // console.log(data);
+    res.json(data)
+
   } catch (err) {
     console.log(err);
     res.status(500).json({ success: false, msg: 'server error' })
@@ -116,7 +149,7 @@ const addProduct = (req, res) => {
         return res.status(400).json({ success: false, msg: 'not supported format' })
       } else if (err) {
         console.log(err);
-        return res.status(500).json({ success: false, msg: "server error" })        
+        return res.status(500).json({ success: false, msg: "server error" })
       }
 
       const { name, price, stock, categories, specifications, customizations } = JSON.parse(req.body?.productData)
