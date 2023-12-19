@@ -37,10 +37,6 @@ const orderSchema = new Schema({
     type: Number,
     required: true
   },
-  shippingCost: {
-    type: Number,
-    required: true
-  },
   tax: {
     type: Number,
     required: true

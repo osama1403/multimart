@@ -7,7 +7,6 @@ import usePrivateAxios from '../../hooks/usePrivateAxios'
 const OrderProductItem = ({ product, details, rating,delivered }) => {
   const serverUrl = process.env.REACT_APP_URL
   const privateAxios = usePrivateAxios()
-  //handle rate in each order element to avoid altering the original data
   const [rate, setRate] = useState()
   const handleRate = async (x) => {
     console.log(x);
@@ -48,12 +47,12 @@ const OrderProductItem = ({ product, details, rating,delivered }) => {
 
   console.log(product);
   return (
-    <div className='w-full flex flex-col sm:flex-row gap-3 py-4 max-w-2xl '>
+    <div className='w-full flex flex-col sm:flex-row items-center sm:items-stretch gap-3 py-4 max-w-2xl '>
 
-      <div className='grow flex flex-nowrap  gap-4 items-center  font-semibold font-nunito'>
+      <div className='grow flex flex-col sm:flex-row flex-nowrap  gap-3 items-center  font-semibold font-nunito'>
         <img src={product.images[0] ? serverUrl + '/' + product.images[0] : prodPlaceholder} alt="" className='w-28 object-cover shadow-zinc-400 shadow-md aspect-[5/5] rounded-md' />
 
-        <div className=' flex flex-col py-4 items-start self-stretch min-w-[200px]' >
+        <div className=' flex flex-col sm:py-4 items-center sm:items-start self-stretch sm:min-w-[200px]' >
           <Link to={`/products/${product._id}`} className='font-semibold text-lg'>{product.name}</Link>
           <div className='my-auto grow flex flex-col justify-center'>
             {

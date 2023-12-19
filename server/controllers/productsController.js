@@ -153,7 +153,7 @@ const addProduct = (req, res) => {
       }
 
       const { name, price, stock, categories, specifications, customizations } = JSON.parse(req.body?.productData)
-      if (!Array.isArray(categories) || categories.filter((el) => !typeof (el) === 'string').length > 0) {
+      if (!Array.isArray(categories) || categories.filter((el) => typeof(el) !== 'string').length > 0) {
         req.files?.forEach(el => {
           const filename = el.filename
           console.log(filename);
@@ -164,7 +164,7 @@ const addProduct = (req, res) => {
             }
           })
         })
-        res.status(400).send('invalid data')
+        res.status(400).send('invalid request')
         return
       }
 

@@ -13,7 +13,7 @@ const OrderItem = ({ product, details }) => {
           <div className='my-auto grow flex flex-col justify-center'>
             {
               product.customizations.map((el, idx) => {
-                return <p className='' key={idx}><span className='text-zinc-600'>{el.name}:</span> {details.customizations[el.name]}</p>
+                return <p className='' key={idx}><span className='text-zinc-600'>{el.name}: </span> {details.customizations[el.name]}</p>
               })
             }
           </div>

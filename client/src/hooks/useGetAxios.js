@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 const useGetAxios = (url, axiosInstance, dep) => {
   const [data, setData] = useState(null)
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
 
   useEffect(() => {
@@ -18,7 +18,7 @@ const useGetAxios = (url, axiosInstance, dep) => {
       } catch (error) {
         console.log('useaxios error');
         if (error.response) {
-          setError(error.response.data?.msg ? error.response.data?.msg : 'something went wrong')
+          setError(error.response.data?.msg ? error.response.data.msg : 'something went wrong')
         } else if (error.request && error.message !== 'canceled') {
           console.log(error);
           setError('no server response')

@@ -53,11 +53,7 @@ const ProductCard = ({ data }) => {
         <div className='w-full flex flex-col  gap-1 md:gap-2'>
           <div className='h-14 flex items-center space-x-2  justify-between '>
             <h3 className=' md:text-xl grow text-ellipsis line-clamp-2'>{data.name} </h3>
-            <div className='text-primary'>
-              <p className='text-sm md:text-base font-bold line-through'>{(data.price / 100).toFixed(2)}$</p>
-              <p className='text-xs md:text-sm font-bold'> {(data.price / 100).toFixed(2)}$</p>
-            </div>
-
+            <p className='text-primary text-sm md:text-base font-bold'>{(data.price / 100).toFixed(2)}$</p>
           </div>
           <div className='flex items-center text-xl md:text-2xl justify-between z-10'>
             <div className='text-lg text-primary md:text-xl flex items-center'>

@@ -13,7 +13,10 @@ app.use(express.json());
 require('dotenv').config();
 
 connectDB()
-app.use(cors())
+app.use(cors({
+  origin:'http://localhost:3000',
+  credentials:true
+}))
 app.use(express.static('./images'))
 // app.use(function (req, res, next) {
 //   res.header("Access-Control-Allow-Origin", "*");

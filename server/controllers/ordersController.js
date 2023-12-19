@@ -41,7 +41,8 @@ const placeOrder = async (req, res) => {
     if (matched.cart.some(el => { return !matched.products.some(e => e._id.equals(el.id)) })) {
       return res.status(400).json({ success: false, msg: 'some products are not right' })
     }
-    // product is not in stock
+    
+    // a product not in stock
     if (matched.products.some(el => {
       const elcount = count[el._id] ? count[el._id] : 1;
       return (!(el.stock < 0) && (el.stock - elcount < 0))
@@ -62,6 +63,7 @@ const placeOrder = async (req, res) => {
       return res.status(401).json({ success: false, msg: 'faulty cart data' })
     }
 
+    //order processing
     //separate products by seller and add count to the object
     const orders = new Map()
     matched.products.forEach(el => {
@@ -72,9 +74,10 @@ const placeOrder = async (req, res) => {
       }
     });
     console.log(orders);
-    const finalOrders = []
+
+    const taxRate = 0.08 // 8%
     const currentDate = new Date()
-    // console.log(currentDate);
+    const finalOrders = []
     const productsBulk = []
     const sellersBulk = []
 
@@ -83,23 +86,18 @@ const placeOrder = async (req, res) => {
         return (p + ((matched.products.find(e => e._id.equals(el.id)).price) * el.count))
       }, 0)
       console.log(seller);
-      const tax = Math.round(0.08 * subtotal)
-      const shippingCost = 6000
+      const tax = Math.round(taxRate * subtotal)
 
-      // const shippingCosts = items.reduce((p, el) => {
-      //   return (p + ((matched.products.find(e => e._id.equals(el.id)).shippingCostPerUnit) * el.count))
-      // }, 0)
-
-      const totalCost = subtotal + tax + shippingCost
-      const o = new Order({ owner: email, seller, date: currentDate, shippingAddress: address, products: items, totalCost, subtotal, shippingCost, tax })
+      const totalCost = subtotal + tax
+      const o = new Order({ owner: email, seller, date: currentDate, shippingAddress: address, products: items, totalCost, subtotal, tax })
       finalOrders.push(o)
-      const b = (subtotal + shippingCost)
-      console.log(b);
+
+      //
       sellersBulk.push({
         updateOne: {
           filter: { email: seller },
           update: {
-            $inc: { balance: b },
+            $inc: { balance: subtotal },
           }
         }
       })
@@ -219,18 +217,18 @@ const getSingleOrder = async (req, res) => {
         $lookup: {
           from: 'ratings',
           let: { prodids: '$productsIds' },
-          pipeline:[
+          pipeline: [
             {
-              $match:{
-                user:email,
-                $expr:{
-                  $in:['$productId','$$prodids']
+              $match: {
+                user: email,
+                $expr: {
+                  $in: ['$productId', '$$prodids']
                 }
               }
             }
 
           ],
-          as:'ratings'
+          as: 'ratings'
         }
       },
       {

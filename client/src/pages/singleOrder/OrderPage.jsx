@@ -70,9 +70,6 @@ const OrderPage = () => {
                 <p className='mt-2'>Shipping to:</p>
                 <p className='text-zinc-600'>{data.shippingAddress}</p>
 
-                <p className='mt-2'>Estimated delivery:</p>
-                <p className='text-zinc-600'>-</p>
-
                 <div className='mt-2 max-w-2xl [&>*:nth-child(even)]:bg-slate-100'>
                   <div className='flex justify-between p-1 '>
                     <p >Elements:</p>
@@ -81,10 +78,6 @@ const OrderPage = () => {
                   <div className='flex md justify-between p-1  '>
                     <p >Subtotal:</p>
                     <p>${(data.subtotal / 100).toFixed(2)}</p>
-                  </div>
-                  <div className='flex justify-between items-center p-1 gap-3'>
-                    <p >shipping cost:</p>
-                    <p className='whitespace-nowrap'>${(data.shippingCost / 100).toFixed(2)}</p>
                   </div>
                   <div className='flex justify-between p-1  '>
                     <p>Tax:</p>

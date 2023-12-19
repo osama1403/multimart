@@ -2,6 +2,7 @@ const User = require('../models/User')
 const Seller = require('../models/Seller')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
+const cookie = require('cookie')
 
 const handleLogin = async (req, res) => {
   // try {
@@ -40,7 +41,7 @@ const handleLogin = async (req, res) => {
       if (user) {
         const verified = await bcrypt.compare(password, user.password);
         if (verified) {
-          const JWT = jwt.sign({ email: email, id: user._id, role: 'user' }, process.env.JWT_SECRET)
+          const JWT = jwt.sign({ email: email, id: user._id, role: 'user' }, process.env.JWT_SECRET, { expiresIn: 10 })
           const addresses = []
           if (user.address1)
             addresses.push(user.address1)
@@ -54,17 +55,18 @@ const handleLogin = async (req, res) => {
             cart: user.cart,
             addresses: addresses
           }
-          res.status(200).json({ token: JWT, role: 'user', id: user._id, userData })
-          return
+          const refreshToken = jwt.sign({ email: email, id: user._id, role: 'user' }, process.env.JWT_SECRET, { expiresIn: '7d' })
+          res.cookie('RT', refreshToken, { httpOnly: true, secure: 'true', sameSite: 'none', maxAge: 7 * 24 * 60 * 60 * 1000 })
+          // console.log(res);
+          return res.status(200).json({ token: JWT, role: 'user', id: user._id, userData })
         }
       }
     } catch (e) {
       console.log(e);
-      res.status(500).json({ success: false, msg: 'server error' })
+      return res.status(500).json({ success: false, msg: 'server error' })
     }
   }
   res.status(400).json({ success: false, msg: "invalid credentials" });
-
 }
 
 
@@ -75,7 +77,6 @@ const handleSellerLogin = async (req, res) => {
   const { email, password } = req.body
 
   if (email && password) {
-
     const emailTest = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const validEmail = emailTest.test(email)
     const validPassword = password.length > 7;
@@ -98,10 +99,61 @@ const handleSellerLogin = async (req, res) => {
       res.status(500).json({ success: false, msg: 'server error' })
     }
   }
-
   res.status(400).json({ success: false, msg: "invalid credentials" });
-
 }
 
 
-module.exports = { handleLogin, handleSellerLogin }
+const handleRefresh = async (req, res) => {
+  console.log('refresh');
+  // console.log(req.cookies.RT);
+  if (req.cookies?.RT) {
+    const refreshToken = req.cookies.RT
+    jwt.verify(refreshToken, process.env.JWT_SECRET, async (err, decode) => {
+      if (err) {
+        return res.status(403).send('Unauthorizedsssssss')
+      }
+
+      try {
+        const { id, role } = decode
+        if (role === 'user') {
+          // handle user refresh
+          const user = await User.findById(id)
+          const JWT = jwt.sign({ email: user.email, id: user._id, role: 'user' }, process.env.JWT_SECRET, { expiresIn: 10 })
+          const addresses = []
+          if (user.address1)
+            addresses.push(user.address1)
+          if (user.address2)
+            addresses.push(user.address2)
+
+          const userData = {
+            name: user.firstName + ' ' + user.lastName,
+            img: user.profilePicture,
+            wishlist: user.wishlist,
+            cart: user.cart,
+            addresses: addresses
+          }
+          return res.status(200).json({ token: JWT, role: 'user', id: user._id, userData })
+
+
+        } else {
+          //handle seller refresh
+          const seller = await Seller.findById(id)
+          const JWT = jwt.sign({ email: seller.email, id: seller._id, role: 'seller' }, process.env.JWT_SECRET)
+          res.status(200).json({ token: JWT, role: 'seller', id: seller._id })
+        }
+
+      } catch (error) {
+        console.log(error);
+        res.status(500).json({ success: false, msg: 'server error' })
+      }
+
+    })
+  } else {
+    return res.status(403).send('Unauthorized')
+  }
+}
+const handleSellerRefresh = (req, res) => {
+  console.log(req.cookies);
+}
+
+module.exports = { handleLogin, handleSellerLogin, handleRefresh, handleSellerRefresh }

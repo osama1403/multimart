@@ -41,7 +41,7 @@ const updateProfilePic = async (req, res) => {
 
       // store filename in DB
       await User.updateOne({ email }, { profilePicture: filename })
-      res.json({ success: true, msg: "profile picture updated successfully",img:filename })
+      res.json({ success: true, msg: "profile picture updated successfully", img: filename })
     } catch (e) {
       res.status(500).json({ success: false, msg: "server error" })
     }
@@ -63,14 +63,20 @@ const getProfile = async (req, res) => {
       {
         $lookup: {
           from: 'orders',
-          localField: 'email',
-          foreignField: 'user',
+          pipeline: [
+            {
+              $match: { owner: email }
+            },
+            {
+              $count: 'count'
+            }
+          ],
           as: 'totalorders'
         }
       }
     ])
     profile = profile[0]
-    profile.totalorders = profile.totalorders.length
+    profile.totalorders = profile.totalorders.length > 0 ? profile.totalorders[0].count : 0
     res.json(profile)
 
   } catch (e) {

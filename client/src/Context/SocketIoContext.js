@@ -41,8 +41,10 @@ const SocketIoProvider = ({ children }) => {
         // socket.emit('message',socket.id)
         console.log('connected to io');
       })
+    }else if(!auth?.accessToken && socket){
+      setSocket(null)
     }
-  }, [auth.accessToken])
+  }, [auth?.accessToken])
 
   useEffect(() => {
     if (socket) {

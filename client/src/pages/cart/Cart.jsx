@@ -33,26 +33,23 @@ const Cart = () => {
 
   useEffect(() => {
     if (data?.products?.length >= 0) {
-      const taxRate = 8
+      const taxRate = 8 //8%
       const subtotal = data.products.reduce((p, el) => p + (el.price * countData[el._id]), 0)
       console.log("subtotal : " + subtotal);
       const tax = (subtotal * taxRate / 100)
-      const estShCost = 6000
       const cartdata = {
         elements: `# ${data.cart.length}`,
         subtotal: `$ ${(subtotal / 100).toFixed(2)}`,
-        estShCost: `$ ${(estShCost / 100).toFixed(2)}`,
         taxRate: taxRate,
         tax: `$ ${(tax / 100).toFixed(2)}`,
-        total: `$ ${((subtotal + tax + estShCost) / 100).toFixed(2)}`
+        total: `$ ${((subtotal + tax ) / 100).toFixed(2)}`
       }
-      console.log(subtotal + ' tax : ' + tax + ' estsh: ' + estShCost + ' tot: ' + subtotal + tax + estShCost);
+      console.log(subtotal + ' tax : ' + tax  + ' tot: ' + subtotal + tax );
       setCartInfo(cartdata)
     } else {
       const cartdata = {
         elements: `# -`,
         subtotal: `$ -`,
-        estShCost: `$ -`,
         taxRate: '',
         tax: `$ -`,
         total: '-'
@@ -151,10 +148,6 @@ const Cart = () => {
           <div className='flex md justify-between pb-1 border-b border-zinc-400 '>
             <p >subtotal :</p>
             <p> {cartInfo.subtotal}</p>
-          </div>
-          <div className='flex justify-between items-center pb-1 gap-3 border-b border-zinc-400 '>
-            <p >estimated shipping cost :</p>
-            <p className='whitespace-nowrap'>{cartInfo.estShCost}</p>
           </div>
           <div className='flex justify-between pb-1 border-b border-zinc-400 '>
             <p>Tax : {cartInfo.taxRate}%</p>
