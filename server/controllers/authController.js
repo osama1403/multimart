@@ -41,7 +41,6 @@ const handleLogin = async (req, res) => {
       if (user) {
         const verified = await bcrypt.compare(password, user.password);
         if (verified) {
-          const JWT = jwt.sign({ email: email, id: user._id, role: 'user' }, process.env.JWT_SECRET, { expiresIn: 10 })
           const addresses = []
           if (user.address1)
             addresses.push(user.address1)
@@ -55,9 +54,10 @@ const handleLogin = async (req, res) => {
             cart: user.cart,
             addresses: addresses
           }
-          const refreshToken = jwt.sign({ email: email, id: user._id, role: 'user' }, process.env.JWT_SECRET, { expiresIn: '7d' })
+          const JWT = jwt.sign({ email: email, id: user._id, role: 'user' }, process.env.JWT_SECRET, { expiresIn: 10 })
+          const refreshToken = jwt.sign({ id: user._id, role: 'user' }, process.env.JWT_SECRET, { expiresIn: '7d' })
+
           res.cookie('RT', refreshToken, { httpOnly: true, secure: 'true', sameSite: 'none', maxAge: 7 * 24 * 60 * 60 * 1000 })
-          // console.log(res);
           return res.status(200).json({ token: JWT, role: 'user', id: user._id, userData })
         }
       }
@@ -89,9 +89,12 @@ const handleSellerLogin = async (req, res) => {
       if (seller) {
         const verified = await bcrypt.compare(password, seller.password);
         if (verified) {
-          const JWT = jwt.sign({ email: email, id: seller._id, role: 'seller' }, process.env.JWT_SECRET)
-          res.status(200).json({ token: JWT, role: 'seller', id: seller._id })
-          return
+          const JWT = jwt.sign({ email: email, id: seller._id, role: 'seller' }, process.env.JWT_SECRET, { expiresIn: 10 })
+          const refreshToken = jwt.sign({ id: seller._id, role: 'seller' }, process.env.JWT_SECRET, { expiresIn: '7d' })
+
+          res.cookie('RT', refreshToken, { httpOnly: true, secure: 'true', sameSite: 'none', maxAge: 7 * 24 * 60 * 60 * 1000 })
+          return res.status(200).json({ token: JWT, role: 'seller', id: seller._id })
+
         }
       }
     } catch (e) {
@@ -118,7 +121,6 @@ const handleRefresh = async (req, res) => {
         if (role === 'user') {
           // handle user refresh
           const user = await User.findById(id)
-          const JWT = jwt.sign({ email: user.email, id: user._id, role: 'user' }, process.env.JWT_SECRET, { expiresIn: 10 })
           const addresses = []
           if (user.address1)
             addresses.push(user.address1)
@@ -132,6 +134,7 @@ const handleRefresh = async (req, res) => {
             cart: user.cart,
             addresses: addresses
           }
+          const JWT = jwt.sign({ email: user.email, id: user._id, role: 'user' }, process.env.JWT_SECRET, { expiresIn: 10 })
           return res.status(200).json({ token: JWT, role: 'user', id: user._id, userData })
 
 
@@ -152,8 +155,14 @@ const handleRefresh = async (req, res) => {
     return res.status(403).send('Unauthorized')
   }
 }
-const handleSellerRefresh = (req, res) => {
-  console.log(req.cookies);
+
+const handleLogout = (req, res) => {
+  const refreshCookie = req.cookies?.RT
+  console.log(refreshCookie);
+  if (refreshCookie) {
+    res.clearCookie('RT', { httpOnly: true, secure: true, sameSite: 'none' })
+    res.send('logged out')
+  }
 }
 
-module.exports = { handleLogin, handleSellerLogin, handleRefresh, handleSellerRefresh }
+module.exports = { handleLogin, handleSellerLogin, handleRefresh, handleLogout }

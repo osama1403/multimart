@@ -27,7 +27,7 @@ const Login = () => {
 
     try {
       setLoading(true)
-      const response = await axios.post('/login/seller', { email, password })
+      const response = await axios.post('/auth/sellerlogin', { email, password })
       const { token, role, id } = response?.data
       setAuth({ accessToken: token, role, id })
       navigate(from, { replace: true })

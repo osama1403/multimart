@@ -1,8 +1,6 @@
-import { useState, useContext, useLayoutEffect, useEffect } from "react";
+import { useState, useContext, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import img from "../../assets/prod.jpeg"
 import { IoSend } from "react-icons/io5";
-// import { BsClock,BsCheck2 } from "react-icons/bs";
 import { FaCheck, FaRegClock } from "react-icons/fa";
 import { BiError } from "react-icons/bi";
 import { socketIoContext } from "../../Context/SocketIoContext";
@@ -34,7 +32,7 @@ const SingleChat = () => {
         return el
       }))
     }
-  }, [data])
+  }, [data,auth?._id,setChats,setMessages])
 
   // useEffect(() => {
   //   console.log('messahes = '+ messages.length);
@@ -67,7 +65,7 @@ const SingleChat = () => {
 
   return (
     <>
-      <div className="h-[calc(100vh-106px)] grow max-w-6xl p-2 md:p-4 self-stretch mx-auto  mb-4 font-nunito">
+      <div className={`${auth.role==='user'?' h-[calc(100vh-116px)] sm:h-[calc(100vh-64px)]': 'h-[calc(100vh-52px)] sm:h-screen' } grow max-w-6xl p-2 sm:p-4 self-stretch mx-auto font-nunito`}>
         {
           error ? <p className="text-lg text-red-500 "> {error}</p>
             : loading ?
@@ -78,7 +76,7 @@ const SingleChat = () => {
                   {/* header */}
                   <div className="flex items-center px-2 py-1 rounded-2xl gap-3 bg-white">
                     <img src={data?.peer?.profilePicture ? serverUrl + '/' + data.peer.profilePicture : profilePlaceholder} alt="" className="rounded-full w-12 h-12 border " />
-                    <h1 className="font-semibold text-xl ">{auth.role === 'user' ? data?.peer?.shopName : data?.peer?.firstname + ' ' + data?.peer?.lastName}</h1>
+                    <h1 className="font-semibold text-xl ">{auth.role === 'user' ? data?.peer?.shopName : data?.peer?.firstName + ' ' + data?.peer?.lastName}</h1>
                   </div>
 
                   <div className="grow flex flex-col-reverse px-2 overflow-y-auto  noscrollbar">

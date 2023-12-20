@@ -97,49 +97,49 @@ const getSingleProduct = async (req, res) => {
 
 }
 
-const getHomePageData = async (req, res) => {
-  // get elements from categories electronics and beauty and deals , get only 10 of each
-  try {
+// const getHomePageData = async (req, res) => {
+//   // get elements from categories electronics and beauty and deals , get only 10 of each
+//   try {
 
-    const data = await Product.aggregate([
-      {
-        $facet: {
-          "electronics": [
-            {
-              $match: { categories: { $in: ["electronics"] } }
-            },
-            {
-              $limit: 10
-            }
-          ],
-          "Beauty and Personal Care": [
-            {
-              $match: { categories: { $in: ["beauty and personal care"] } }
-            },
-            {
-              $limit: 10
-            }
-          ],
-          "deals": [
-            {
-              $match: { deal: { $exist: true, $ne: {} } }
-            },
-            {
-              $limit: 10
-            }
-          ]
-        }
-      }
-    ])
+//     const data = await Product.aggregate([
+//       {
+//         $facet: {
+//           "electronics": [
+//             {
+//               $match: { categories: { $in: ["electronics"] } }
+//             },
+//             {
+//               $limit: 10
+//             }
+//           ],
+//           "Beauty and Personal Care": [
+//             {
+//               $match: { categories: { $in: ["beauty and personal care"] } }
+//             },
+//             {
+//               $limit: 10
+//             }
+//           ],
+//           "deals": [
+//             {
+//               $match: { deal: { $exist: true, $ne: {} } }
+//             },
+//             {
+//               $limit: 10
+//             }
+//           ]
+//         }
+//       }
+//     ])
 
-    res.json({ success: true, data: data })
+//     res.json({ success: true, data: data })
 
-  } catch (e) {
-    console.log(e);
-    res.status(500).json({ success: false, msg: 'server error' })
-  }
+//   } catch (e) {
+//     console.log(e);
+//     res.status(500).json({ success: false, msg: 'server error' })
+//   }
 
-}
+// }
 
 const addProduct = (req, res) => {
   try {
@@ -347,7 +347,6 @@ const rateProduct = async (req, res) => {
 module.exports = {
   getProducts,
   getSingleProduct,
-  getHomePageData,
   addProduct,
   editStock,
   getSellerProducts,

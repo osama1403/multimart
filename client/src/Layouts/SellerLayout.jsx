@@ -4,6 +4,8 @@ import { AiFillDashboard, AiOutlineClose, AiOutlineMenu } from 'react-icons/ai'
 import { BsFillChatFill } from 'react-icons/bs'
 import { useState, useEffect, useContext } from "react";
 import { socketIoContext } from "../Context/SocketIoContext";
+import { RiLogoutBoxLine } from "react-icons/ri";
+import useLogout from "../hooks/useLogout";
 
 const links = [
   { name: "Store", link: '/seller/store', icon: <FaStore /> },
@@ -18,6 +20,7 @@ const SellerLayout = () => {
   const [open, setOpen] = useState(false)
   const { pathname } = useLocation();
   const { notification } = useContext(socketIoContext)
+  const { logout, loading } = useLogout()
   console.log(notification);
   useEffect(() => {
     setOpen(false);
@@ -51,21 +54,30 @@ const SellerLayout = () => {
               <div className="flex flex-col w-full text-xl p-6 [&>*:not(:last-child)]:border-b ">
                 {links.map((el, idx) =>
                   <NavLink to={el.link} key={idx} className={({ isActive }) => { return `relative w-full py-5 flex items-center justify-center  gap-4 ${isActive ? 'text-primary' : ''}` }}>
-                    {el.name === 'Chat' ? <i className={`relative chaticon ${notification ? '':'before:hidden'}`}>{el.icon}</i> : el.icon} <span className="inline">{el.name}</span>
+                    {el.name === 'Chat' ? <i className={`relative chaticon ${notification ? '' : 'before:hidden'}`}>{el.icon}</i> : el.icon} <span className="inline">{el.name}</span>
                   </NavLink>
                 )}
+                <button className={`relative w-full py-5 flex items-center justify-center  gap-4 hover:text-primary`} onClick={logout}>
+                  <RiLogoutBoxLine /><span className="inline">{loading ? '...' : 'Log out'}</span>
+                </button>
               </div>
             </div>
           </div>
         </div>
 
+
         <div className="relative hidden sm:block border-r">
-          <div className="flex flex-col sticky top-0 gap-3 py-10 min-w-max text-2xl lg:text-lg text-zinc-600  font-nunito">
-            {links.map((el, idx) =>
-              <NavLink to={el.link} key={idx} className={({ isActive }) => { return `relative w-full  px-5 py-2 flex items-center justify-center sm:justify-start gap-4 ${isActive ? 'text-primary' : ''}` }}>
-                {el.name === 'Chat' ? <i className={`relative chaticon ${notification ? '':'before:hidden'}`}>{el.icon}</i> : el.icon} <span className={` hidden lg:inline`}>{el.name}</span>
-              </NavLink>
-            )}
+          <div className="flex flex-col sticky top-0 gap-3 py-10 justify-between min-w-max h-screen text-2xl lg:text-lg text-zinc-600  font-nunito  overflow-y-auto noscrollbar">
+            <div className="flex flex-col gap-3">
+              {links.map((el, idx) =>
+                <NavLink to={el.link} key={idx} className={({ isActive }) => { return `relative w-full  px-5 py-2 flex items-center justify-center sm:justify-start gap-4 ${isActive ? 'text-primary' : ''}` }}>
+                  {el.name === 'Chat' ? <i className={`relative chaticon ${notification ? '' : 'before:hidden'}`}>{el.icon}</i> : el.icon} <span className={` hidden lg:inline`}>{el.name}</span>
+                </NavLink>
+              )}
+            </div>
+            <button className={`relative w-full  px-5 py-2 flex items-center justify-center sm:justify-start gap-4 hover:text-primary `} onClick={logout}>
+              <RiLogoutBoxLine /><span className={` hidden lg:inline`}>{loading ? '...' : 'Log out'}</span>
+            </button>
           </div>
         </div>
 
