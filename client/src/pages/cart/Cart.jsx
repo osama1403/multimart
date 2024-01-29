@@ -6,9 +6,9 @@ import { AiOutlineCloseCircle, AiOutlineCheck } from 'react-icons/ai';
 import { useEffect, useMemo, useState } from 'react';
 import CartItem from './CartItem';
 import useAuth from '../../hooks/useAuth';
+import { useNavigate } from 'react-router-dom';
 
 const Cart = () => {
-  console.log('cart here' );
   const privateAxios = usePrivateAxios()
   const { data, loading, error, setData } = useGetAxios('/user/cart', privateAxios, [])
   const { auth, setAuth } = useAuth()
@@ -22,11 +22,9 @@ const Cart = () => {
   const [submitSuccess, setSubmitSuccess] = useState(false)
   const countData = useMemo(() => { return data?.cart?.length > 0 ? data.cart.reduce((p, c) => { return { ...p, [c.id]: (elCount[c.id] ? elCount[c.id] : 1) } }, {}) : {} }, [data, elCount])
 
-
+  
   useEffect(() => {
-    // console.log("data: " +data);
     if (data) {
-      console.log('set auth');
       setAuth((p) => { return ({ ...p, userData: { ...p.userData, cart: data.cart } }) })
     }
   }, [data, setAuth])
@@ -35,16 +33,14 @@ const Cart = () => {
     if (data?.products?.length >= 0) {
       const taxRate = 8 //8%
       const subtotal = data.products.reduce((p, el) => p + (el.price * countData[el._id]), 0)
-      console.log("subtotal : " + subtotal);
       const tax = (subtotal * taxRate / 100)
       const cartdata = {
         elements: `# ${data.cart.length}`,
         subtotal: `$ ${(subtotal / 100).toFixed(2)}`,
         taxRate: taxRate,
         tax: `$ ${(tax / 100).toFixed(2)}`,
-        total: `$ ${((subtotal + tax ) / 100).toFixed(2)}`
+        total: `$ ${((subtotal + tax) / 100).toFixed(2)}`
       }
-      console.log(subtotal + ' tax : ' + tax  + ' tot: ' + subtotal + tax );
       setCartInfo(cartdata)
     } else {
       const cartdata = {
@@ -56,7 +52,6 @@ const Cart = () => {
       }
       setCartInfo(cartdata)
     }
-
   }, [data, countData])
 
   useEffect(() => {
@@ -79,7 +74,7 @@ const Cart = () => {
 
 
   const handleSubmit = async () => {
-    if (submitSuccess) {
+    if (submitSuccess || submitLoading) {
       return
     }
     if (!address) {
@@ -89,8 +84,14 @@ const Cart = () => {
     setCheckoutAlert('')
     setSubmitLoading(true)
     try {
-      await privateAxios.post('/user/placeorder', { address, count: countData })
-      setSubmitSuccess(true)
+      const response = await privateAxios.post('/user/placeorder', { address, count: countData })
+      if(response.data.paymentUrl){
+        window.location=response.data.paymentUrl
+      }
+      // handling stripe
+
+
+      // setSubmitSuccess(true)
     } catch (error) {
       if (error.response) {
         setCheckoutAlert(error.response.data?.msg ? error.response.data?.msg : 'something went wrong')

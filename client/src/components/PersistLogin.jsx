@@ -7,25 +7,33 @@ const PersistLogin = () => {
   const refresh = useRefreshToken()
   const { auth } = useAuth()
   const [isLoading, setIsLoading] = useState(true)
+  const persist = localStorage.getItem('persist') ? JSON.parse(localStorage.getItem('persist')) : false
+  console.log(persist);
   useEffect(() => {
+
     const verifyRefreshToken = async () => {
       try {
         await refresh()
       } catch (error) {
-        console.log(error);
+        console.error(error.message);
       } finally {
         setIsLoading(false)
       }
     }
-    !auth?.accessToken ? verifyRefreshToken() : setIsLoading(false)
+
+    (persist && !auth?.accessToken) ? verifyRefreshToken() : setIsLoading(false)
+
   }, [])
   return (
     <>
       {
-        isLoading ? <div className="w-full h-screen flex justify-center items-center">
-          <p className="text-lg text-primary">Just a moment ...</p>
-        </div> :
-          <Outlet />
+        !persist ?
+          <Outlet /> :
+          isLoading ?
+            <div className="w-full h-screen flex justify-center items-center">
+              <p className="text-lg text-primary">Just a moment ...</p>
+            </div> :
+            <Outlet />
       }
 
     </>

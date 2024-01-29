@@ -97,49 +97,6 @@ const getSingleProduct = async (req, res) => {
 
 }
 
-// const getHomePageData = async (req, res) => {
-//   // get elements from categories electronics and beauty and deals , get only 10 of each
-//   try {
-
-//     const data = await Product.aggregate([
-//       {
-//         $facet: {
-//           "electronics": [
-//             {
-//               $match: { categories: { $in: ["electronics"] } }
-//             },
-//             {
-//               $limit: 10
-//             }
-//           ],
-//           "Beauty and Personal Care": [
-//             {
-//               $match: { categories: { $in: ["beauty and personal care"] } }
-//             },
-//             {
-//               $limit: 10
-//             }
-//           ],
-//           "deals": [
-//             {
-//               $match: { deal: { $exist: true, $ne: {} } }
-//             },
-//             {
-//               $limit: 10
-//             }
-//           ]
-//         }
-//       }
-//     ])
-
-//     res.json({ success: true, data: data })
-
-//   } catch (e) {
-//     console.log(e);
-//     res.status(500).json({ success: false, msg: 'server error' })
-//   }
-
-// }
 
 const addProduct = (req, res) => {
   try {
@@ -152,8 +109,8 @@ const addProduct = (req, res) => {
         return res.status(500).json({ success: false, msg: "server error" })
       }
 
-      const { name, price, stock, categories, specifications, customizations } = JSON.parse(req.body?.productData)
-      if (!Array.isArray(categories) || categories.filter((el) => typeof(el) !== 'string').length > 0) {
+      const { name, price, stock, categories, specifications, description, customizations } = JSON.parse(req.body?.productData)
+      if (!Array.isArray(categories) || categories.filter((el) => typeof (el) !== 'string').length > 0) {
         req.files?.forEach(el => {
           const filename = el.filename
           console.log(filename);
@@ -173,7 +130,8 @@ const addProduct = (req, res) => {
       // console.log('files: '+req.method+req.get('Content-Type'));
       // console.log(req.body);
       try {
-        const isCreated = await Product.create({ owner, name, price, stock, specifications, categories, customizations, images })
+        const now = new Date()
+        const isCreated = await Product.create({ owner, name, price, stock, specifications, description, categories, customizations, images, date: now })
         if (isCreated) {
           res.json({ success: true, msg: 'product added successfully' })
           return
@@ -287,10 +245,13 @@ const editStock = async (req, res) => {
     if (prod.owner !== email) {
       res.status(403).send('unauthorized')
     }
-
     if (value < 0 || mode === 'REMOVE' && value > prod.stock) {
       return res.status(400).json({ msg: 'value error' })
     }
+    if (prod.stock < 0 && mode !== 'SET') {
+      return res.status(400).json({ msg: 'cannot edit only set' })
+    }
+    
     let query = {}
     switch (mode) {
       case 'ADD':

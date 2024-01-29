@@ -11,7 +11,10 @@ const Orders = () => {
     <>
       <div className="grow max-w-6xl self-stretch mx-auto flex flex-col gap-4 px-1 sm:px-4 py-4 mb-4 font-nunito">
         {
-          error ? <p className="text-lg text-red-500 " > {error}</p>
+          error ?
+            <div className="flex w-full h-[calc(100vh-64px)] justify-center items-center ">
+              <p className="text-xl font font-semibold text-red-500">{error} </p>
+            </div>
             :
             loading ?
               <LoadingThreeDots />

@@ -166,8 +166,7 @@ const Dashboard = () => {
                 </div>
               </div>
 
-              <div className="flex flex-col md:flex-row gap-5 mt-5 text-lg font-nunito ">
-                <div className="w-full rounded-xl shadow-md bg-white border ">
+                <div className="w-full max-w-4xl mt-5 mx-auto rounded-xl shadow-md bg-white border ">
                   <p className="border-b border-red text-lg p-2">orders :</p>
                   <div className="py-2 px-4">
 
@@ -192,8 +191,6 @@ const Dashboard = () => {
 
 
 
-              </div>
-
               {/* chart for sales and orders */}
               {/* chart resise based on container , container should have known sizes (not percentages) */}
               <div className=" relative max-w-4xl px-1 md:px-4 py-2 mt-5 min-h-[250px]  mx-auto w-full sm:w-[70vw] aspect-[2/1] bg-white rounded-lg shadow-md border scroller overflow-x-auto">
@@ -203,14 +200,6 @@ const Dashboard = () => {
               </div>
 
 
-              {/* <div className="h-36 w-[70vw]  max-w-fit bg-red-300 overflow-auto">
-                      <div className="flex flex-nowrap min-w-fit">
-                        <div className="w-36">h</div>
-                        <div className="w-36">h</div>
-                        <div className="w-36">h</div>
-                        <div className="w-36">h</div>
-                      </div>
-                    </div> */}
 
               {/* most sold products */}
               <div className=" max-w-4xl mt-5 mx-auto bg-white rounded-xl overflow-hidden shadow-md border ">

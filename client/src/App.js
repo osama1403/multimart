@@ -26,6 +26,7 @@ import SellerPage from "./pages/sellerPage/SellerPage";
 import Chat from "./pages/chat/Chat";
 import SingleChat from "./pages/singleChat/SingleChat";
 import PersistLogin from "./components/PersistLogin";
+import AboutUs from "./pages/About/AboutUs";
 
 function App() {
   return (
@@ -44,6 +45,7 @@ function App() {
 
             <Route element={<RequireAuth allowedRoles={['visitor', 'user']} />}>
               <Route path="/" element={<Home />} />
+              <Route path="/about" element={< AboutUs />} />
               <Route path="products" element={<Products />} />
               <Route path="products/:id" element={<ProductPage />} />
               <Route path="seller/:id" element={<SellerPage />} />

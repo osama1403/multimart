@@ -21,9 +21,8 @@ const SellerSingleOrder = () => {
       const res = await privateAxios.post('/seller/orders/upgradestatus', { id: data._id }, { signal: abortController.signal })
       const { status } = res.data
       setData(p=>{return{...p,status}})
-      console.log(status);
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
     setUpgradeLoading(false)
   }
@@ -33,6 +32,7 @@ const SellerSingleOrder = () => {
       abortController.abort()
     }
   }, [])
+  
   return (
     <>
       <div className="grow min-h-screen px-2 sm:px-6 py-8 max-w-6xl mx-auto">
@@ -45,7 +45,7 @@ const SellerSingleOrder = () => {
                 <div className="w-full px-4 py-3 rounded-lg border shadow-md text-zinc-700 ">
                   <p >placed in:</p>
                   <p ><AiOutlineCalendar className='inline' />{new Date(data.date).toLocaleString()}</p>
-                  <p className="mt-2">total price : <span className="text-xl">${(data.subtotal + data.shippingCost) / 100 .toFixed(2)}</span></p>
+                  <p className="mt-2">total price : <span className="text-xl">${data.subtotal / 100 .toFixed(2)}</span></p>
 
                   <p className="mt-2">ship to:</p>
                   <p>{data.shippingAddress}</p>
@@ -62,7 +62,7 @@ const SellerSingleOrder = () => {
                             : 'text-green-500'}`} />
                       {data.status}
                     </p>
-                    <button className={`flex items-center justify-center border rounded-md w-32 py-1 px-3 ${data.status === 'Delivered' ? 'hidden' : ''} `} onClick={upgradeStatus}>
+                    <button className={`flex outline-none hover:border-primary hover:text-primary font-medium items-center justify-center border rounded-md w-32 py-1 px-3 ${data.status === 'Delivered' ? 'hidden' : ''} `} onClick={upgradeStatus}>
                       {
                         upgradeLoading ? <BsThreeDots className="text-2xl"/>
                           :

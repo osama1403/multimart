@@ -29,11 +29,6 @@ const ProductPage = () => {
   const inWishlist = useMemo(() => auth?.userData?.wishlist?.includes(data?._id), [auth, data])
   const inCart = useMemo(() => auth?.userData?.cart?.map((el) => el.id).includes(data?._id), [auth, data])
 
-  // useEffect(() => {
-  //   console.log('inCart: ' + inCart);
-  //   console.log('inWishlist: ' + inWishlist);
-  // })
-
   const handleAddToCart = async () => {
     //navigate to login page if not authenticated
     if (!auth.accessToken) {
@@ -86,7 +81,6 @@ const ProductPage = () => {
       setAlert('')
       setWishlistButtonLoading(true)
       const newWishlist = [...auth.userData.wishlist]
-      console.log('sssssssssssssssss');
       if (!inWishlist) {
         await privateAxios.post('/user/addtowishlist', { id: data?._id })
         newWishlist.push(data?._id)
@@ -96,7 +90,6 @@ const ProductPage = () => {
       }
       const authWithEditedWishlist = { ...auth, userData: { ...auth.userData, wishlist: newWishlist } }
       setAuth(authWithEditedWishlist)
-      console.log(authWithEditedWishlist)
 
     } catch (error) {
       if (error.response) {
@@ -112,7 +105,6 @@ const ProductPage = () => {
     if (data?.customizations) {
       const custChoice = data.customizations.reduce((previous, el) => { return ({ ...previous, [el.name]: null }) }, {})
       setCustomizations(custChoice)
-      // console.log("customizations : " + JSON.stringify(customizations));
     }
   }, [data])
 
@@ -180,14 +172,10 @@ const ProductPage = () => {
                     <p className='inline-block'>{data.totalRatingCount === 0 ? 0 : (data.totalRating / data.totalRatingCount).toFixed(1)} <span className='text-sm ml-1'>( {data.totalRatingCount} )</span></p>
                   </div>
 
-                  <div className='mt-2 flex items-center space-x-3'>
-                    <p className='line-through '>
+                    <p className='text-xl font-medium mt-2'>
                       {data.price / 100}$
                     </p>
-                    <p className='text-xl  '>
-                      {data.price / 100}$
-                    </p>
-                  </div>
+                  
                   {/* description */}
                   <p className='mt-4 '> {data.description} </p>
                   {/* specifications */}

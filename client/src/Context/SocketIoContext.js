@@ -7,7 +7,6 @@ const socketIoContext = createContext({})
 const serverUrl = process.env.REACT_APP_URL
 
 const SocketIoProvider = ({ children }) => {
-  // let socket = null;
   const [socket, setSocket] = useState(null)
   const [messages, setMessages] = useState([])
   const [chats, setChats] = useState([])
@@ -16,12 +15,10 @@ const SocketIoProvider = ({ children }) => {
   const location = useLocation()
 
   useEffect(() => {
-    console.log(location.pathname);
     setMessages([])
   }, [location.pathname])
 
   useEffect(() => {
-    console.log( chats);
     if (chats) {
       const a = chats.find(el => {return (el.lastMessage.author !== auth.id && el.lastMessage.status !== 'read')})
       if (a) {
@@ -37,10 +34,6 @@ const SocketIoProvider = ({ children }) => {
     if (auth?.accessToken && !socket) {
       let socket = io(serverUrl, { auth: { token: auth.accessToken } })
       setSocket(socket)
-      socket.on('connect', () => {
-        // socket.emit('message',socket.id)
-        console.log('connected to io');
-      })
     }else if(!auth?.accessToken && socket){
       setSocket(null)
     }
@@ -50,8 +43,6 @@ const SocketIoProvider = ({ children }) => {
     if (socket) {
       socket.removeAllListeners()
       socket.on('message', (msg) => {
-        console.log(msg);
-        console.log('new message delivered : ' + `msgauthor : ${msg.author} , path : ${location.pathname} ` + (auth.role === 'user' && location.pathname === `/chat/${msg.author}`) || (auth.role === 'seller' && location.pathname === `/seller/chat/${msg.author}`));
         if ((auth.role === 'user' && location.pathname === `/chat/${msg.author}`) || (auth.role === 'seller' && location.pathname === `/seller/chat/${msg.author}`)) {
           socket.emit('userReadMessage', msg._id, msg.author)
           setMessages(p => [...p, msg])
@@ -92,7 +83,6 @@ const SocketIoProvider = ({ children }) => {
       })
 
       socket.on('join chat', (peer_id) => {
-        console.log('join chat: ' + peer_id);
         if ((auth.role === 'user' && location.pathname === `/chat/${peer_id}`) || (auth.role === 'seller' && location.pathname === `/seller/chat/${peer_id}`)) {
           setMessages(p => p.map(el => {
             if (el.author === auth.id) {
@@ -105,7 +95,6 @@ const SocketIoProvider = ({ children }) => {
       })
 
       socket.on('initNotificationChats', (notificationChats) => {
-        console.log(notificationChats);
         if ((auth.role === 'user' && location.pathname !== `/chat`) || (auth.role === 'seller' && location.pathname !== `/seller/chat`)) {
           setChats(notificationChats)
         }

@@ -14,7 +14,6 @@ const SingleChat = () => {
   const privateAxios = usePrivateAxios()
   const serverUrl = process.env.REACT_APP_URL
   const { id } = useParams()
-  console.log(id);
   const { auth } = useAuth()
   const { socket, messages, setMessages, setChats } = useContext(socketIoContext)
   const { data, loading, error } = useGetAxios(`/chat/${id}`, privateAxios, [])
@@ -34,15 +33,10 @@ const SingleChat = () => {
     }
   }, [data,auth?._id,setChats,setMessages])
 
-  // useEffect(() => {
-  //   console.log('messahes = '+ messages.length);
-  //   return () => { setMessages([]) }
-  // }, [])
-
+  
   const handleSendMessage = () => {
     if (text.trim()) {
       const message = { author: auth.id, to: id, text: text.trim(), status: 'sending', time: new Date() }
-      console.log(message);
       setMessages(p => [...p, message])
       setText('')
 

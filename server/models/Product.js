@@ -42,9 +42,11 @@ const productSchema = new Schema({
     options: [String],
   }],
   images: [String],
-  deal: {
-    newprice: Number
+  date:{
+    type:Date,
+    required:true
   }
+  
 
 })
 

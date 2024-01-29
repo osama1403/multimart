@@ -9,14 +9,12 @@ const OrderProductItem = ({ product, details, rating,delivered }) => {
   const privateAxios = usePrivateAxios()
   const [rate, setRate] = useState()
   const handleRate = async (x) => {
-    console.log(x);
-    console.log(product._id)
     const id = product._id
     try {
       await privateAxios.post('/user/rateproduct', { id, rate: x })
       setRate(x)
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
 
   }
@@ -45,7 +43,6 @@ const OrderProductItem = ({ product, details, rating,delivered }) => {
     rateStars(rate)
   }, [rateStars,rate])
 
-  console.log(product);
   return (
     <div className='w-full flex flex-col sm:flex-row items-center sm:items-stretch gap-3 py-4 max-w-2xl '>
 

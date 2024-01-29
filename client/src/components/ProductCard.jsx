@@ -12,7 +12,6 @@ const ProductCard = ({ data }) => {
   const Location = useLocation()
   const Navigate = useNavigate()
   const privateAxios = usePrivateAxios()
-  console.log('product card rerender');
 
   const handleAddToWishlist = async (e) => {
     e.preventDefault()
@@ -31,8 +30,6 @@ const ProductCard = ({ data }) => {
       }
       const authWithEditedWishlist = { ...auth, userData: { ...auth.userData, wishlist: newWishlist } }
       setAuth(authWithEditedWishlist)
-      console.log(authWithEditedWishlist)
-
     } catch (error) {
       console.error(error);
     }

@@ -8,7 +8,6 @@ import { RiLogoutBoxLine } from "react-icons/ri";
 import useLogout from "../hooks/useLogout";
 
 const links = [
-  { name: "Store", link: '/seller/store', icon: <FaStore /> },
   { name: "Dashboard", link: '/seller/dashboard', icon: <AiFillDashboard /> },
   { name: "Products", link: '/seller/products', icon: <FaThLarge /> },
   { name: "Add product", link: '/seller/addproduct', icon: <FaPlus /> },
@@ -21,7 +20,6 @@ const SellerLayout = () => {
   const { pathname } = useLocation();
   const { notification } = useContext(socketIoContext)
   const { logout, loading } = useLogout()
-  console.log(notification);
   useEffect(() => {
     setOpen(false);
   }, [pathname])

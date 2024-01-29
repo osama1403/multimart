@@ -5,9 +5,6 @@ const SearchBar = ({ handleSearch, searchValue }) => {
   const sref = useRef()
   const handleSearchAction = () => {
     handleSearch(search.trim())
-    // if (search) {
-      // console.log(search);
-    // }
   }
 
   return (

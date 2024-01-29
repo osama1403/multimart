@@ -5,32 +5,6 @@ import useGetAxios from "../../hooks/useGetAxios";
 
 
 const HorizontalScroller = ({ category }) => {
-  // const [data, setData] = useState(null)
-  // const [loading, setLoading] = useState(false)
-  // const [msg, setMsg] = useState('')
-
-  // useEffect(() => {
-  //   const aborter = new AbortController()
-  //   const fetchData = async () => {
-  //     try {
-  //       setLoading(true)
-  //       setMsg('')
-  //       const res = await axios.get(`/products?categories[]=${category}&limit=8`, { signal: aborter.signal })
-  //       setData(res.data)
-  //     } catch (error) {
-  //       if (error.response) {
-  //         setMsg(error.response.data?.msg ? error.response.data?.msg : 'something went wrong')
-  //       } else if (error.request) {
-  //         setMsg('no server response')
-  //       }
-  //     }
-  //     setLoading(false)
-  //   }
-  //   fetchData()
-  //   return (() => {
-  //     aborter.abort()
-  //   })
-  // }, [axios])
 
   const {data,loading,error} = useGetAxios(`/products?categories[]=${category}&limit=8`,axios,[])
 

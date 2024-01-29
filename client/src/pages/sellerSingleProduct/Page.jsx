@@ -1,6 +1,6 @@
 import { AiOutlineStar } from 'react-icons/ai'
 import usePrivateAxios from '../../hooks/usePrivateAxios';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import useGetAxios from '../../hooks/useGetAxios';
 import { BsThreeDots } from 'react-icons/bs'
@@ -9,8 +9,8 @@ import LoadingThreeDots from '../../components/LoadingThreeDots'
 const SellerSingleProduct = () => {
   const privateaxios = usePrivateAxios()
   const { id } = useParams()
-  const[x,setX] = useState(false)
-  const { data, loading, error } = useGetAxios(`/seller/products/${id}`, privateaxios, [id,x])
+  const [x, setX] = useState(false)
+  const { data, loading, error } = useGetAxios(`/seller/products/${id}`, privateaxios, [id, x])
   const [editStock, setEditStock] = useState(false)
   const [editStockData, setEditStockData] = useState({ mode: 'ADD', value: 0 })
   const [stockLoading, setStockLoading] = useState(false)
@@ -18,8 +18,11 @@ const SellerSingleProduct = () => {
 
 
   const handleEditSubmit = async () => {
-    if (editStockData.mode !== 'ALWAYS AVAILABLE' && editStockData.value == 0) {
+    if (editStockData.mode !== 'ALWAYS AVAILABLE' && editStockData.value === 0) {
       return setErr('please provide a value')
+    }
+    if (editStockData.mode !== 'SET' && data?.stock < 0) {
+      return setErr('product is always available')
     }
     setErr('')
     setStockLoading(true)
@@ -30,7 +33,7 @@ const SellerSingleProduct = () => {
       }
       await privateaxios.post('/seller/editstock', data)
       setX(!x)
-      setEditStockData({mode:'ADD',value:0})
+      setEditStockData({ mode: 'ADD', value: 0 })
       setEditStock(false)
     } catch (error) {
       if (error.response) {
@@ -40,7 +43,7 @@ const SellerSingleProduct = () => {
       }
     }
     setStockLoading(false)
-    
+
 
   }
 
@@ -61,7 +64,7 @@ const SellerSingleProduct = () => {
               </div>
 
               <div className='w-full mb-4 px-2 py-3 border rounded-xl shadow-md '>
-                <p>Added in: 22/11/2021</p>
+                <p>Added in: {new Date(data.date).toLocaleString()}</p>
                 <p className='text-lg font-medium'>units sold: {data.ordersCount.total}</p>
                 <p className=''>pending units: {data.ordersCount.pending}</p>
                 <p className=''>processing units: {data.ordersCount.processing}</p>
@@ -138,20 +141,13 @@ const SellerSingleProduct = () => {
 
                 <div className='mt-2 flex items-center text-xl font font-nunito text-primary'>
                   <AiOutlineStar className='inline-block mr-2' />
-                  <p className='inline-block'>{data.rating}</p>
+                  <p className='inline-block'>{(data.totalRating / data.totalRatingCount).toFixed(1)}</p>
                 </div>
 
-                <div className='mt-2 flex items-center space-x-3'>
-                  <h2 className='text-xl  '>
-                    Price:
-                  </h2>
-                  <p className='line-through '>
-                    {data.price.toFixed(2)}
-                  </p>
-                  <p className='text-xl  '>
-                    {data.price.toFixed(2)}
-                  </p>
-                </div>
+                <p className='text-xl mt-2 '>
+                  Price: ${(data.price / 100).toFixed(2)}
+                </p>
+
                 {/* description */}
                 <p className='mt-4'>
                   {data.description}
@@ -177,11 +173,11 @@ const SellerSingleProduct = () => {
                   {
                     data.customizations.map((el, idx) => {
                       return (
-                        <div key={idx} className='mb-2'>
+                        <div key={idx} className='mb-2 pl-2'>
                           <p className='text-lg font-medium'>{el.name}:</p>
                           <div className='flex flex-wrap gap-10 items-center justify-s max-w-lg w-full '>
                             {
-                              el.options.map((option, optidx) => <p key={optidx}>{option}</p>)
+                              el.options.map((option, optidx) => <p className='bg-slate-200 rounded-full px-3 pb-[2px] font-semibold' key={optidx}>{option}</p>)
                             }
                           </div>
                         </div>

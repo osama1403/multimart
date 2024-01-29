@@ -7,7 +7,6 @@ import { FaPlus, FaMinus } from 'react-icons/fa';
 const serverUrl = process.env.REACT_APP_URL
 
 const CartItem = ({ el, customizations, setData, elcount , setelcount }) => {
-  console.log('item');
   const privateAxios = usePrivateAxios()
   const [loadingRemove, setLoadingRemove] = useState(false)
 
@@ -18,7 +17,7 @@ const CartItem = ({ el, customizations, setData, elcount , setelcount }) => {
       const res = await privateAxios.post('/user/removefromcart', { id, refresh: true })
       setData(res.data)
     } catch (err) {
-      console.log('err:' + err.message);
+      console.error(err.message);
       setLoadingRemove(false)
     }
   }

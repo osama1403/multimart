@@ -37,12 +37,11 @@ const Profile = () => {
     if (data) {
       if (data.firstName !== firstName || data.lastName !== lastName || data.phone !== phone || data.address1 !== address1 || data.address2 !== address2) {
         setChanged(true)
-        console.log('data.phone ' + data.phone);
       } else {
         setChanged(false)
       }
     }
-  }, [firstName, lastName, phone, address1, address2])
+  }, [data, firstName, lastName, phone, address1, address2])
 
   const handleSetImage = (e) => {
     if (e.target.files[0]) {
@@ -61,15 +60,8 @@ const Profile = () => {
         setImg(null)
       }
     } catch (e) {
-      console.log('eeeee' + e);
-      if (error.response) {
-        // setAlert(error.response.data?.msg ? error.response.data?.msg : 'something went wrong')
-      } else if (error.request) {
-        // setAlert('no server response')
-      }
+      console.error(error)
     }
-
-
   }
 
   const handleUpdataInfo = async () => {

@@ -7,20 +7,17 @@ const useGetAxios = (url, axiosInstance, dep) => {
 
   useEffect(() => {
     const aborter = new AbortController()
-    console.log("aa");
     const fetchData = async () => {
       setError('')
       setLoading(true)
       try {
-        // console.log(url);
         const result = await axiosInstance.get(url, { signal: aborter.signal })
         setData(result.data)
       } catch (error) {
-        console.log('useaxios error');
         if (error.response) {
           setError(error.response.data?.msg ? error.response.data.msg : 'something went wrong')
         } else if (error.request && error.message !== 'canceled') {
-          console.log(error);
+          console.error(error);
           setError('no server response')
         }
       }
@@ -29,7 +26,6 @@ const useGetAxios = (url, axiosInstance, dep) => {
     // const fetchData = ()=>{}
     fetchData()
     return () => {
-      console.log('aborted');
       aborter.abort()
     }
   }, [...dep, axiosInstance, url])

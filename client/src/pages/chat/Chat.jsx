@@ -28,7 +28,10 @@ const Chat = () => {
     <>
       <div className="grow max-w-6xl p-4 self-stretch mx-auto  mb-4 font-nunito">
         {
-          error ? <p className="text-lg text-red-500 "> {error}</p>
+          error ?
+            <div className="flex w-full h-[calc(100vh-64px)] justify-center items-center ">
+              <p className="text-xl font font-semibold text-red-500">{error} </p>
+            </div>
             : loading ?
               <LoadingThreeDots />
               : chats &&
@@ -66,12 +69,10 @@ const Chat = () => {
                     }
                   }
 
-
-                  console.log(el.lastMessage.date);
                   return (
                     <Link to={`${role === 'user' ? '/chat/' : '/seller/chat/'}${peer_id}`} key={el._id}>
                       <div className=" p-2 max-w-2xl flex items-center hover:bg-slate-200">
-                        <img src={pfp ? serverUrl + '/' + pfp : profilePlaceholder} alt="" className="rounded-full w-16 h-16 border " />
+                        <img src={pfp ? serverUrl + '/' + pfp : profilePlaceholder} alt="" className="rounded-full w-16 h-16 border object-cover" />
                         <div className="grow px-2">
                           <div className="flex justify-between items-center">
                             <h1 className="font-semibold ">{name}</h1>

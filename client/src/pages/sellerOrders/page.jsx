@@ -37,7 +37,7 @@ const SellerOrders = () => {
       const res = await (privateAxios.get('/seller/orders'))
       setData(res.data)
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
     setReloading(false)
 
@@ -94,7 +94,10 @@ const SellerOrders = () => {
                                 <tr key={el._id}>
                                   {/* <td className="p-3 text-primary">#795</td> */}
                                   <td className="p-3">
-                                    <p className="px-4 rounded bg-primary text-white w-fit">{el.status}</p>
+                                    <p className={`px-4 rounded  ${el.status === 'Pending' ? 'bg-primary'
+                                      : el.status === 'Processing' ? 'bg-yellow-400'
+                                        : el.status === 'Shipping' ? 'bg-blue-500'
+                                          : 'bg-green-500'} text-white w-fit`}>{el.status}</p>
                                   </td>
                                   <td className="p-3 font-semibold">${((el.subtotal + el.shippingCost) / 100).toFixed(2)}</td>
                                   <td className="p-3 text-zinc-600">{new Date(el.date).toLocaleString()}</td>

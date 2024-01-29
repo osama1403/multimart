@@ -14,8 +14,6 @@ const Navbar = () => {
   const { accessToken } = auth
   const { notification } = useContext(socketIoContext)
 
-  console.log(accessToken);
-
   useEffect(() => {
     if (open) {
       setOpen(false);
