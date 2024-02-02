@@ -82,6 +82,9 @@ const Login = () => {
                   <p className="text-red-500 mb-2">{alert}</p>
                 </div>
               }
+              <p className="text-sm text-zinc-800 font-semibold mt-1">DEMO SELLER ACCOUNT:</p>
+              <p className="text-sm text-zinc-800 font-semibold mt">email: sellerjohndoe@gmail.com</p>
+              <p className="text-sm text-zinc-800 font-semibold mt">password: 123123123</p>
             </div>
             <button className="mx-auto inline-block px-6 py-1 border-2 text-primary font-semibold border-primary rounded-full hover:px-7 transition-all duration-200 cursor-pointer">
               {loading ? <BsThreeDots className="text-3xl" /> : "login"}
