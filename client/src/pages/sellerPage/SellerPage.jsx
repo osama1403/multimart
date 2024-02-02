@@ -1,4 +1,3 @@
-import img from '../../assets/prod.jpeg'
 import ProductCard from '../../components/ProductCard'
 import useGetAxios from '../../hooks/useGetAxios';
 import axios from '../../api/axios'
@@ -9,7 +8,7 @@ import coverPlaceholder from '../../assets/images/coverPlaceholder.png';
 import { BsChatDots } from 'react-icons/bs';
 
 const SellerPage = () => {
-  const serverUrl = process.env.REACT_APP_URL
+  const serverUrl = process.env.REACT_APP_SERVER_URL
 
   const { id } = useParams()
   const { data, loading, error } = useGetAxios(`/products/seller/${id}`, axios, [])

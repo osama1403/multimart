@@ -9,16 +9,27 @@ const Order = require('../models/Order');
 
 
 const getProducts = async (req, res) => {
-  const pageCount = 40;
-  let { page, categories } = req.query
+  const pageCount = 10;
+  let { page, categories, order } = req.query
   let search = req.query.search || ''
+  search = search.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   page = !isNaN(page) ? page * 1 : 0;
-  // console.log(categories);
-  // console.log(search);
-  // console.log(Array.isArray(categories));
-  // console.log('page: ' + page);
+ 
 
   const queryFilter = categories && Array.isArray(categories) ? { categories: { $in: categories } } : {}
+  const querySort = {}
+  if (order === 'PHTL') {
+    querySort.price = -1
+  } else if (order === 'PLTH') {
+    querySort.price = 1
+  } else if (order === 'RHTL') {
+    querySort.rate = -1
+  } else if (order === 'RLTH') {
+    querySort.rate = 1
+  } else {
+    querySort.rate = -1
+  }
+
   queryFilter.name = { $regex: search, $options: 'i' }
   try {
     // const products = await Product.find(queryFilter).skip(page * pageCount).limit(pageCount);
@@ -36,6 +47,20 @@ const getProducts = async (req, res) => {
           'products': [
             {
               $match: queryFilter
+            },
+            {
+              $addFields: {
+                rate: {
+                  $cond: {
+                    if: { $eq: ["$totalRatingCount", 0] }, 
+                    then: 0,
+                    else: { $divide: ["$totalRating", "$totalRatingCount"] } // Perform division if totalRatingCount is not zero
+                  }
+                }
+              }
+            },
+            {
+              $sort: querySort
             },
             {
               $skip: page * pageCount
@@ -251,7 +276,7 @@ const editStock = async (req, res) => {
     if (prod.stock < 0 && mode !== 'SET') {
       return res.status(400).json({ msg: 'cannot edit only set' })
     }
-    
+
     let query = {}
     switch (mode) {
       case 'ADD':

@@ -4,7 +4,7 @@ import usePrivateAxios from '../../hooks/usePrivateAxios'
 import { BsThreeDots } from 'react-icons/bs'
 import { FaPlus, FaMinus } from 'react-icons/fa';
 
-const serverUrl = process.env.REACT_APP_URL
+const serverUrl = process.env.REACT_APP_SERVER_URL
 
 const CartItem = ({ el, customizations, setData, elcount , setelcount }) => {
   const privateAxios = usePrivateAxios()

@@ -22,12 +22,9 @@ app.use(cors({
 connectDB()
 
 app.use('/api', apiRouter)
-app.get("/*", (req, res) => {
-  res.sendFile('index.html', { root: path.join(__dirname, 'build') });
-})
 
 mongoose.connection.once('open', () => {
-  console.log("db connected");
+  console.log("DB connected");
   const server = app.listen(5000, () => { console.log('server is up on port 5000'); })
 
   const io = socketIo(server, {
@@ -40,7 +37,7 @@ mongoose.connection.once('open', () => {
     ioRegisterEvents(io, socket)
     await ioConnectionNotifications(io, socket)
   }
-  // console.log(app.locals.io);
+
   io.use(ioIsAuthenticated)
   io.on('connection', onConnection)
 })

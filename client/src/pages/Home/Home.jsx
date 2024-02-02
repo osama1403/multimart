@@ -1,16 +1,17 @@
 import Hero from "./Hero";
 import HorizontalScroller from "./HorizontalScroller";
 import CategoriesSection from "./CategoriesSection";
+import Categories from "../../Categories";
 
 const Home = () => {
   
   return (
     <>
     <Hero />
-    <HorizontalScroller category={'Automotive'}/>
     <CategoriesSection />
-    <HorizontalScroller category={'Others'}/>
-    <HorizontalScroller category = {'Apparel and Fashion'}/>
+    <HorizontalScroller category={Categories[0].name}/>
+    <HorizontalScroller category={Categories[2].name}/>
+    <HorizontalScroller category = {Categories[1].name}/>
     
     {/* <SearchBar /> */}
     </>

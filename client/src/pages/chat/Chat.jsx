@@ -2,14 +2,13 @@ import LoadingThreeDots from "../../components/LoadingThreeDots";
 import usePrivateAxios from "../../hooks/usePrivateAxios";
 import useGetAxios from "../../hooks/useGetAxios";
 import profilePlaceholder from '../../assets/images/profilePlaceholder.png';
-import img from "../../assets/prod.jpeg"
 import { Link } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
-import { useContext, useEffect, useLayoutEffect } from "react";
+import { useContext, useLayoutEffect } from "react";
 import { socketIoContext } from "../../Context/SocketIoContext";
 
 const Chat = () => {
-  const serverUrl = process.env.REACT_APP_URL
+  const serverUrl = process.env.REACT_APP_SERVER_URL
   const { auth } = useAuth()
   const { chats, setChats } = useContext(socketIoContext)
   const role = auth.role
@@ -22,7 +21,7 @@ const Chat = () => {
     if (data) {
       setChats(data)
     }
-  }, [data])
+  }, [data,setChats])
 
   return (
     <>

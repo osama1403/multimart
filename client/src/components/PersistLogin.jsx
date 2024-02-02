@@ -8,7 +8,6 @@ const PersistLogin = () => {
   const { auth } = useAuth()
   const [isLoading, setIsLoading] = useState(true)
   const persist = localStorage.getItem('persist') ? JSON.parse(localStorage.getItem('persist')) : false
-  console.log(persist);
   useEffect(() => {
 
     const verifyRefreshToken = async () => {

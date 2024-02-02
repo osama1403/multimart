@@ -1,5 +1,4 @@
 const User = require('../models/User');
-const Cart = require('../models/Cart')
 const getJwtEmail = require('../utils/getJwtEmail');
 const Order = require('../models/Order');
 const Product = require('../models/Product')
@@ -7,7 +6,10 @@ const mongoose = require('mongoose');
 const Seller = require('../models/Seller');
 const PaymentOrder = require('../models/PaymentOrder');
 const Stripe = require('stripe');
+require('dotenv').config();
 const stripe = Stripe(process.env.STRIPE_PRIVATE_KEY)
+
+const taxRate = 0.08 // 8%
 
 const placeOrder = async (req, res) => {
   const email = getJwtEmail(req)
@@ -39,7 +41,6 @@ const placeOrder = async (req, res) => {
     ])
     matched = matched[0]
     // product in cart is not in products
-    // console.log(matched);
 
     if (matched?.cart?.some(el => { return !matched.products.some(e => e._id.equals(el.id)) })) {
       return res.status(400).json({ success: false, msg: 'some products are not right' })
@@ -65,9 +66,6 @@ const placeOrder = async (req, res) => {
     if (errInCus) {
       return res.status(401).json({ success: false, msg: 'faulty cart data' })
     }
-
-    const taxRate = 0.08 // 8%
-
 
     matched.cart.forEach(el => {
       let product = matched.products.find(e => e._id.equals(el.id))
@@ -126,22 +124,23 @@ const placeOrder = async (req, res) => {
       quantity: 1
     })
     console.log(JSON.stringify(stripeItems));
-    await Product.bulkWrite(productsBulk)
-    const paymentorder = await PaymentOrder.create({ owner: email, products: matched.cart, shippingAddress: address, date: new Date(), subtotal, tax, totalCost: subtotal + tax })
+    // await Product.bulkWrite(productsBulk)
+    // const paymentorder = await PaymentOrder.create({ owner: email, products: matched.cart, shippingAddress: address, date: new Date(), subtotal, tax, totalCost: subtotal + tax })
 
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       mode: 'payment',
-      success_url: `${process.env.SERVER_URL}/cart`,
-      cancel_url: `${process.env.SERVER_URL}/cart`,
-      line_items: stripeItems,
-      metadata: { orderid: paymentorder._id }
+      success_url: `${process.env.FRONTEND_URL}/cart`,
+      cancel_url: `${process.env.FRONTEND_URL}/cart`,
+      line_items: stripeItems
+      // metadata: { orderid: paymentorder._id }
     })
+
+    await Product.bulkWrite(productsBulk)
+    await PaymentOrder.create({ owner: email, session_id: session.id, products: matched.cart, shippingAddress: address, date: new Date(), subtotal, tax, totalCost: subtotal + tax })
+
+    console.log(session);
     res.json({ paymentUrl: session.url })
-
-    //stripe
-
-    //
 
   } catch (error) {
     console.log(error);
@@ -158,6 +157,7 @@ const fulfillOrder = async (req, res) => {
 
   let event;
 
+  //verify the webhook request source 
   try {
     event = stripe.webhooks.constructEvent(payload, sig, process.env.STRIPE_PRIVATE_KEY);
   } catch (err) {
@@ -168,10 +168,13 @@ const fulfillOrder = async (req, res) => {
 
   try {
     switch (event.type) {
+      // if payment succeeded
       case 'payment_intent.succeeded': {
         const session_id = event.data.object.id
-        const paymentOrder = await PaymentOrder.findOne({ sessionId: session_id })
+        // get the paymentOrder of this session 
+        const paymentOrder = await PaymentOrder.findOne({ session_id: session_id })
         if (paymentOrder) {
+          // separate products by seller
           const orders = new Map()
           paymentOrder.products.forEach(el => {
             if (!orders.has(el.owner)) {
@@ -187,6 +190,14 @@ const fulfillOrder = async (req, res) => {
           const productsBulk = []
 
           console.log(orders);
+
+          // place the actual orders 
+          // if the order contains product from multiple sellers
+          // the order is separated to multiple orders one for each seller
+          // add the balance for each seller
+          // increase the sold units number of each products 
+          // finally remove the associated paymentOrder 
+
           for (const [seller, items] of orders) {
             const subtotal = items.reduce((p, el) => p + el.price * el.count, 0)
             // console.log(seller);
@@ -223,9 +234,12 @@ const fulfillOrder = async (req, res) => {
       }
       case 'payment_intent.payment_failed':
       case 'checkout.session.expired': {
-        //payment failed or expired ... return the booked elements
+        //payment failed or expired 
+        // return the booked elements
+        //delete the associated paymentOrder
+
         const session_id = event.data.object.id
-        const paymentOrder = await PaymentOrder.findOne({ sessionId: session_id })
+        const paymentOrder = await PaymentOrder.findOne({ session_id: session_id })
 
         const productsBulk = []
         paymentOrder.products.forEach(el => {

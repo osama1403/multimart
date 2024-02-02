@@ -1,5 +1,4 @@
 const User = require('../models/User');
-const Cart = require('../models/Cart')
 const getJwtEmail = require('../utils/getJwtEmail')
 
 const getCart = async (req, res) => {

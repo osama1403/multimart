@@ -42,11 +42,10 @@ const productSchema = new Schema({
     options: [String],
   }],
   images: [String],
-  date:{
-    type:Date,
-    required:true
+  date: {
+    type: Date,
+    required: true
   }
-  
 
 })
 

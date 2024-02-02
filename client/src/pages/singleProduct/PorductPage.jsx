@@ -10,7 +10,7 @@ import useAuth from '../../hooks/useAuth';
 import { useNavigate } from "react-router-dom";
 import usePrivateAxios from '../../hooks/usePrivateAxios';
 
-const serverUrl = process.env.REACT_APP_URL
+const serverUrl = process.env.REACT_APP_SERVER_URL
 
 const ProductPage = () => {
   const { id } = useParams()

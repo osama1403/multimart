@@ -5,7 +5,7 @@ import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react
 import usePrivateAxios from '../../hooks/usePrivateAxios'
 
 const OrderProductItem = ({ product, details, rating,delivered }) => {
-  const serverUrl = process.env.REACT_APP_URL
+  const serverUrl = process.env.REACT_APP_SERVER_URL
   const privateAxios = usePrivateAxios()
   const [rate, setRate] = useState()
   const handleRate = async (x) => {

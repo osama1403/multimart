@@ -5,7 +5,7 @@ import Categories from '../../Categories';
 const CategoriesSection = () => {
   const [open, setOpen] = useState(false);
   return (
-    <div className=" mx-auto px-2 sm:px-4 py-5  max-w-[1520px] min-w-[220px] font-nunito">
+    <div className=" mx-auto px-2 sm:px-4 py-10  max-w-[1520px] min-w-[220px] font-nunito">
       <h2 className="py-2 text-xl text-center">Explore different categories for all your shopping needs</h2>
       <div className={`mt-4 grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-5 ${!open ? '[&>*:nth-child(n+5)]:hidden' : ''}`}>
         {Categories.map((el) => {

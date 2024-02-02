@@ -12,7 +12,7 @@ import useAuth from "../../hooks/useAuth";
 
 const SingleChat = () => {
   const privateAxios = usePrivateAxios()
-  const serverUrl = process.env.REACT_APP_URL
+  const serverUrl = process.env.REACT_APP_SERVER_URL
   const { id } = useParams()
   const { auth } = useAuth()
   const { socket, messages, setMessages, setChats } = useContext(socketIoContext)

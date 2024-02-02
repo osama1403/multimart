@@ -11,7 +11,7 @@ import { useEffect, useLayoutEffect, useState } from "react";
 import { FiEdit } from "react-icons/fi";
 
 const Dashboard = () => {
-  const serverUrl = process.env.REACT_APP_URL
+  const serverUrl = process.env.REACT_APP_SERVER_URL
   const privateAxios = usePrivateAxios()
 
   const [profileImg, setProfileImg] = useState(null)

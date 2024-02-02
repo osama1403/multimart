@@ -4,7 +4,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import prodPlaceholder from '../assets/images/prodPlaceholder.jpg'
 import usePrivateAxios from '../hooks/usePrivateAxios';
 import useAuth from '../hooks/useAuth';
-const serverUrl = process.env.REACT_APP_URL
+const serverUrl = process.env.REACT_APP_SERVER_URL
 
 const ProductCard = ({ data }) => {
   const { auth, setAuth } = useAuth()

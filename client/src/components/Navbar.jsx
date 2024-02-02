@@ -7,7 +7,7 @@ import profilePlaceholder from '../assets/images/profilePlaceholder.png'
 import { socketIoContext } from "../Context/SocketIoContext";
 
 const Navbar = () => {
-  const serverUrl = process.env.REACT_APP_URL
+  const serverUrl = process.env.REACT_APP_SERVER_URL
   const [open, setOpen] = useState(false);
   const { pathname } = useLocation();
   const { auth } = useAuth();

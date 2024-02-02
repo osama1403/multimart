@@ -6,6 +6,10 @@ const paymentOrderSchema = new Schema({
     type: String,
     required: true
   },
+  session_id: {
+    type: String,
+    required: true
+  },
   date: {
     type: Date,
     required: true
@@ -15,7 +19,7 @@ const paymentOrderSchema = new Schema({
     required: true
   },
   products: {
-    type:[Schema.Types.Mixed],
+    type: [Schema.Types.Mixed],
     required: true
   },
   totalCost: {

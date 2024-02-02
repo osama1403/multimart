@@ -20,7 +20,7 @@ const Profile = () => {
   const [changed, setChanged] = useState(false)
   const [img, setImg] = useState(null)
   const { setAuth } = useAuth()
-  const serverUrl = process.env.REACT_APP_URL
+  const serverUrl = process.env.REACT_APP_SERVER_URL
   const privateAxios = usePrivateAxios()
   const { data, loading, error } = useGetAxios('/user/profile', privateAxios, [])
   useEffect(() => {
@@ -149,30 +149,7 @@ const Profile = () => {
                       <p className='text-2xl text-primary'>{data.totalorders}</p>
                     </div>
                   </div>
-                  <div className='w-36 h-36 rounded-full mx-auto md:mx-0 flex flex-col items-center justify-center bg-gradient-to-b from-zinc-300 to bg-zinc-500 '>
-                    <div className='w-32 h-32  py-2 px-4 bg-white rounded-full flex flex-col items-center justify-center'>
-                      <p>cart</p>
-                      <p className='text-2xl text-primary'>13</p>
-                    </div>
-                  </div>
-                  {/* <div className='w-36 h-36 py-2 px-4 rounded-full mx-auto md:mx-0 flex flex-col items-center justify-center bg-slate-100 '>
-            <p>cart</p>
-            <p className='text-2xl text-primary'>13</p>
-          </div>
-          <div className='w-36 h-36 py-2 px-4 rounded-full mx-auto md:mx-0 flex flex-col items-center justify-center bg-slate-100 '>
-            <p>wishlist</p>
-            <p className='text-2xl text-primary'>18</p>
-          </div>
-          <div className='w-36 h-36 py-2 px-4 rounded-full mx-auto md:mx-0 flex flex-col items-center justify-center bg-slate-100 '>
-            <p>orders</p>
-            <p className='text-2xl text-primary'>3</p>
-          </div>
-          <div className='w-36 h-36 py-2 px-4 rounded-full mx-auto md:mx-0 flex flex-col items-center justify-center bg-slate-100 '>
-          <p>completed orders</p>
-            <p className='text-2xl text-primary'>23</p>
-          </div> */}
-
-
+          
                 </div>
 
                 <div className='mt-4 max-w-3xl text-zinc-700'>

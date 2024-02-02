@@ -1,6 +1,6 @@
 import prodPlaceholder from '../../assets/images/prodPlaceholder.jpg'
 const OrderItem = ({ product, details }) => {
-  const serverUrl = process.env.REACT_APP_URL
+  const serverUrl = process.env.REACT_APP_SERVER_URL
   return (
     <div className='w-full flex flex-col sm:flex-row gap-3 py-4 max-w-2xl '>
 

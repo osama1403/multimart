@@ -3,16 +3,16 @@ const mongoose = require('mongoose');
 
 const connectDB = async () => {
   try {
-    console.log("dburi : "+process.env.DB_URI);
     const dburi = process.env.DB_URI
-    console.log("env dburi : " + dburi);
-    const dbur = 'mongodb://127.0.0.1:27017/multimart'
-    mongoose.connect(dburi);
+    mongoose.connect(dburi, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true
+    });
 
-  }catch (err) {
+  } catch (err) {
     console.log(err);
   }
 
 }
 
-module.exports = connectDB ;
+module.exports = connectDB;

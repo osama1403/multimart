@@ -3,7 +3,7 @@ import { FaFacebook, FaInstagram, FaTwitter, FaEnvelope, FaPhone, FaLocationArro
 const Footer = () => {
   return (
     <>
-      <footer className=" px-10 pt-12 bg-zinc-900 w-full text-white">
+      <footer className=" px-10 pt-12 bg-zinc-900 w-full max-w-[1520px] mx-auto text-white">
         <div className="flex flex-col gap-8 sm:gap-0 sm:flex-row justify-around items-center sm:items-start text-center sm:text-left ">
 
           <div className="self-center flex flex-col justify-between items-center sm:items-start">
