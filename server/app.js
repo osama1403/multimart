@@ -12,10 +12,10 @@ const { ioRegisterEvents, ioConnectionNotifications } = require('./Configuration
 require('dotenv').config();
 
 app.use(express.json());
-// app.use(express.static('./images'))
-app.use(express.static(path.join(__dirname, 'build')));
+app.use(express.static('./images'))
+// app.use(express.static(path.join(__dirname, 'build')));
 app.use(cors({
-  origin: 'http://localhost:3000',
+  origin: process.env.FRONTEND_URL,
   credentials: true
 }))
 
@@ -28,7 +28,7 @@ mongoose.connection.once('open', () => {
   const server = app.listen(5000, () => { console.log('server is up on port 5000'); })
 
   const io = socketIo(server, {
-    cors: 'http://localhost:3000'
+    cors: process.env.FRONTEND_URL
   })
   app.locals.io = io
   const onConnection = async (socket) => {

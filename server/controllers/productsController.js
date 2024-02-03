@@ -3,8 +3,8 @@ const Product = require('../models/Product')
 const Rating = require('../models/Rating')
 const getJwtEmail = require('../utils/getJwtEmail')
 const multerInstance = require('../Configuration/multerInstance');
-const AWS = require("aws-sdk");
-const s3 = new AWS.S3()
+// const AWS = require("aws-sdk");
+// const s3 = new AWS.S3()
 const Order = require('../models/Order');
 
 // const fs = require('fs');
@@ -140,28 +140,28 @@ const addProduct = (req, res) => {
       if (!Array.isArray(categories) || categories.filter((el) => typeof (el) !== 'string').length > 0) {
         
         // file storage in fileSystem: 
-        // req.files?.forEach(el => {
-        //   const filename = el.filename
-        //   console.log(filename);
-        //   fs.unlink('./images/' + filename, (err) => {
-        //     if (err) {
-        //       console.log(err);
-        //       console.log('failed to remove file: ' + filename);
-        //     }
-        //   })
-        // })
+        req.files?.forEach(el => {
+          const filename = el.filename
+          console.log(filename);
+          fs.unlink('./images/' + filename, (err) => {
+            if (err) {
+              console.log(err);
+              console.log('failed to remove file: ' + filename);
+            }
+          })
+        })
 
         // s3 bucket
-        if (req.files?.length > 0) {
-          await s3.deleteObjects(
-            {
-              Bucket: process.env.BUCKET,
-              Delete: {
-                Objects: req.files.map(el => { return { Key: el.filename } })
-              }
-            }
-          ).promise()
-        }
+        // if (req.files?.length > 0) {
+        //   await s3.deleteObjects(
+        //     {
+        //       Bucket: process.env.BUCKET,
+        //       Delete: {
+        //         Objects: req.files.map(el => { return { Key: el.filename } })
+        //       }
+        //     }
+        //   ).promise()
+        // }
 
         res.status(400).send('invalid request')
         return
