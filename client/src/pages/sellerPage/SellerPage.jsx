@@ -28,7 +28,7 @@ const SellerPage = () => {
               <div className='relative sm:mb-16'>
                 <div className='sm:absolute sm:-top-24 sm:left-20 flex flex-col sm:flex-row justify-center items-center gap-2 sm:items-end sm:w-fit'>
                   <div className='pfp before:hidden after:hidden sm:before:block sm:after:block z-0 relative w-40 h-40  '>
-                    <img src={(data?.profilePicture) ? serverUrl + '/' + data?.profilePicture : profilePlaceholder} alt="" className='object-cover bg-white border-white sm:border-4 rounded-full w-full h-full' />
+                    <img src={(data?.profilePicture) ? serverUrl + '/api/image/' + data?.profilePicture : profilePlaceholder} alt="" className='object-cover bg-white border-white sm:border-4 rounded-full w-full h-full' />
                   </div>
                   <div className='flex flex-col sm:flex-row gap-2 items-center sm:pb-8 sm:pl-1'>
                     <h1 className='text-xl font-semibold '>{data?.shopName}</h1>

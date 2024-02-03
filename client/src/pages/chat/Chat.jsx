@@ -71,7 +71,7 @@ const Chat = () => {
                   return (
                     <Link to={`${role === 'user' ? '/chat/' : '/seller/chat/'}${peer_id}`} key={el._id}>
                       <div className=" p-2 max-w-2xl flex items-center hover:bg-slate-200">
-                        <img src={pfp ? serverUrl + '/' + pfp : profilePlaceholder} alt="" className="rounded-full w-16 h-16 border object-cover" />
+                        <img src={pfp ? serverUrl + '/api/image/' + pfp : profilePlaceholder} alt="" className="rounded-full w-16 h-16 border object-cover" />
                         <div className="grow px-2">
                           <div className="flex justify-between items-center">
                             <h1 className="font-semibold ">{name}</h1>

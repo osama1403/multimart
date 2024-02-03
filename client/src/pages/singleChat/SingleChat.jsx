@@ -69,7 +69,7 @@ const SingleChat = () => {
                 <div className="rounded-2xl bg-slate-200 h-full border shadow-md flex flex-col w-full ">
                   {/* header */}
                   <div className="flex items-center px-2 py-1 rounded-2xl gap-3 bg-white">
-                    <img src={data?.peer?.profilePicture ? serverUrl + '/' + data.peer.profilePicture : profilePlaceholder} alt="" className="rounded-full w-12 h-12 border " />
+                    <img src={data?.peer?.profilePicture ? serverUrl + '/api/image/' + data.peer.profilePicture : profilePlaceholder} alt="" className="rounded-full w-12 h-12 border " />
                     <h1 className="font-semibold text-xl ">{auth.role === 'user' ? data?.peer?.shopName : data?.peer?.firstName + ' ' + data?.peer?.lastName}</h1>
                   </div>
 

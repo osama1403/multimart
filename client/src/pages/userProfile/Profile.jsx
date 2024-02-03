@@ -115,7 +115,7 @@ const Profile = () => {
                   <div className='relative flex flex-col items-center'>
                     <label htmlFor='img' className='text-primary hover:text-blue-400  absolute top-2 right-2 cursor-pointer outline-none'><FiEdit /></label>
                     <input type="file" name="img" id="img" className='hidden' accept='image/*' onChange={handleSetImage} />
-                    <img src={img ? URL.createObjectURL(img) : data.profilePicture ? serverUrl + '/' + data.profilePicture : profilePlaceholder} alt="" className='aspect-square w-40 h-40 rounded-full object-cover' />
+                    <img src={img ? URL.createObjectURL(img) : data.profilePicture ? serverUrl + '/api/image/' + data.profilePicture : profilePlaceholder} alt="" className='aspect-square w-40 h-40 rounded-full object-cover' />
 
                   </div>
                   <div>
@@ -129,27 +129,10 @@ const Profile = () => {
                   </div>
                 </div>
 
-                <div className='grid grid-cols-2 md:grid-cols-4 gap-4 py-4 text-xl  font-nunito border-b'>
-
-                  <div className='w-36 h-36 rounded-full mx-auto md:mx-0 flex flex-col items-center justify-center bg-gradient-to-b from-green-300 to bg-green-500 '>
-                    <div className='w-32 h-32  py-2 px-4 bg-white rounded-full flex flex-col items-center justify-center'>
-                      <p>cart</p>
-                      <p className='text-2xl text-primary'>{data.cart?.length}</p>
-                    </div>
-                  </div>
-                  <div className='w-36 h-36 rounded-full mx-auto md:mx-0 flex flex-col items-center justify-center bg-gradient-to-b from-red-300 to bg-red-500 '>
-                    <div className='w-32 h-32  py-2 px-4 bg-white rounded-full flex flex-col items-center justify-center'>
-                      <p>wishlist</p>
-                      <p className='text-2xl text-primary'>{data.wishlist?.length}</p>
-                    </div>
-                  </div>
-                  <div className='w-36 h-36 rounded-full mx-auto md:mx-0 flex flex-col items-center justify-center bg-gradient-to-b from-blue-300 to bg-blue-500 '>
-                    <div className='w-32 h-32  py-2 px-4 bg-white rounded-full flex flex-col items-center justify-center'>
-                      <p>orders</p>
-                      <p className='text-2xl text-primary'>{data.totalorders}</p>
-                    </div>
-                  </div>
-          
+                <div className='flex flex-col flex-wrap items-start gap-1 py-4 text-xl font-nunito border-b'>
+                  <p>cart: <span className='text-primary'>{data.cart?.length}</span></p>
+                  <p>wishlist: <span className='text-primary'>{data.wishlist?.length}</span></p>
+                  <p>total orders: <span className='text-primary'>{data.totalorders}</span></p>
                 </div>
 
                 <div className='mt-4 max-w-3xl text-zinc-700'>

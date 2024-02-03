@@ -15,6 +15,7 @@ const SellerSingleProduct = () => {
   const [editStockData, setEditStockData] = useState({ mode: 'ADD', value: 0 })
   const [stockLoading, setStockLoading] = useState(false)
   const [err, setErr] = useState('')
+  const serverUrl = process.env.REACT_APP_SERVER_URL
 
 
   const handleEditSubmit = async () => {
@@ -192,7 +193,7 @@ const SellerSingleProduct = () => {
                   <div className='flex flex-wrap space-x-3'>
                     {
                       data.images.map((el, idx) => {
-                        return <img src={`http://127.0.0.1:5000/${el}`} alt="prod image" key={idx} className='w-24 h-24 rounded object-cover border' />
+                        return <img src={`${serverUrl}/api/image/${el}`} alt="prod image" key={idx} className='w-24 h-24 rounded object-cover border' />
                       })
                     }
                   </div>

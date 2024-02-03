@@ -32,7 +32,7 @@ const CartItem = ({ el, customizations, setData, elcount , setelcount }) => {
     <div className="w-full border p-3 my-4 hyphens-auto" >
       {/* <h2 className="text-lg font-semibold md:hidden"> {el.name}</h2> */}
       <div className="flex  flex-col sm:flex-row gap-3 items-stretch mb-3">
-        <img src={el.images[0] ? serverUrl + '/' + el.images[0] : prodPlaceholder} alt="" className='border self-center aspect-square w-36 mx-auto' />
+        <img src={el.images[0] ? serverUrl + '/api/image/' + el.images[0] : prodPlaceholder} alt="" className='border self-center aspect-square w-36 mx-auto' />
         <div className='grow flex gap-3 justify-between items-center min-w-[250px]'>
           <div className='min-w-[135px] h-full md:min-w-[256px] w-min grow grid grid-cols-1 break-words '>
             <div className=' mb-2 '>

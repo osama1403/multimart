@@ -106,7 +106,7 @@ const Dashboard = () => {
               <div className="w-full border py-4 sm:py-0 rounded-2xl shadow-md overflow-hidden">
 
                 <div className="hidden sm:block relative">
-                  <img src={coverImg ? URL.createObjectURL(coverImg) : data.coverPicture ? serverUrl + '/' + data.coverPicture : coverPlaceholder} alt="" className=' w-full aspect-[3/1] object-cover' />
+                  <img src={coverImg ? URL.createObjectURL(coverImg) : data.coverPicture ? serverUrl + '/api/image/' + data.coverPicture : coverPlaceholder} alt="" className=' w-full aspect-[3/1] object-cover' />
 
                   <div className={`${edit ? '' : 'hidden'} absolute bottom-2 right-2 `}>
                     <label htmlFor='cimg' className='text-primary hover:text-blue-400 cursor-pointer outline-none block p-2'><FiEdit /></label>
@@ -118,7 +118,7 @@ const Dashboard = () => {
                   <div className='sm:absolute sm:-top-24 sm:left-20 flex flex-col sm:flex-row justify-center items-center gap-2 sm:items-end sm:w-fit'>
 
                     <div className='pfp before:hidden after:hidden sm:before:block sm:after:block z-0 relative w-40 h-40'>
-                      <img src={profileImg ? URL.createObjectURL(profileImg) : data.profilePicture ? serverUrl + '/' + data.profilePicture : profilePlaceholder} alt="" className='object-cover border-white sm:border-4 bg-white rounded-full w-full h-full' />
+                      <img src={profileImg ? URL.createObjectURL(profileImg) : data.profilePicture ? serverUrl + '/api/image/' + data.profilePicture : profilePlaceholder} alt="" className='object-cover border-white sm:border-4 bg-white rounded-full w-full h-full' />
 
                       {/* <button className="text-sm text-zinc-700 hover:text-primary "></button> */}
                       <div className={`${edit ? '' : 'hidden'} absolute top-2 right-2 `}>
@@ -223,7 +223,7 @@ const Dashboard = () => {
                               <td className="box-border">
                                 <Link to={'/seller/products/' + el._id} className="w-full px-3 py-2 flex min-w-max items-center hover:bg-slate-200">
 
-                                  <img src={el.images[0] ? serverUrl + '/' + el.images[0] : prodPlaceholder} alt="" className="w-11 aspect-square object-cover rounded-full" />
+                                  <img src={el.images[0] ? serverUrl + '/api/image/' + el.images[0] : prodPlaceholder} alt="" className="w-11 aspect-square object-cover rounded-full" />
                                   <p className="ml-3 font-semibold max-w-[150px] break-words">{el.name}</p>
                                 </Link>
                               </td>

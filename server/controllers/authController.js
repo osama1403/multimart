@@ -54,7 +54,7 @@ const handleLogin = async (req, res) => {
             cart: user.cart,
             addresses: addresses
           }
-          const JWT = jwt.sign({ email: email, id: user._id, role: 'user' }, process.env.JWT_SECRET, { expiresIn: 10 })
+          const JWT = jwt.sign({ email: email, id: user._id, role: 'user' }, process.env.JWT_SECRET, { expiresIn: 60*5 })
           const refreshToken = jwt.sign({ id: user._id, role: 'user' }, process.env.JWT_SECRET, { expiresIn: '7d' })
 
           res.cookie('RT', refreshToken, { httpOnly: true, secure: 'true', sameSite: 'none', maxAge: 7 * 24 * 60 * 60 * 1000 })
@@ -89,7 +89,7 @@ const handleSellerLogin = async (req, res) => {
       if (seller) {
         const verified = await bcrypt.compare(password, seller.password);
         if (verified) {
-          const JWT = jwt.sign({ email: email, id: seller._id, role: 'seller' }, process.env.JWT_SECRET, { expiresIn: 10 })
+          const JWT = jwt.sign({ email: email, id: seller._id, role: 'seller' }, process.env.JWT_SECRET, { expiresIn: 60*5 })
           const refreshToken = jwt.sign({ id: seller._id, role: 'seller' }, process.env.JWT_SECRET, { expiresIn: '7d' })
 
           res.cookie('RT', refreshToken, { httpOnly: true, secure: 'true', sameSite: 'none', maxAge: 7 * 24 * 60 * 60 * 1000 })

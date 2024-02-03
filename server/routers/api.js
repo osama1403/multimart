@@ -5,7 +5,8 @@ const productsRouter = require('./products')
 const sellerRouter = require('./seller')
 const userRouter = require('./user')
 const chatRouter = require('./chat')
-const webhookRouter= require('./webhook')
+const webhookRouter = require('./webhook')
+const imagesRouter = require('./images')
 
 const apiRouter = express.Router()
 
@@ -15,7 +16,8 @@ apiRouter.use('/seller', sellerRouter)
 apiRouter.use('/auth', authRouter)
 apiRouter.use('/signup', signUpRouter)
 apiRouter.use('/chat', chatRouter)
-apiRouter.use('/webhook',webhookRouter)
+apiRouter.use('/webhook', webhookRouter)
+apiRouter.use('/image',imagesRouter)
 
 module.exports = apiRouter
 

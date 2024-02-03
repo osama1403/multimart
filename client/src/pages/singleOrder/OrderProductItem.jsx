@@ -47,7 +47,7 @@ const OrderProductItem = ({ product, details, rating,delivered }) => {
     <div className='w-full flex flex-col sm:flex-row items-center sm:items-stretch gap-3 py-4 max-w-2xl '>
 
       <div className='grow flex flex-col sm:flex-row flex-nowrap  gap-3 items-center  font-semibold font-nunito'>
-        <img src={product.images[0] ? serverUrl + '/' + product.images[0] : prodPlaceholder} alt="" className='w-28 object-cover shadow-zinc-400 shadow-md aspect-[5/5] rounded-md' />
+        <img src={product.images[0] ? serverUrl + '/api/image/' + product.images[0] : prodPlaceholder} alt="" className='w-28 object-cover shadow-zinc-400 shadow-md aspect-[5/5] rounded-md' />
 
         <div className=' flex flex-col sm:py-4 items-center sm:items-start self-stretch sm:min-w-[200px]' >
           <Link to={`/products/${product._id}`} className='font-semibold text-lg'>{product.name}</Link>

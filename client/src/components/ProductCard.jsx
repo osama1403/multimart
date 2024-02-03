@@ -44,7 +44,7 @@ const ProductCard = ({ data }) => {
     <Link to={'/products/' + data._id}>
       <div className="border  max-w-xs md:max-w-sm mx-auto w-full font-nunito flex flex-col rounded-lg shadow-lg p-2 md:p-4 gap-2 scale-100  hover:scale-105 transition-transform duration-300 cursor-pointer">
         <div className='w-full aspect-square rounded-lg overflow-clip'>
-          <img src={data.images[0] ? serverUrl + '/' + data.images[0] : prodPlaceholder} alt="product img" className='h-full object-cover' loading='lazy' />
+          <img src={data.images[0] ? serverUrl + '/api/image/' + data.images[0] : prodPlaceholder} alt="product img" className='h-full object-cover' loading='lazy' />
         </div>
 
         <div className='w-full flex flex-col  gap-1 md:gap-2'>

@@ -44,7 +44,7 @@ const Login = () => {
   return (
     <>
       <div className="w-full  min-h-[calc(100vh-64px)] flex justify-center items-center">
-        <div className="font-nunito w-full flex flex-col items-center space-y-3 my-3 mx-4 max-w-xl p-6 rounded-xl border shadow-xl shadow-zinc-300">
+        <div className="font-nunito w-full flex flex-col items-center space-y-3 my-10 mx-4 max-w-xl p-6 rounded-xl border shadow-xl shadow-zinc-300">
 
           <h1 className="text-2xl text-primary font-bold">Sign Up</h1>
 

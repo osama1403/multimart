@@ -47,7 +47,7 @@ const Login = () => {
     <>
       <div className="w-full min-h-[calc(100vh-64px)] flex justify-center items-center">
 
-        <div className="font-nunito w-full flex flex-col my-3 items-center mx-4 max-w-xl p-6 rounded-xl border shadow-xl shadow-zinc-300">
+        <div className="font-nunito w-full flex flex-col my-10 items-center mx-4 max-w-xl p-6 rounded-xl border shadow-xl shadow-zinc-300">
           <h1 className="  text-2xl text-primary font-bold">Seller Login</h1>
           <form onSubmit={handlesubmit} className='mb-3 mx-auto w-full flex flex-col max-w-sm text-lg font-light '>
             <div>
