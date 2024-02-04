@@ -3,8 +3,6 @@ const Product = require('../models/Product')
 const Rating = require('../models/Rating')
 const getJwtEmail = require('../utils/getJwtEmail')
 const multerInstance = require('../Configuration/multerInstance');
-// const AWS = require("aws-sdk");
-// const s3 = new AWS.S3()
 const Order = require('../models/Order');
 
 // const fs = require('fs');

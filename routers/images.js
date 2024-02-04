@@ -1,27 +1,20 @@
 const express = require('express')
 const imagesRouter = express.Router()
-const AWS = require("aws-sdk");
-const s3 = new AWS.S3()
-
-
-
+const { GetObjectCommand,S3Client } = require('@aws-sdk/client-s3')
+const s3 = new S3Client()
 
 
 //  *** THIS FILE IS FOR SERVING IMAGES FROM S3 BUCKET IF APPLICABLE ***
 
 
-
-
-
-
-imagesRouter.get('/:key', (req, res) => {
+imagesRouter.get('/:key', async (req, res) => {
   try{
     const key = req.params.key
-    const objectReadStream = s3.getObject({
+    const response = await s3.send(new GetObjectCommand({
       Bucket: process.env.BUCKET,
       Key: key
-    }).createReadStream()
-    objectReadStream.pipe(res)
+    }))
+    response.Body.pipe(res)
 
   }catch (error) {
     if (error.code === 'NoSuchKey') {
