@@ -12,8 +12,8 @@ const { ioRegisterEvents, ioConnectionNotifications } = require('./Configuration
 require('dotenv').config();
 
 app.use(express.json());
-app.use(express.static('./images'))
-// app.use(express.static(path.join(__dirname, 'build')));
+// app.use(express.static('./images'))
+
 app.use(cors({
   origin: process.env.FRONTEND_URL,
   credentials: true

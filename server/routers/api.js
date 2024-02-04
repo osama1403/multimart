@@ -17,7 +17,7 @@ apiRouter.use('/auth', authRouter)
 apiRouter.use('/signup', signUpRouter)
 apiRouter.use('/chat', chatRouter)
 apiRouter.use('/webhook', webhookRouter)
-// apiRouter.use('/image',imagesRouter)
+apiRouter.use('/image',imagesRouter)
 
 module.exports = apiRouter
 

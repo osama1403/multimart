@@ -139,29 +139,29 @@ const addProduct = (req, res) => {
       const { name, price, stock, categories, specifications, description, customizations } = JSON.parse(req.body?.productData)
       if (!Array.isArray(categories) || categories.filter((el) => typeof (el) !== 'string').length > 0) {
         
-        // file storage in fileSystem: 
-        req.files?.forEach(el => {
-          const filename = el.filename
-          console.log(filename);
-          fs.unlink('./images/' + filename, (err) => {
-            if (err) {
-              console.log(err);
-              console.log('failed to remove file: ' + filename);
-            }
-          })
-        })
-
-        // s3 bucket
-        // if (req.files?.length > 0) {
-        //   await s3.deleteObjects(
-        //     {
-        //       Bucket: process.env.BUCKET,
-        //       Delete: {
-        //         Objects: req.files.map(el => { return { Key: el.filename } })
-        //       }
+        // IF file storage in fileSystem: 
+        // req.files?.forEach(el => {
+        //   const filename = el.filename
+        //   console.log(filename);
+        //   fs.unlink('./images/' + filename, (err) => {
+        //     if (err) {
+        //       console.log(err);
+        //       console.log('failed to remove file: ' + filename);
         //     }
-        //   ).promise()
-        // }
+        //   })
+        // })
+
+        // IF file storage in s3 bucket
+        if (req.files?.length > 0) {
+          await s3.deleteObjects(
+            {
+              Bucket: process.env.BUCKET,
+              Delete: {
+                Objects: req.files.map(el => { return { Key: el.filename } })
+              }
+            }
+          ).promise()
+        }
 
         res.status(400).send('invalid request')
         return
