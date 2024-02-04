@@ -8,7 +8,7 @@ require('dotenv').config();
 
 const s3Storage = multerS3({
   s3: s3,
-  bucket: process.env.BUCKET,
+  Bucket: process.env.BUCKET,
   Key: (req, file, cb) => {
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
     cb(null, path.parse(file.originalname).name + '-' + uniqueSuffix + path.extname(file.originalname))
