@@ -186,7 +186,7 @@ const getSingleChat = async (req, res) => {
     chat = chat[0]
     if (chat) {
       // console.log(res.app.locals?res.app.locals:'');
-      res.app.locals.io.to(id).emit('join chat',sender.id)
+      // res.app.locals.io.to(id).emit('join chat',sender.id)
       await Message.updateMany({ chatId: chat._id, author: id }, { status: 'read' })
       // console.log(res.locals?true:false);
       // send io event seen all 
