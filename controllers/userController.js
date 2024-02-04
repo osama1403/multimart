@@ -31,6 +31,7 @@ const updateProfilePic = async (req, res) => {
     if (err?.message === 'not supported format') {
       return res.status(400).json({ success: false, msg: 'not supported format' })
     } else if (err) {
+      console.log(err);
       return res.status(500).json({ success: false, msg: "server error" })
     }
     try {
@@ -43,6 +44,7 @@ const updateProfilePic = async (req, res) => {
       await User.updateOne({ email }, { profilePicture: filename })
       res.json({ success: true, msg: "profile picture updated successfully", img: filename })
     } catch (e) {
+      console.log(err);
       res.status(500).json({ success: false, msg: "server error" })
     }
   })
