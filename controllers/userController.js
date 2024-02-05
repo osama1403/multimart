@@ -36,8 +36,8 @@ const updateProfilePic = async (req, res) => {
     }
     try {
       // const filename = res.req.file.filename;
-      const filename = req.file?.filename;
-      console.log(filename);
+      const filename = req.file?.key;
+      console.log(req.file);
       const email = getJwtEmail(req)
 
       // store filename in DB
