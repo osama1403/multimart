@@ -14,6 +14,15 @@ imagesRouter.get('/:key', async (req, res) => {
       Bucket: process.env.BUCKET,
       Key: key
     }))
+
+    if (key.toLowerCase().endsWith('.jpg') || key.toLowerCase().endsWith('.jpeg')) {
+      res.setHeader('Content-Type', 'image/jpeg');
+    }else if(key.toLowerCase().endsWith('.png')){
+      res.setHeader('Content-Type', 'image/png');
+    }else{
+      return res.status(403).send(unsupported)
+    }
+
     response.Body.pipe(res)
 
   }catch (error) {

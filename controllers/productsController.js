@@ -138,16 +138,16 @@ const addProduct = (req, res) => {
       if (!Array.isArray(categories) || categories.filter((el) => typeof (el) !== 'string').length > 0) {
         
         // file storage in fileSystem: 
-        req.files?.forEach(el => {
-          const filename = el.filename
-          console.log(filename);
-          fs.unlink('./images/' + filename, (err) => {
-            if (err) {
-              console.log(err);
-              console.log('failed to remove file: ' + filename);
-            }
-          })
-        })
+        // req.files?.forEach(el => {
+        //   const filename = el.filename
+        //   console.log(filename);
+        //   fs.unlink('./images/' + filename, (err) => {
+        //     if (err) {
+        //       console.log(err);
+        //       console.log('failed to remove file: ' + filename);
+        //     }
+        //   })
+        // })
 
         // s3 bucket
         // if (req.files?.length > 0) {
@@ -166,7 +166,7 @@ const addProduct = (req, res) => {
       }
 
       const owner = getJwtEmail(req);
-      const images = req.files?.map(el => el.filename)
+      const images = req.files?.map(el => el.key)
       // console.log('files: '+req.method+req.get('Content-Type'));
       // console.log(req.body);
       try {

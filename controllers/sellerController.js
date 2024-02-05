@@ -166,11 +166,11 @@ const sellerUpdateProfile = async (req, res) => {
         updateobj.shopName = updateData.shopName
       }
       if (updateData.profileImage) {
-        const img = req.files?.find(el => el.originalname === updateData.profileImage).filename;
+        const img = req.files?.find(el => el.originalname === updateData.profileImage).key;
         updateobj.profilePicture = img
       }
       if (updateData.coverImage) {
-        const img = req.files?.find(el => el.originalname === updateData.coverImage).filename;
+        const img = req.files?.find(el => el.originalname === updateData.coverImage).key;
         updateobj.coverPicture = img
       }
 
