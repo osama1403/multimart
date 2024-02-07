@@ -142,7 +142,7 @@ const SellerSingleProduct = () => {
 
                 <div className='mt-2 flex items-center text-xl font font-nunito text-primary'>
                   <AiOutlineStar className='inline-block mr-2' />
-                  <p className='inline-block'>{(data.totalRating / data.totalRatingCount).toFixed(1)}</p>
+                  <p className='inline-block'>{data.totalRatingCount === 0 ? 0 : (data.totalRating / data.totalRatingCount).toFixed(1)}</p>
                 </div>
 
                 <p className='text-xl mt-2 '>

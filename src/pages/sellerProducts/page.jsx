@@ -5,6 +5,7 @@ import usePrivateAxios from '../../hooks/usePrivateAxios';
 import useGetAxios from '../../hooks/useGetAxios';
 import LoadingThreeDots from '../../components/LoadingThreeDots';
 
+const serverUrl = process.env.REACT_APP_SERVER_URL
 const SellerProducts = () => {
   const privateaxios = usePrivateAxios()
   const { data, loading, error } = useGetAxios('/seller/products', privateaxios, [])
@@ -51,7 +52,7 @@ const SellerProducts = () => {
                                 <tr key={idx}>
                                   <td className='p-3'>
                                     <div className='flex items-center'>
-                                      <img src={el.images[0] ? `http://127.0.0.1:5000/${el.images[0]}` : prodPlaceholder} alt="prod img" className="w-16 h-16 aspect-square object-cover rounded " />
+                                      <img src={el.images[0] ? serverUrl + '/api/image/' + el.images[0] : prodPlaceholder} alt="prod img" className="w-16 h-16 aspect-square object-cover rounded " />
                                       <p className="text-base  ml-2 max-w-[150px]">{el.name}</p>
                                     </div>
                                   </td>
