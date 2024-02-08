@@ -137,12 +137,14 @@ const placeOrder = async (req, res) => {
       success_url: `${process.env.FRONTEND_URL}`,
       cancel_url: `${process.env.FRONTEND_URL}`,
       line_items: stripeItems,
-      metadata: { orderid: paymentorder._id }
+      metadata: { orderid: paymentorder._id.toString() }
     })
 
     await Product.bulkWrite(productsBulk)
     // await PaymentOrder.create({ owner: email, session_id: session.id, products: matched.cart, shippingAddress: address, date: new Date(), subtotal, tax, totalCost: subtotal + tax })
 
+    console.log("paymentorder._id : ");
+    console.log(paymentorder._id.toString());
     console.log(session);
     res.json({ paymentUrl: session.url })
 
