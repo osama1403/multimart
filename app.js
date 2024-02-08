@@ -7,6 +7,7 @@ const cors = require('cors')
 // const socketIo = require('socket.io')
 const app = express();
 const webhookRouter = require('./routers/webhook')
+const bodyParser = require('body-parser')
 
 // const ioIsAuthenticated = require('./middlewares/ioIsAuthenticated')
 // const { ioRegisterEvents, ioConnectionNotifications } = require('./Configuration/ioEvents')
@@ -24,7 +25,7 @@ app.use(cors({
 connectDB()
 
 app.use('/api',express.json(), apiRouter)
-app.use('/webhook',express.text(), webhookRouter)
+app.use('/webhook',bodyParser.raw('*/*'), webhookRouter)
 
 
 mongoose.connection.once('open', () => {
