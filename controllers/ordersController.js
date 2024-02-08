@@ -168,7 +168,7 @@ const fulfillOrder = async (req, res) => {
     return res.status(400).send(`Webhook Error: ${err.message}`);
   }
 
-  console.log(event);
+  // console.log(event);
 
   try {
     switch (event.type) {
@@ -176,7 +176,7 @@ const fulfillOrder = async (req, res) => {
       case 'payment_intent.succeeded': {
         const session_id = event.data.object.id
         // get the paymentOrder of this session
-        console.log(session_id); 
+        console.log("session_id: "+session_id); 
         const paymentOrder = await PaymentOrder.findOne({ session_id: session_id })
         if (paymentOrder) {
           // separate products by seller
