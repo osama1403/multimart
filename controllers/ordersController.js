@@ -117,7 +117,11 @@ const placeOrder = async (req, res) => {
       price_data: {
         currency: 'usd',
         product_data: {
-          name: 'TAX'
+          name: 'TAX',
+          description:`TEST CREDIT CARD NUMBER : "
+          4242424242424242
+          with any random details
+          `
         },
         unit_amount: tax
       },
@@ -130,8 +134,8 @@ const placeOrder = async (req, res) => {
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       mode: 'payment',
-      success_url: `${process.env.FRONTEND_URL}/cart`,
-      cancel_url: `${process.env.FRONTEND_URL}/cart`,
+      // success_url: `${process.env.FRONTEND_URL}/cart`,
+      // cancel_url: `${process.env.FRONTEND_URL}/cart`,
       line_items: stripeItems
       // metadata: { orderid: paymentorder._id }
     })
