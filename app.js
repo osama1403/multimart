@@ -24,7 +24,7 @@ app.use(cors({
 connectDB()
 
 app.use('/api',express.json(), apiRouter)
-app.use('/webhook', webhookRouter)
+app.use('/webhook',express.raw('application/json'), webhookRouter)
 
 
 mongoose.connection.once('open', () => {
