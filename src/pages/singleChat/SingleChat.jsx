@@ -76,17 +76,17 @@ const SingleChat = () => {
           modalOpen &&
 
           <div className="absolute flex items-center justify-center w-full inset-0 z-10 p-4 bg-red-400 bg-opacity-50 backdrop-blur ">
-            <div className="w-full flex flex-col justify-center max-w-sm mx-auto text-black text-lg text-center px-3 py-6 bg-white rounded-lg">
+            <div className="w-full flex flex-col items-center justify-center max-w-sm mx-auto text-black text-lg text-center px-3 py-6 bg-white rounded-lg">
               <p >
                 sorry chat feature doesn't work right now because of the deployment server incompatibility with WebSocket technology.
               </p>
               <p className="mt-1">
                 you can still review the code for it in the github repository
               </p>
-              <a href="" target="_blank" className=" text-xs hover:text-purple-600 cursor-pointer">
-                View Github Repository
+              <a href="https://github.com/osama1403/multimart" target="_blank" className=" text-sm text-purple-600 hover:text-blue-700 cursor-pointer">
+                Go to Github Repository
               </a>
-              <button className="mt-3 px-3 text-lg font-semibold hover: text-primary hover:border-primary py-1 border border-black rounded-full" onClick={() => { setModalOpen(false) }}>
+              <button className="mt-3 px-7 text-lg font-semibold hover: text-primary hover:border-primary py-1 border border-black rounded-full" onClick={() => { setModalOpen(false) }}>
                 OK
               </button>
             </div>
