@@ -6,10 +6,6 @@ const paymentOrderSchema = new Schema({
     type: String,
     required: true
   },
-  session_id: {
-    type: String,
-    required: true
-  },
   date: {
     type: Date,
     required: true

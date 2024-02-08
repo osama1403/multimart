@@ -129,19 +129,19 @@ const placeOrder = async (req, res) => {
     })
     console.log(JSON.stringify(stripeItems));
     // await Product.bulkWrite(productsBulk)
-    // const paymentorder = await PaymentOrder.create({ owner: email, products: matched.cart, shippingAddress: address, date: new Date(), subtotal, tax, totalCost: subtotal + tax })
+    const paymentorder = await PaymentOrder.create({ owner: email, products: matched.cart, shippingAddress: address, date: new Date(), subtotal, tax, totalCost: subtotal + tax })
 
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       mode: 'payment',
       success_url: `${process.env.FRONTEND_URL}`,
       cancel_url: `${process.env.FRONTEND_URL}`,
-      line_items: stripeItems
-      // metadata: { orderid: paymentorder._id }
+      line_items: stripeItems,
+      metadata: { orderid: paymentorder._id }
     })
 
     await Product.bulkWrite(productsBulk)
-    await PaymentOrder.create({ owner: email, session_id: session.id, products: matched.cart, shippingAddress: address, date: new Date(), subtotal, tax, totalCost: subtotal + tax })
+    // await PaymentOrder.create({ owner: email, session_id: session.id, products: matched.cart, shippingAddress: address, date: new Date(), subtotal, tax, totalCost: subtotal + tax })
 
     console.log(session);
     res.json({ paymentUrl: session.url })
@@ -174,10 +174,10 @@ const fulfillOrder = async (req, res) => {
     switch (event.type) {
       // if payment succeeded
       case 'payment_intent.succeeded': {
-        const session_id = event.data.object.id
+        const orderid = event.data.object.metadata.orderid
         // get the paymentOrder of this session
-        console.log("session_id: "+session_id); 
-        const paymentOrder = await PaymentOrder.findOne({ session_id: session_id })
+        console.log("orderid: " + orderid);
+        const paymentOrder = await PaymentOrder.findById(orderid)
         if (paymentOrder) {
           // separate products by seller
           const orders = new Map()
@@ -243,8 +243,8 @@ const fulfillOrder = async (req, res) => {
         // return the booked elements
         //delete the associated paymentOrder
 
-        const session_id = event.data.object.id
-        const paymentOrder = await PaymentOrder.findOne({ session_id: session_id })
+        const orderid = event.data.object.metadata.orderid
+        const paymentOrder = await PaymentOrder.findById(orderid)
 
         const productsBulk = []
         paymentOrder.products.forEach(el => {
