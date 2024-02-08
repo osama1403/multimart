@@ -175,7 +175,8 @@ const fulfillOrder = async (req, res) => {
       // if payment succeeded
       case 'payment_intent.succeeded': {
         const session_id = event.data.object.id
-        // get the paymentOrder of this session 
+        // get the paymentOrder of this session
+        console.log(session_id); 
         const paymentOrder = await PaymentOrder.findOne({ session_id: session_id })
         if (paymentOrder) {
           // separate products by seller
@@ -267,7 +268,7 @@ const fulfillOrder = async (req, res) => {
     console.log(err);
   }
 
-  return response.status(200).end();
+  return res.status(200).end();
 
   // // get ordre from payment order
   // const paymentOrder = await PaymentOrder.findById('')
