@@ -163,9 +163,9 @@ const fulfillOrder = async (req, res) => {
 
   //verify the webhook request source 
   try {
-    event = stripe.webhooks.constructEvent(payload, sig, process.env.STRIPE_PRIVATE_KEY);
+    event = stripe.webhooks.constructEvent(payload, sig, process.env.STRIPE_WEBHOOK_SECRET);
   } catch (err) {
-    return response.status(400).send(`Webhook Error: ${err.message}`);
+    return res.status(400).send(`Webhook Error: ${err.message}`);
   }
 
   console.log(event);
