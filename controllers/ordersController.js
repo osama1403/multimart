@@ -99,8 +99,8 @@ const placeOrder = async (req, res) => {
           currency: 'usd',
           product_data: {
             name: product.name,
-            description: Object.entries(el.customizations).reduce((p, [key, val]) => `${p}${key}: ${val}
-            `, '')
+            description: Object.entries(el.customizations).length > 0 ? Object.entries(el.customizations).reduce((p, [key, val]) => `${p}${key}: ${val}
+            `, '') : "no customization"
             // images:product.images.length>0?[`${product.images[0]}`]:[]
           },
           unit_amount: product.price
@@ -118,7 +118,7 @@ const placeOrder = async (req, res) => {
         currency: 'usd',
         product_data: {
           name: 'TAX',
-          description:`TEST CREDIT CARD NUMBER : "
+          description: `TEST CREDIT CARD NUMBER : "
           4242424242424242
           with any random details
           `
