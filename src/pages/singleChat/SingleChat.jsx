@@ -69,27 +69,31 @@ const SingleChat = () => {
   return (
     <>
       <div className={`${auth.role === 'user' ? ' h-[calc(100vh-116px)] sm:h-[calc(100vh-64px)]' : 'h-[calc(100vh-52px)] sm:h-screen'} grow relative max-w-6xl p-2 sm:p-4 self-stretch mx-auto font-nunito`}>
-       
-       
-        {/* socketio alert */}
-        <div className="absolute flex items-center justify-center w-full inset-0 z-10 p-4 bg-red-400 bg-opacity-50 backdrop-blur ">
-          <div className="w-full flex flex-col justify-center max-w-sm mx-auto text-black text-lg text-center px-3 py-6 bg-white rounded-lg">
-            <p >
-              sorry chat feature doesn't work right now because of the deployment server incompatibility with WebSocket technology.
-            </p>
-            <p className="mt-1">
-              you can still review the code for it in the github repository
-            </p>
-            <a href="" target="_blank" className=" text-xs hover:text-purple-600 cursor-pointer">
-              View Github Repository
-            </a>
-            <button className="mt-3 px-3 text-lg font-semibold hover: text-primary hover:border-primary py-1 border border-black rounded-full" onClick={()=>{setModalOpen(false)}}>
-              OK
-            </button>
-          </div>
-        </div>
 
-        
+
+        {/* socketio alert */}
+        {
+          modalOpen &&
+
+          <div className="absolute flex items-center justify-center w-full inset-0 z-10 p-4 bg-red-400 bg-opacity-50 backdrop-blur ">
+            <div className="w-full flex flex-col justify-center max-w-sm mx-auto text-black text-lg text-center px-3 py-6 bg-white rounded-lg">
+              <p >
+                sorry chat feature doesn't work right now because of the deployment server incompatibility with WebSocket technology.
+              </p>
+              <p className="mt-1">
+                you can still review the code for it in the github repository
+              </p>
+              <a href="" target="_blank" className=" text-xs hover:text-purple-600 cursor-pointer">
+                View Github Repository
+              </a>
+              <button className="mt-3 px-3 text-lg font-semibold hover: text-primary hover:border-primary py-1 border border-black rounded-full" onClick={() => { setModalOpen(false) }}>
+                OK
+              </button>
+            </div>
+          </div>
+
+        }
+
         {
           error ? <p className="text-lg text-red-500 "> {error}</p>
             : loading ?
