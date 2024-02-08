@@ -6,12 +6,14 @@ const apiRouter = require('./routers/api')
 const cors = require('cors')
 // const socketIo = require('socket.io')
 const app = express();
+const webhookRouter = require('./routers/webhook')
+
 // const ioIsAuthenticated = require('./middlewares/ioIsAuthenticated')
 // const { ioRegisterEvents, ioConnectionNotifications } = require('./Configuration/ioEvents')
 
 require('dotenv').config();
 
-app.use(express.json());
+// app.use(express.json());
 // app.use(express.static('./images'))
 // app.use(express.static(path.join(__dirname, 'build')));
 app.use(cors({
@@ -21,7 +23,9 @@ app.use(cors({
 
 connectDB()
 
-app.use('/api', apiRouter)
+app.use('/api',express.json(), apiRouter)
+app.use('/webhook', webhookRouter)
+
 
 mongoose.connection.once('open', () => {
   console.log("DB connected");

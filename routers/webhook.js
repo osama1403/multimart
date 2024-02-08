@@ -3,6 +3,6 @@ const { fulfillOrder } = require('../controllers/ordersController')
 
 const webhookRouter = express.Router()
 
-webhookRouter.post('/stripe',express.raw({ type: 'application/json' }), fulfillOrder)
+webhookRouter.post('/stripe', fulfillOrder)
 
 module.exports = webhookRouter
