@@ -186,10 +186,10 @@ const fulfillOrder = async (req, res) => {
           // separate products by seller
           const orders = new Map()
           paymentOrder.products.forEach(el => {
-            if (!orders.has(el.owner)) {
-              orders.set(el.owner, [{ id: el.id, customizations: el.customizations, count: el.count }])
+            if (!orders.has(el.seller)) {
+              orders.set(el.seller, [{ id: el.id, customizations: el.customizations, count: el.count, price: el.price }])
             } else {
-              orders.get(el.owner).push({ id: el.id, customizations: el.customizations, count: el.count })
+              orders.get(el.seller).push({ id: el.id, customizations: el.customizations, count: el.count, price: el.price })
             }
           });
 
@@ -208,7 +208,7 @@ const fulfillOrder = async (req, res) => {
           // finally remove the associated paymentOrder 
 
           for (const [seller, items] of orders) {
-            const subtotal = items.reduce((p, el) => p + el.price * el.count, 0)
+            const subtotal = items.reduce((p, el) => p + (el.price * el.count), 0)
             // console.log(seller);
             const tax = Math.round(taxRate * subtotal)
             const totalCost = subtotal + tax
