@@ -54,7 +54,7 @@ const handleLogin = async (req, res) => {
             cart: user.cart,
             addresses: addresses
           }
-          const JWT = jwt.sign({ email: email, id: user._id, role: 'user' }, process.env.JWT_SECRET, { expiresIn: 60*5 })
+          const JWT = jwt.sign({ email: email, id: user._id, role: 'user' }, process.env.JWT_SECRET, { expiresIn: `${60*10}s` })
           const refreshToken = jwt.sign({ id: user._id, role: 'user' }, process.env.JWT_SECRET, { expiresIn: '7d' })
 
           res.cookie('RT', refreshToken, { httpOnly: true, secure: 'true', sameSite: 'none', maxAge: 7 * 24 * 60 * 60 * 1000 })
@@ -89,7 +89,7 @@ const handleSellerLogin = async (req, res) => {
       if (seller) {
         const verified = await bcrypt.compare(password, seller.password);
         if (verified) {
-          const JWT = jwt.sign({ email: email, id: seller._id, role: 'seller' }, process.env.JWT_SECRET, { expiresIn: 60*5 })
+          const JWT = jwt.sign({ email: email, id: seller._id, role: 'seller' }, process.env.JWT_SECRET, { expiresIn: `${60*10}s` })
           const refreshToken = jwt.sign({ id: seller._id, role: 'seller' }, process.env.JWT_SECRET, { expiresIn: '7d' })
 
           res.cookie('RT', refreshToken, { httpOnly: true, secure: 'true', sameSite: 'none', maxAge: 7 * 24 * 60 * 60 * 1000 })
@@ -113,7 +113,7 @@ const handleRefresh = async (req, res) => {
     const refreshToken = req.cookies.RT
     jwt.verify(refreshToken, process.env.JWT_SECRET, async (err, decode) => {
       if (err) {
-        return res.status(403).send('Unauthorizedsssssss')
+        return res.status(403).send('Unauthorized')
       }
 
       try {
@@ -134,14 +134,14 @@ const handleRefresh = async (req, res) => {
             cart: user.cart,
             addresses: addresses
           }
-          const JWT = jwt.sign({ email: user.email, id: user._id, role: 'user' }, process.env.JWT_SECRET, { expiresIn: 10 })
+          const JWT = jwt.sign({ email: user.email, id: user._id, role: 'user' }, process.env.JWT_SECRET, { expiresIn: `${60*10}s` })
           return res.status(200).json({ token: JWT, role: 'user', id: user._id, userData })
 
 
         } else {
           //handle seller refresh
           const seller = await Seller.findById(id)
-          const JWT = jwt.sign({ email: seller.email, id: seller._id, role: 'seller' }, process.env.JWT_SECRET)
+          const JWT = jwt.sign({ email: seller.email, id: seller._id, role: 'seller' }, process.env.JWT_SECRET, { expiresIn: `${60*10}s` })
           res.status(200).json({ token: JWT, role: 'seller', id: seller._id })
         }
 
