@@ -37,7 +37,7 @@ const OrderPage = () => {
                   <p className='text-zinc-700'><AiOutlineCalendar className='inline' />{new Date(data.date).toLocaleString()}</p>
                   <p className='text-xl font-bold text-zinc-600'>${data.totalCost / 100}</p>
                 </div>
-                <span>seller:</span><Link className='text-blue-400 ml-2 hover:text-blue-600'>{data.seller.shopName}</Link>
+                <span>seller:</span><Link className='text-blue-400 ml-2 hover:text-blue-600' to={`/seller/${data.seller._id}`} >{data.seller.shopName}</Link>
               </div>
 
               {/* status */}
