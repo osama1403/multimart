@@ -137,14 +137,16 @@ const placeOrder = async (req, res) => {
       success_url: `${process.env.FRONTEND_URL}`,
       cancel_url: `${process.env.FRONTEND_URL}`,
       line_items: stripeItems,
-      metadata: { orderid: paymentorder._id.toString() }
+      metadata: { orderid: paymentorder._id.toString() },
+      payment_intent_data: {
+        metadata: {
+          orderid: paymentorder._id.toString()
+        }
+      }
     })
 
     await Product.bulkWrite(productsBulk)
-    // await PaymentOrder.create({ owner: email, session_id: session.id, products: matched.cart, shippingAddress: address, date: new Date(), subtotal, tax, totalCost: subtotal + tax })
 
-    console.log("paymentorder._id : ");
-    console.log(paymentorder._id.toString());
     console.log(session);
     res.json({ paymentUrl: session.url })
 
@@ -178,7 +180,7 @@ const fulfillOrder = async (req, res) => {
       case 'payment_intent.succeeded': {
         const orderid = event.data.object.metadata.orderid
         // get the paymentOrder of this session
-        console.log("orderid: " + orderid);
+        // console.log("orderid: " + orderid);
         const paymentOrder = await PaymentOrder.findById(orderid)
         if (paymentOrder) {
           // separate products by seller
