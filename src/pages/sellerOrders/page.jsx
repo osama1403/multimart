@@ -99,7 +99,7 @@ const SellerOrders = () => {
                                         : el.status === 'Shipping' ? 'bg-blue-500'
                                           : 'bg-green-500'} text-white w-fit`}>{el.status}</p>
                                   </td>
-                                  <td className="p-3 font-semibold">${((el.subtotal + el.shippingCost) / 100).toFixed(2)}</td>
+                                  <td className="p-3 font-semibold">${(el.subtotal / 100).toFixed(2)}</td>
                                   <td className="p-3 text-zinc-600">{new Date(el.date).toLocaleString()}</td>
                                   <td className="p-3 text-zinc-600 max-w-[270px] overflow-clip text-ellipsis">{el.shippingAddress}</td>
                                   <td className="p-3">{el.products?.reduce((p, e) => p + e.count, 0)}</td>
