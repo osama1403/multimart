@@ -37,7 +37,19 @@ const Chat = () => {
               // : chats &&
 
               <div className="rounded-2xl border shadow-md p-2 w-full [&>*:not(:last-child)]:border-b" >
+                <div className=" bg-red-400 p-2">
+                  
+                  <p className="text-black text-lg">
+                    sorry chat feature doesn't work right now because of the deployment server incompatibility with WebSocket technology.
+                  </p>
+                  <p className="mt-1 text-black text-lg">
+                    you can still review the code for it in the github repository
+                  </p>
+                  <a href="https://github.com/osama1403/multimart" target="_blank" className=" text-sm text-purple-600 hover:text-blue-700 cursor-pointer">
+                    Go to Github Repository
+                  </a>
 
+                </div>
                 {/* {chats?.sort((a, b) => new Date(b.lastMessage.date) - new Date(a.lastMessage.date)).map((el) => { */}
                 {data?.sort((a, b) => new Date(b.lastMessage.date) - new Date(a.lastMessage.date)).map((el) => {
                   let pfp, name, peer_id
