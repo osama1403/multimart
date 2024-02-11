@@ -45,7 +45,7 @@ const Chat = () => {
                   <p className="mt-1 text-black text-lg">
                     you can still review the code for it in the github repository
                   </p>
-                  <a href="https://github.com/osama1403/multimart" target="_blank" className=" text-sm text-purple-600 hover:text-blue-700 cursor-pointer">
+                  <a href="https://github.com/osama1403/multimart" target="_blank" className="text-purple-600 hover:text-blue-700 cursor-pointer">
                     Go to Github Repository
                   </a>
 
