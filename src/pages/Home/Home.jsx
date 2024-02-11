@@ -9,9 +9,9 @@ const Home = () => {
     <>
     <Hero />
     <CategoriesSection />
-    <HorizontalScroller category={Categories[0].name}/>
     <HorizontalScroller category={Categories[2].name}/>
     <HorizontalScroller category = {Categories[1].name}/>
+    <HorizontalScroller category={Categories[0].name}/>
     
     {/* <SearchBar /> */}
     </>
