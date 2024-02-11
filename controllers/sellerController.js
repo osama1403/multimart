@@ -68,13 +68,13 @@ const sellerGetDashboard = async (req, res) => {
       seller.orders.forEach(el => {
         //calculating total sales and  last 7 days revenu
         const orderTime = (new Date(el.date))
-        totalsales += (el.subtotal + el.shippingCost)
+        totalsales += el.subtotal
         if (orderTime.getTime() > lastWeek.getTime()) {
-          last7days += (el.subtotal + el.shippingCost)
+          last7days += el.subtotal
         }
         if (orderTime.getTime() > before6Months.getTime()) {
           const ordMonName = getMonthName(orderTime)
-          months[ordMonName].revenu += (el.subtotal + el.shippingCost)
+          months[ordMonName].revenu += el.subtotal
           el.products.forEach(element => {
             months[ordMonName].units += element.count
           });
